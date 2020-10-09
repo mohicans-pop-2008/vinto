@@ -1,0 +1,32 @@
+{
+  "name": "vinto",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha",
+    "start": "webpack-dev-server --mode development --open",
+    "build": "webpack --mode production",
+    "lint": "eslint --cache --format codeframe --ext mjs,jsx,js src test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "prop-types": "^15.7.2",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-hot-loader": "^4.13.0"
+  },
+  "devDependencies": {
+    "@neutrinojs/airbnb": "^9.4.0",
+    "@neutrinojs/mocha": "^9.4.0",
+    "@neutrinojs/react": "^9.4.0",
+    "eslint": "^7.10.0",
+    "mocha": "^8.1.3",
+    "neutrino": "^9.4.0",
+    "webpack": "^4.44.2",
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.0"
+  }
+}
