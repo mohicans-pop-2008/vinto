@@ -17,6 +17,7 @@ async function connectionSuccessful(room) {
   conference.addTrack(localVideoTrack);
   conference.addTrack(localAudioTrack);
   console.log('=============> Video & Audio connected <=============');
+  return {conference, localVideoTrack}
 }
 
 const connectionFailed = () => {
@@ -36,12 +37,8 @@ const connect = () => {
       connectionSuccessful.bind(connection, room));
     connection.addEventListener(JitsiMeetJS.events.connection.CONNECTION_FAILED,
       connectionFailed);
-    await connection.connect();
+    connection.connect();
   };
-};
-
-const helper = () => {
-  script.onload = connect;
 };
 
 let conference;
@@ -50,24 +47,25 @@ const loadAndConnect = async ({ domain, room }) => {
   const script = document.createElement('script');
   script.src = `https://${domain}/libs/lib-jitsi-meet.min.js`;
   document.querySelector('head').appendChild(script);
-
-  // script.onload = () => {
-  //   JitsiMeetJS.init();
-  //   const configScript = document.createElement('script');
-  //   configScript.src = `https://${domain}/config.js`;
-  //   document.querySelector('head').appendChild(configScript);
-  //   configScript.onload = async () => {
-  //     config.serviceUrl = config.websocket || config.bosh;
-  //     config.serviceUrl += `?room=${room}`;
-  //     const connection = new JitsiMeetJS.JitsiConnection(null, undefined, config);
-  //     connection.addEventListener(JitsiMeetJS.events.connection.CONNECTION_ESTABLISHED,
-  //       connectionSuccessful.bind(connection, room));
-  //     connection.addEventListener(JitsiMeetJS.events.connection.CONNECTION_FAILED,
-  //       connectionFailed);
-  //     await connection.connect();
-  //   };
-  // };
-  return { conference, localVideoTrack };
+  
+  return new Promise((resolve, reject) => {
+    script.onload = () => {
+      JitsiMeetJS.init();
+      const configScript = document.createElement('script');
+      configScript.src = `https://${domain}/config.js`;
+      document.querySelector('head').appendChild(configScript);
+      configScript.onload = async () => {
+        config.serviceUrl = config.websocket || config.bosh;
+        config.serviceUrl += `?room=${room}`;
+        const connection = new JitsiMeetJS.JitsiConnection(null, undefined, config);
+        connection.addEventListener(JitsiMeetJS.events.connection.CONNECTION_ESTABLISHED,
+          connectionSuccessful.bind(connection, room));
+        connection.addEventListener(JitsiMeetJS.events.connection.CONNECTION_FAILED,
+          connectionFailed);
+        resolve({ conference, localVideoTrack })
+      };
+    };
+  })
 };
 
 const message = 'Welcome to vinto';
