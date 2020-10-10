@@ -92,7 +92,6 @@ const tryToJoinConf = async (room) => {
   connection.addEventListener(JitsiMeetJS.events.connection.CONNECTION_FAILED,
     () => console.log('=============> CONNECTION FAILED <============='));
   await connection.connect();
-  let conference;
   if (connected) {
     console.log('made it here');
     conference = connection.initJitsiConference(room, {});
@@ -105,9 +104,10 @@ const tryToJoinConf = async (room) => {
     console.log('=============> Video & Audio connected <=============');
     conference.join();
     return { conference, localVideoTrack };
+  } else {
+    console.log("didn't make it to connection");
+    return null;
   }
-  console.log("didn't make it to connection")
-  return null;
 };
 
 const message = 'Welcome to vinto';
@@ -129,10 +129,10 @@ class App extends React.Component {
     if (result) {
 
     }
-  //   this.setState({
-  //     currentConference: conference,
-  //     videos: [...this.state.videos, localVideoTrack],
-  //   });
+    //   this.setState({
+    //     currentConference: conference,
+    //     videos: [...this.state.videos, localVideoTrack],
+    //   });
   }
 
   render() {
