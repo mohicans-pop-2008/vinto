@@ -1,8 +1,8 @@
 import './App.css';
 import { hot } from 'react-hot-loader';
-import React, { useState, useCallback } from 'react';
-import { Video } from './components'
+import React from 'react';
 import $ from 'jquery';
+import { Video } from './components';
 
 window.$ = $;
 
@@ -50,30 +50,60 @@ const loadAndConnect = async ({ domain, room }) => {
 };
 
 const message = 'Welcome to vinto';
-const App = () => {
-  const [currentConf, setConference] = useState(null);
-  // for our purposes, we just want to connect immediately upon load for now.
-  const { conference, localVideoTrack } = loadAndConnect({ domain: 'meet.jit.si', room: 'some-default-room' });
-  // setConference(conference);
-  // const [videoTracks, addVideoTrack, removeVideoTrack] = useTracks();
-  // const [audioTracks, addAudioTrack, removeAudioTrack] = useTracks();
 
-  // const addTrack = useCallback((track) => {
-  //   if (track.getType() === 'video') addVideoTrack(track);
-  //   if (track.getType() === 'audio') addAudioTrack(track);
-  // }, [addVideoTrack, addAudioTrack]);
+class App extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      currentConference: null,
+      videos: [],
+      audios: []
+    };
+    this.onClick.bind(this);
+  }
 
-  // const removeTrack = useCallback((track) => {
-  //   if (track.getType() === 'video') removeVideoTrack(track);
-  //   if (track.getType() === 'audio') removeAudioTrack(track);
-  // }, [removeAudioTrack, removeVideoTrack]);
+  async onClick() {
+    const { conference, localVideoTrack } = await loadAndConnect({ domain: 'meet.jit.si', room: 'some-default-room' });
+  }
+  render() {
+    return (
+      <div className="App">
+        <h1>{message}</h1>
+        {/* this is what i expect to see when I am not connected to a conference */}
+        <button type="button" onClick={this.onClick}>Connect to this Conference!</button>
+        <button type="button" onClick={this.checkConfAndTrack}>TESTING CONFERENCE AND TRACK AVAILABILITY</button>
+        {/* What I want to see upon connection */}
 
-  return (
-    <div className="App">
-      <h1>{message}</h1>
-      <Video />
-    </div>
-  );
-};
+      </div>
+    );
+  }
+}
+// const App = () => {
+//   const [currentConf, setConference] = useState(null);
+//   const [videos, setVideos] = useState([]);
+//   const [audios, setAudios] = useState([]);
+
+//   loadAndConnect({ domain: 'meet.jit.si', room: 'some-default-room' });
+//   // setConference(conference);
+//   // const [videoTracks, addVideoTrack, removeVideoTrack] = useTracks();
+//   // const [audioTracks, addAudioTrack, removeAudioTrack] = useTracks();
+
+//   // const addTrack = useCallback((track) => {
+//   //   if (track.getType() === 'video') addVideoTrack(track);
+//   //   if (track.getType() === 'audio') addAudioTrack(track);
+//   // }, [addVideoTrack, addAudioTrack]);
+
+//   // const removeTrack = useCallback((track) => {
+//   //   if (track.getType() === 'video') removeVideoTrack(track);
+//   //   if (track.getType() === 'audio') removeAudioTrack(track);
+//   // }, [removeAudioTrack, removeVideoTrack]);
+
+//   return (
+//     <div className="App">
+//       <h1>{message}</h1>
+//       {videos.length ? <Video track={videos[0]} /> : <div>No video</div>}
+//     </div>
+//   );
+// };
 
 export default hot(module)(App);

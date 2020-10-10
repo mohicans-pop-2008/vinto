@@ -1,9 +1,10 @@
 import React from 'react';
 
 const Video = (props) => (
-    <div>
-      This would be an individual video window!
-    </div>
+  <div>
+    Individual video window below!
+    <video height='250px' autoPlay='1' ref={(ref) => props.track.attach(ref)}></video>
+  </div>
 );
 
-export default Video
+export default Video;
