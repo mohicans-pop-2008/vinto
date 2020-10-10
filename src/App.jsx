@@ -1,28 +1,32 @@
 import { hot } from 'react-hot-loader';
-import React from 'react';
+import React, {useEffect} from 'react';
 import './App.css';
-
-const loadAndConnect = ({ domain, room }) => new Promise((resolve) => {
-  const script = document.createElement('script');
-  script.src = `https://${domain}/libs/lib-jitsi-meet.min.js`;
-  document.querySelector('head').appendChild(script);
-
-  script.onload = () => {
-    JitsiMeetJS.init();
-
-    const configScript = document.createElement('script');
-    configScript.src = `https://${domain}/config.js`;
-    document.querySelector('head').appendChild(configScript);
-    // configScript.onload = () => {
-    //   connectandJoin({ domain, room, config }).then(resolve);
-    // };
-  };
-
-});
+import JitsiMeetJS from 'lib-jitsi-meet';
+import config from '../utils/jitsi.config';
+import $ from 'jquery';
 
 const message = 'Welcome to vinto';
+
+/* Define JitsiConnection event listeners */
+const onConnectionSuccess = () => {
+  console.log('CONNECTION_ESTABLISHED')
+}
+
 const App = () => {
-  loadAndConnect({domain: 'meet.jit.si', room: 'some-default-room'});
+  window.$ = $ // make it so Jitsi can find jquery selector
+  JitsiMeetJS.init()
+  let options = config
+  options.serviceUrl = `${config.websocket}?room=some-default-room`
+  let connection = new JitsiMeetJS.JitsiConnection(null, null, options)
+
+  /* Register the JitsiConnection event listeners */
+  connection.addEventListener(JitsiMeetJS.events.connection.CONNECTION_ESTABLISHED, onConnectionSuccess);
+  useEffect(() => {
+    async function connectToJitsiMeetServer () {
+      await connection.connect();
+    }
+    connectToJitsiMeetServer();
+  }, []);
 
   return (
     <div className="App">

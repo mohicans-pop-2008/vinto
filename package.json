@@ -13,10 +13,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@babel/plugin-transform-flow-strip-types": "^7.10.4",
+    "jquery": "^3.5.1",
+    "lib-jitsi-meet": "file:./utils/lib-jitsi-meet",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-hot-loader": "^4.13.0"
+    "react-hot-loader": "^4.13.0",
+    "webpack-bundle-analyzer": "^3.9.0"
   },
   "devDependencies": {
     "@neutrinojs/airbnb": "^9.4.0",

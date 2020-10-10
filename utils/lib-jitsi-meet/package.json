@@ -1,0 +1,11 @@
+{
+  "name": "kev-lib-jitsi-meet",
+  "version": "1.0.0",
+  "description": "",
+  "main": "lib-jitsi-meet.min.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
