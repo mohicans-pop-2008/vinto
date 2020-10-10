@@ -6,64 +6,47 @@ import { Video } from './components';
 
 window.$ = $;
 
-async function connectionSuccessful(room) {
-  console.log('=============> CONNECTION SUCCESSFUL <=============');
-  conference = this.initJitsiConference(room, {});
-  conference.on(JitsiMeetJS.events.conference.CONFERENCE_JOINED, () => console.log('!!!!!!!CONFERENCE JOINED'));
-  conference.join();
-  const localTracks = await JitsiMeetJS.createLocalTracks({ devices: ['video', 'audio'], facingMode: 'user' }, true);
-  localVideoTrack = localTracks.find((track) => track.getType() === 'video');
-  const localAudioTrack = localTracks.find((track) => track.getType() === 'audio');
-  conference.addTrack(localVideoTrack);
-  conference.addTrack(localAudioTrack);
-  console.log('=============> Video & Audio connected <=============');
-  return {conference, localVideoTrack}
-}
-
-const connectionFailed = () => {
-  console.log('=============> CONNECTION FAILED <=============');
-};
-
-const connect = () => {
-  JitsiMeetJS.init();
-  const configScript = document.createElement('script');
-  configScript.src = `https://${domain}/config.js`;
-  document.querySelector('head').appendChild(configScript);
-  configScript.onload = async () => {
-    config.serviceUrl = config.websocket || config.bosh;
-    config.serviceUrl += `?room=${room}`;
-    const connection = new JitsiMeetJS.JitsiConnection(null, undefined, config);
-    connection.addEventListener(JitsiMeetJS.events.connection.CONNECTION_ESTABLISHED,
-      connectionSuccessful.bind(connection, room));
-    connection.addEventListener(JitsiMeetJS.events.connection.CONNECTION_FAILED,
-      connectionFailed);
-    connection.connect();
-  };
-};
-
-let conference;
-let localVideoTrack;
-const loadAndConnect = async ({ domain, room }) => {
-  const script = document.createElement('script');
-  script.src = `https://${domain}/libs/lib-jitsi-meet.min.js`;
-  document.querySelector('head').appendChild(script);
-  
-  return new Promise((resolve, reject) => {
-    script.onload = () => {
+const loadAndConnect = ({domain, room}) => {
+  return new Promise((resolve) => {
+    const script = document.createElement('script');
+    script.src = `https://${domain}/libs/lib-jitsi-meet.min.js`;
+    document.querySelector('head').appendChild(script);
+    script.onload = async () => {
+      console.log('=============> lib-jitsi-meet Loaded <=============');
       JitsiMeetJS.init();
       const configScript = document.createElement('script');
       configScript.src = `https://${domain}/config.js`;
       document.querySelector('head').appendChild(configScript);
       configScript.onload = async () => {
+        console.log('=============> jitsi config Loaded <=============');
         config.serviceUrl = config.websocket || config.bosh;
         config.serviceUrl += `?room=${room}`;
-        const connection = new JitsiMeetJS.JitsiConnection(null, undefined, config);
-        connection.addEventListener(JitsiMeetJS.events.connection.CONNECTION_ESTABLISHED,
-          connectionSuccessful.bind(connection, room));
-        connection.addEventListener(JitsiMeetJS.events.connection.CONNECTION_FAILED,
-          connectionFailed);
-        resolve({ conference, localVideoTrack })
-      };
+        const connection = new JitsiMeetJS.JitsiConnection(
+          null,
+          undefined,
+          config,
+        );
+        connection.addEventListener(JitsiMeetJS.events.connection.CONNECTION_ESTABLISHED, async () => {
+          console.log('=============> CONNECTION ESTABLISHED <=============');
+          const conference = connection.initJitsiConference(room, {})
+          await conference.join()
+          console.log('=============> CONFERENCE JOINED <=============');
+          const localTracks = await JitsiMeetJS.createLocalTracks(
+            { devices: ['video', 'audio'], facingMode: 'user' },
+            true,
+          );
+          console.log('=============> Video & Audio Tracks Created <=============');
+          const localVideoTrack = localTracks.find((track) => track.getType() === 'video');
+          const localAudioTrack = localTracks.find(
+            (track) => track.getType() === 'audio',
+          );
+          conference.addTrack(localVideoTrack);
+          conference.addTrack(localAudioTrack);
+          console.log('=============> Video & Audio Tracks Connected <=============');
+          resolve({conference, localVideoTrack})
+        })
+        await connection.connect()
+      }
     };
   })
 };
@@ -76,14 +59,17 @@ class App extends React.Component {
     this.state = {
       currentConference: null,
       videos: [],
-      audios: []
+      audios: [],
     };
     this.onSubmit.bind(this);
   }
 
   async onSubmit(event) {
     event.preventDefault();
-    const { conference, localVideoTrack } = await loadAndConnect({ domain: 'meet.jit.si', room: 'some-default-room' });
+    const { conference, localVideoTrack } = await loadAndConnect({
+      domain: 'meet.jit.si',
+      room: 'some-default-room',
+    });
     this.setState({
       currentConference: conference,
       videos: [...this.state.videos, localVideoTrack],
@@ -99,7 +85,6 @@ class App extends React.Component {
           <button type="submit">Connect to this Conference!</button>
         </form>
         {/* What I want to see upon connection */}
-
       </div>
     );
   }
@@ -131,5 +116,13 @@ class App extends React.Component {
 //     </div>
 //   );
 // };
+
+// const connectionFailed = () => {
+//   console.log('=============> CONNECTION FAILED <=============');
+// };
+
+// async function connectionSuccessful(room) {
+//   return { conference, localVideoTrack };
+// }
 
 export default hot(module)(App);
