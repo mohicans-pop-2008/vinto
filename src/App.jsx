@@ -6,7 +6,7 @@ import { Video } from './components';
 
 window.$ = $;
 
-async function connectionSuccessful(room, conference, localVideoTrack) {
+async function connectionSuccessful(room) {
   console.log('=============> CONNECTION SUCCESSFUL <=============');
   conference = this.initJitsiConference(room, {});
   conference.on(JitsiMeetJS.events.conference.CONFERENCE_JOINED, () => console.log('!!!!!!!CONFERENCE JOINED'));
@@ -23,29 +23,50 @@ const connectionFailed = () => {
   console.log('=============> CONNECTION FAILED <=============');
 };
 
+const connect = () => {
+  JitsiMeetJS.init();
+  const configScript = document.createElement('script');
+  configScript.src = `https://${domain}/config.js`;
+  document.querySelector('head').appendChild(configScript);
+  configScript.onload = async () => {
+    config.serviceUrl = config.websocket || config.bosh;
+    config.serviceUrl += `?room=${room}`;
+    const connection = new JitsiMeetJS.JitsiConnection(null, undefined, config);
+    connection.addEventListener(JitsiMeetJS.events.connection.CONNECTION_ESTABLISHED,
+      connectionSuccessful.bind(connection, room));
+    connection.addEventListener(JitsiMeetJS.events.connection.CONNECTION_FAILED,
+      connectionFailed);
+    await connection.connect();
+  };
+};
+
+const helper = () => {
+  script.onload = connect;
+};
+
+let conference;
+let localVideoTrack;
 const loadAndConnect = async ({ domain, room }) => {
   const script = document.createElement('script');
   script.src = `https://${domain}/libs/lib-jitsi-meet.min.js`;
   document.querySelector('head').appendChild(script);
 
-  let conference;
-  let localVideoTrack;
-  script.onload = async () => {
-    JitsiMeetJS.init();
-    const configScript = document.createElement('script');
-    configScript.src = `https://${domain}/config.js`;
-    document.querySelector('head').appendChild(configScript);
-    configScript.onload = async () => {
-      config.serviceUrl = config.websocket || config.bosh;
-      config.serviceUrl += `?room=${room}`;
-      const connection = new JitsiMeetJS.JitsiConnection(null, undefined, config);
-      connection.addEventListener(JitsiMeetJS.events.connection.CONNECTION_ESTABLISHED,
-        connectionSuccessful.bind(connection, room, conference, localVideoTrack));
-      connection.addEventListener(JitsiMeetJS.events.connection.CONNECTION_FAILED,
-        connectionFailed);
-      await connection.connect();
-    };
-  };
+  // script.onload = () => {
+  //   JitsiMeetJS.init();
+  //   const configScript = document.createElement('script');
+  //   configScript.src = `https://${domain}/config.js`;
+  //   document.querySelector('head').appendChild(configScript);
+  //   configScript.onload = async () => {
+  //     config.serviceUrl = config.websocket || config.bosh;
+  //     config.serviceUrl += `?room=${room}`;
+  //     const connection = new JitsiMeetJS.JitsiConnection(null, undefined, config);
+  //     connection.addEventListener(JitsiMeetJS.events.connection.CONNECTION_ESTABLISHED,
+  //       connectionSuccessful.bind(connection, room));
+  //     connection.addEventListener(JitsiMeetJS.events.connection.CONNECTION_FAILED,
+  //       connectionFailed);
+  //     await connection.connect();
+  //   };
+  // };
   return { conference, localVideoTrack };
 };
 
@@ -59,19 +80,26 @@ class App extends React.Component {
       videos: [],
       audios: []
     };
-    this.onClick.bind(this);
+    this.onSubmit.bind(this);
   }
 
-  async onClick() {
+  async onSubmit(event) {
+    event.preventDefault();
     const { conference, localVideoTrack } = await loadAndConnect({ domain: 'meet.jit.si', room: 'some-default-room' });
+    this.setState({
+      currentConference: conference,
+      videos: [...this.state.videos, localVideoTrack],
+    });
   }
+
   render() {
     return (
       <div className="App">
         <h1>{message}</h1>
         {/* this is what i expect to see when I am not connected to a conference */}
-        <button type="button" onClick={this.onClick}>Connect to this Conference!</button>
-        <button type="button" onClick={this.checkConfAndTrack}>TESTING CONFERENCE AND TRACK AVAILABILITY</button>
+        <form onSubmit={(e) => this.onSubmit(e)}>
+          <button type="submit">Connect to this Conference!</button>
+        </form>
         {/* What I want to see upon connection */}
 
       </div>
