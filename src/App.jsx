@@ -3,7 +3,7 @@ import './App.css';
 import { hot } from 'react-hot-loader';
 import React, { useEffect, useState, useCallback } from 'react';
 import $ from 'jquery';
-import { Video, Audio, Controls } from './components';
+import { Video, Audio, Controls, Sidebar } from './components';
 
 window.$ = $;
 
@@ -169,14 +169,15 @@ const App = () => {
             {audioTracks.map((audio) => (
               <Audio key={audio.getId()} track={audio} />
             ))}
+            <Sidebar />
           </div>
           <Controls />
         </div>
       ) : (
-        <form onSubmit={(e) => onSubmit(e)}>
-          <button type="submit">Connect to this Conference!</button>
-        </form>
-      )}
+          <form onSubmit={(e) => onSubmit(e)}>
+            <button type="submit">Connect to this Conference!</button>
+          </form>
+        )}
     </div>
   );
 };
