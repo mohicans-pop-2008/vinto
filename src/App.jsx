@@ -3,7 +3,7 @@ import './App.css';
 import { hot } from 'react-hot-loader';
 import React, { useEffect, useState, useCallback } from 'react';
 import $ from 'jquery';
-import { Video, Audio } from './components';
+import { Video, Audio, Controls } from './components';
 
 window.$ = $;
 
@@ -162,18 +162,21 @@ const App = () => {
       <h1>{message}</h1>
       {videoTracks.length ? (
         <div>
-          {videoTracks.map((video) => (
-            <Video key={video.getId()} track={video} />
-          ))}
-          {audioTracks.map((audio) => (
-            <Audio key={audio.getId()} track={audio} />
-          ))}
+          <div>
+            {videoTracks.map((video) => (
+              <Video key={video.getId()} track={video} />
+            ))}
+            {audioTracks.map((audio) => (
+              <Audio key={audio.getId()} track={audio} />
+            ))}
+          </div>
+          <Controls />
         </div>
       ) : (
-          <form onSubmit={(e) => onSubmit(e)}>
-            <button type="submit">Connect to this Conference!</button>
-          </form>
-        )}
+        <form onSubmit={(e) => onSubmit(e)}>
+          <button type="submit">Connect to this Conference!</button>
+        </form>
+      )}
     </div>
   );
 };
