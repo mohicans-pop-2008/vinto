@@ -1,3 +1,4 @@
+/* global JitsiMeetJS config */
 import './App.css';
 import { hot } from 'react-hot-loader';
 import React, { useEffect, useState, useCallback } from 'react';
