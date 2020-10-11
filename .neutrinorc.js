@@ -11,6 +11,7 @@ module.exports = {
       eslint: {
         rules: {
           "jsx-a11y/media-has-caption": "off",
+          "no-console": "off",
         },
       },
     }),
