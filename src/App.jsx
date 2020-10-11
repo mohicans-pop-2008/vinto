@@ -2,76 +2,90 @@ import './App.css';
 import { hot } from 'react-hot-loader';
 import React, { useEffect, useState, useCallback } from 'react';
 import $ from 'jquery';
-import { Video } from './components';
+import { Video, Audio } from './components';
 
 window.$ = $;
 
-const loadAndConnect = ({ domain, room }) => {
-  return new Promise((resolve) => {
-    const script = document.createElement('script');
-    script.src = `https://${domain}/libs/lib-jitsi-meet.min.js`;
-    document.querySelector('head').appendChild(script);
-    script.onload = async () => {
-      console.log('=============> lib-jitsi-meet Loaded <=============');
-      JitsiMeetJS.init();
-      const configScript = document.createElement('script');
-      configScript.src = `https://${domain}/config.js`;
-      document.querySelector('head').appendChild(configScript);
-      configScript.onload = async () => {
-        console.log('=============> jitsi config Loaded <=============');
-        config.serviceUrl = config.websocket || config.bosh;
-        config.serviceUrl += `?room=${room}`;
-        const connection = new JitsiMeetJS.JitsiConnection(
-          null,
-          undefined,
-          config,
-        );
-        connection.addEventListener(JitsiMeetJS.events.connection.CONNECTION_ESTABLISHED, async () => {
+const loadAndConnect = ({ domain, room }) => new Promise((resolve) => {
+  const script = document.createElement('script');
+  script.src = `https://${domain}/libs/lib-jitsi-meet.min.js`;
+  document.querySelector('head').appendChild(script);
+  script.onload = async () => {
+    console.log('=============> lib-jitsi-meet Loaded <=============');
+    JitsiMeetJS.init();
+    const configScript = document.createElement('script');
+    configScript.src = `https://${domain}/config.js`;
+    document.querySelector('head').appendChild(configScript);
+    configScript.onload = async () => {
+      console.log('=============> jitsi config Loaded <=============');
+      config.serviceUrl = config.websocket || config.bosh;
+      config.serviceUrl += `?room=${room}`;
+      const connection = new JitsiMeetJS.JitsiConnection(
+        null,
+        undefined,
+        config,
+      );
+      connection.addEventListener(
+        JitsiMeetJS.events.connection.CONNECTION_ESTABLISHED,
+        async () => {
           console.log('=============> CONNECTION ESTABLISHED <=============');
-          const conference = connection.initJitsiConference(room, {})
-          await conference.join()
+          const conference = connection.initJitsiConference(room, {});
+          await conference.join();
           console.log('=============> CONFERENCE JOINED <=============');
           const localTracks = await JitsiMeetJS.createLocalTracks(
             { devices: ['video', 'audio'], facingMode: 'user' },
             true,
           );
-          console.log('=============> Video & Audio Tracks Created <=============');
-          const localVideoTrack = localTracks.find((track) => track.getType() === 'video');
+          console.log(
+            '=============> Video & Audio Tracks Created <=============',
+          );
+          const localVideoTrack = localTracks.find(
+            (track) => track.getType() === 'video',
+          );
           const localAudioTrack = localTracks.find(
             (track) => track.getType() === 'audio',
           );
           conference.addTrack(localVideoTrack);
           conference.addTrack(localAudioTrack);
-          console.log('=============> Video & Audio Tracks Connected <=============');
-          resolve({ conference, localVideoTrack })
-        })
-        await connection.connect()
-      }
+          console.log(
+            '=============> Video & Audio Tracks Connected <=============',
+          );
+          resolve({ conference, localVideoTrack });
+        },
+      );
+      await connection.connect();
     };
-  })
-};
+  };
+});
 
 // JITSI STANDUP CUSTOM HOOK
 const useTracks = () => {
-  const [tracks, setTracks] = useState([])
+  const [tracks, setTracks] = useState([]);
 
-  const addTrack = useCallback((track) => {
-    setTracks((tracks) => {
-      const hasTrack = tracks.find(_track => track.getId() === _track.getId())
+  const addTrack = useCallback(
+    (track) => {
+      setTracks((tracks) => {
+        const hasTrack = tracks.find(
+          (_track) => track.getId() === _track.getId(),
+        );
 
-      if (hasTrack) return tracks;
+        if (hasTrack) return tracks;
 
-      return [...tracks, track]
+        return [...tracks, track];
+      });
+    },
+    [setTracks],
+  );
 
-    });
-  }, [setTracks])
+  const removeTrack = useCallback(
+    (track) => {
+      setTracks((tracks) => tracks.filter((_track) => track.getId() !== _track.getId()));
+    },
+    [setTracks],
+  );
 
-  const removeTrack = useCallback((track) => {
-    setTracks((tracks) => tracks.filter(_track => track.getId() !== _track.getId()))
-  }, [setTracks])
-
-  return [tracks, addTrack, removeTrack]
-}
+  return [tracks, addTrack, removeTrack];
+};
 
 const message = 'Welcome to vinto';
 
@@ -83,15 +97,21 @@ const App = () => {
   const [videoTracks, addVideoTrack, removeVideoTrack] = useTracks();
   const [audioTracks, addAudioTrack, removeAudioTrack] = useTracks();
 
-  const addTrack = useCallback((track) => {
-    if (track.getType() === 'video') addVideoTrack(track)
-    if (track.getType() === 'audio') addAudioTrack(track)
-  }, [addVideoTrack, addAudioTrack])
+  const addTrack = useCallback(
+    (track) => {
+      if (track.getType() === 'video') addVideoTrack(track);
+      if (track.getType() === 'audio') addAudioTrack(track);
+    },
+    [addVideoTrack, addAudioTrack],
+  );
 
-  const removeTrack = useCallback((track) => {
-    if (track.getType() === 'video') removeVideoTrack(track)
-    if (track.getType() === 'audio') removeAudioTrack(track)
-  }, [removeAudioTrack, removeVideoTrack])
+  const removeTrack = useCallback(
+    (track) => {
+      if (track.getType() === 'video') removeVideoTrack(track);
+      if (track.getType() === 'audio') removeAudioTrack(track);
+    },
+    [removeAudioTrack, removeVideoTrack],
+  );
 
   // MINE
   // Add tracks
@@ -142,14 +162,20 @@ const App = () => {
   return (
     <div className="App">
       <h1>{message}</h1>
-      {videoTracks.length
-        ? (<div>
-          {videoTracks.map((video) => <Video key={video.getId()} track={video} />)}
-          {audioTracks.map((audio) => <Audio key={audio.getId()} track={audio} />)}
-        </div>)
-        : <form onSubmit={(e) => onSubmit(e)}>
+      {videoTracks.length ? (
+        <div>
+          {videoTracks.map((video) => (
+            <Video key={video.getId()} track={video} />
+          ))}
+          {audioTracks.map((audio) => (
+            <Audio key={audio.getId()} track={audio} />
+          ))}
+        </div>
+      ) : (
+        <form onSubmit={(e) => onSubmit(e)}>
           <button type="submit">Connect to this Conference!</button>
-        </form>}
+        </form>
+      )}
     </div>
   );
 };
