@@ -1,12 +1,12 @@
 import './App.css';
 import { hot } from 'react-hot-loader';
-import React from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import $ from 'jquery';
 import { Video } from './components';
 
 window.$ = $;
 
-const loadAndConnect = ({domain, room}) => {
+const loadAndConnect = ({ domain, room }) => {
   return new Promise((resolve) => {
     const script = document.createElement('script');
     script.src = `https://${domain}/libs/lib-jitsi-meet.min.js`;
@@ -43,7 +43,7 @@ const loadAndConnect = ({domain, room}) => {
           conference.addTrack(localVideoTrack);
           conference.addTrack(localAudioTrack);
           console.log('=============> Video & Audio Tracks Connected <=============');
-          resolve({conference, localVideoTrack})
+          resolve({ conference, localVideoTrack })
         })
         await connection.connect()
       }
@@ -51,78 +51,107 @@ const loadAndConnect = ({domain, room}) => {
   })
 };
 
+// JITSI STANDUP CUSTOM HOOK
+const useTracks = () => {
+  const [tracks, setTracks] = useState([])
+
+  const addTrack = useCallback((track) => {
+    setTracks((tracks) => {
+      const hasTrack = tracks.find(_track => track.getId() === _track.getId())
+
+      if (hasTrack) return tracks;
+
+      return [...tracks, track]
+
+    });
+  }, [setTracks])
+
+  const removeTrack = useCallback((track) => {
+    setTracks((tracks) => tracks.filter(_track => track.getId() !== _track.getId()))
+  }, [setTracks])
+
+  return [tracks, addTrack, removeTrack]
+}
+
 const message = 'Welcome to vinto';
 
-class App extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      currentConference: null,
-      videos: [],
-      audios: [],
-    };
-    this.onSubmit.bind(this);
-  }
+const App = () => {
+  const [conference, setConference] = useState(null);
+  // const [videos, setVideos] = useState([]);
+  // const [audios, setAudios] = useState([]);
 
-  async onSubmit(event) {
+  const [videoTracks, addVideoTrack, removeVideoTrack] = useTracks();
+  const [audioTracks, addAudioTrack, removeAudioTrack] = useTracks();
+
+  const addTrack = useCallback((track) => {
+    if (track.getType() === 'video') addVideoTrack(track)
+    if (track.getType() === 'audio') addAudioTrack(track)
+  }, [addVideoTrack, addAudioTrack])
+
+  const removeTrack = useCallback((track) => {
+    if (track.getType() === 'video') removeVideoTrack(track)
+    if (track.getType() === 'audio') removeAudioTrack(track)
+  }, [removeAudioTrack, removeVideoTrack])
+
+  // MINE
+  // Add tracks
+  // const addVideo = useCallback((video) => {
+  //   setVideos([...videos, video]);
+  // }, [videos, setVideos]);
+
+  // const addAudio = useCallback((audio) => {
+  //   setAudios([...audios, audio]);
+  // }, [audios, setAudios]);
+
+  // const addTrack = useCallback((track) => {
+  //   if (track.getType() === 'video') addVideo(track);
+  //   if (track.getType() === 'audio') addAudio(track);
+  // }, [addVideo, addAudio]);
+
+  // Remove tracks
+  // const removeVideo = useCallback((video) => {
+  //   setVideos(videos.filter((track) => track.getId() !== video.getId()));
+  // }, [videos, setVideos]);
+
+  // const removeAudio = useCallback((audio) => {
+  //   setAudios(audios.filter((track) => track.getId() !== audio.getId()));
+  // }, [audios, setAudios]);
+
+  // const removeTrack = useCallback((track) => {
+  //   if (track.getType() === 'video') removeVideo(track);
+  //   if (track.getType() === 'audio') removeAudio(track);
+  // }, [removeVideo, removeAudio]);
+
+  useEffect(() => {
+    if (!conference) return;
+
+    conference.on(JitsiMeetJS.events.conference.TRACK_ADDED, addTrack);
+    conference.on(JitsiMeetJS.events.conference.TRACK_REMOVED, removeTrack);
+  }, [addTrack, conference, removeTrack]);
+
+  const onSubmit = async (event) => {
     event.preventDefault();
     const { conference, localVideoTrack } = await loadAndConnect({
       domain: 'meet.jit.si',
       room: 'some-default-room',
     });
-    this.setState({
-      currentConference: conference,
-      videos: [...this.state.videos, localVideoTrack],
-    });
-  }
+    setConference(conference);
+    addTrack(localVideoTrack);
+  };
 
-  render() {
-    return (
-      <div className="App">
-        <h1>{message}</h1>
-        {/* this is what i expect to see when I am not connected to a conference */}
-        <form onSubmit={(e) => this.onSubmit(e)}>
+  return (
+    <div className="App">
+      <h1>{message}</h1>
+      {videoTracks.length
+        ? (<div>
+          {videoTracks.map((video) => <Video key={video.getId()} track={video} />)}
+          {audioTracks.map((audio) => <Audio key={audio.getId()} track={audio} />)}
+        </div>)
+        : <form onSubmit={(e) => onSubmit(e)}>
           <button type="submit">Connect to this Conference!</button>
-        </form>
-        {/* What I want to see upon connection */}
-      </div>
-    );
-  }
-}
-// const App = () => {
-//   const [currentConf, setConference] = useState(null);
-//   const [videos, setVideos] = useState([]);
-//   const [audios, setAudios] = useState([]);
-
-//   loadAndConnect({ domain: 'meet.jit.si', room: 'some-default-room' });
-//   // setConference(conference);
-//   // const [videoTracks, addVideoTrack, removeVideoTrack] = useTracks();
-//   // const [audioTracks, addAudioTrack, removeAudioTrack] = useTracks();
-
-//   // const addTrack = useCallback((track) => {
-//   //   if (track.getType() === 'video') addVideoTrack(track);
-//   //   if (track.getType() === 'audio') addAudioTrack(track);
-//   // }, [addVideoTrack, addAudioTrack]);
-
-//   // const removeTrack = useCallback((track) => {
-//   //   if (track.getType() === 'video') removeVideoTrack(track);
-//   //   if (track.getType() === 'audio') removeAudioTrack(track);
-//   // }, [removeAudioTrack, removeVideoTrack]);
-
-//   return (
-//     <div className="App">
-//       <h1>{message}</h1>
-//       {videos.length ? <Video track={videos[0]} /> : <div>No video</div>}
-//     </div>
-//   );
-// };
-
-// const connectionFailed = () => {
-//   console.log('=============> CONNECTION FAILED <=============');
-// };
-
-// async function connectionSuccessful(room) {
-//   return { conference, localVideoTrack };
-// }
+        </form>}
+    </div>
+  );
+};
 
 export default hot(module)(App);
