@@ -59,93 +59,27 @@ const loadAndConnect = ({ domain, room }) => new Promise((resolve) => {
   };
 });
 
-// JITSI STANDUP CUSTOM HOOK
-const useTracks = () => {
-  const [tracks, setTracks] = useState([]);
-
-  const addTrack = useCallback(
-    (track) => {
-      setTracks((tracks) => {
-        const hasTrack = tracks.find(
-          (_track) => track.getId() === _track.getId(),
-        );
-
-        if (hasTrack) return tracks;
-
-        return [...tracks, track];
-      });
-    },
-    [setTracks],
-  );
-
-  const removeTrack = useCallback(
-    (track) => {
-      setTracks((tracks) => tracks.filter((_track) => track.getId() !== _track.getId()));
-    },
-    [setTracks],
-  );
-
-  return [tracks, addTrack, removeTrack];
-};
-
 const message = 'Welcome to vinto';
 
 const App = () => {
   const [conference, setConference] = useState(null);
-  const [videoTracks, addVideoTrack, removeVideoTrack] = useTracks();
-  const [audioTracks, addAudioTrack, removeAudioTrack] = useTracks();
-
-  const addTrack = useCallback(
-    (track) => {
-      if (track.getType() === 'video') addVideoTrack(track);
-      if (track.getType() === 'audio') addAudioTrack(track);
-    },
-    [addVideoTrack, addAudioTrack],
-  );
-
-  const removeTrack = useCallback(
-    (track) => {
-      if (track.getType() === 'video') removeVideoTrack(track);
-      if (track.getType() === 'audio') removeAudioTrack(track);
-    },
-    [removeAudioTrack, removeVideoTrack],
-  );
-
-  // MINE
-  // Add tracks
-  // const addVideo = useCallback((video) => {
-  //   setVideos([...videos, video]);
-  // }, [videos, setVideos]);
-
-  // const addAudio = useCallback((audio) => {
-  //   setAudios([...audios, audio]);
-  // }, [audios, setAudios]);
-
-  // const addTrack = useCallback((track) => {
-  //   if (track.getType() === 'video') addVideo(track);
-  //   if (track.getType() === 'audio') addAudio(track);
-  // }, [addVideo, addAudio]);
-
-  // Remove tracks
-  // const removeVideo = useCallback((video) => {
-  //   setVideos(videos.filter((track) => track.getId() !== video.getId()));
-  // }, [videos, setVideos]);
-
-  // const removeAudio = useCallback((audio) => {
-  //   setAudios(audios.filter((track) => track.getId() !== audio.getId()));
-  // }, [audios, setAudios]);
-
-  // const removeTrack = useCallback((track) => {
-  //   if (track.getType() === 'video') removeVideo(track);
-  //   if (track.getType() === 'audio') removeAudio(track);
-  // }, [removeVideo, removeAudio]);
+  const [videoTracks, setVideoTracks] = useState([]);
+  const [audioTracks, setAudioTracks] = useState([]);
 
   useEffect(() => {
     if (!conference) return;
+    const addTrack = (track) => {
+      if (track.getType() === 'video') setVideoTracks([...videoTracks, track]);
+      if (track.getType() === 'audio') setAudioTracks([...audioTracks, track]);
+    };
 
+    const removeTrack = (track) => {
+      if (track.getType() === 'video') setVideoTracks(videoTracks.filter((video) => video.getId() !== track.getId()));
+      if (track.getType() === 'audio') setAudioTracks(audioTracks.filter((audio) => audio.getId() !== track.getId()));
+    };
     conference.on(JitsiMeetJS.events.conference.TRACK_ADDED, addTrack);
     conference.on(JitsiMeetJS.events.conference.TRACK_REMOVED, removeTrack);
-  }, [addTrack, conference, removeTrack]);
+  }, [videoTracks, audioTracks, conference]);
 
   const onSubmit = async (event) => {
     event.preventDefault();
@@ -154,7 +88,7 @@ const App = () => {
       room: 'some-default-room',
     });
     setConference(conference);
-    addTrack(localVideoTrack);
+    setVideoTracks([...videoTracks, localVideoTrack]);
   };
 
   return (
