@@ -92,9 +92,6 @@ const message = 'Welcome to vinto';
 
 const App = () => {
   const [conference, setConference] = useState(null);
-  // const [videos, setVideos] = useState([]);
-  // const [audios, setAudios] = useState([]);
-
   const [videoTracks, addVideoTrack, removeVideoTrack] = useTracks();
   const [audioTracks, addAudioTrack, removeAudioTrack] = useTracks();
 
@@ -173,10 +170,10 @@ const App = () => {
           ))}
         </div>
       ) : (
-        <form onSubmit={(e) => onSubmit(e)}>
-          <button type="submit">Connect to this Conference!</button>
-        </form>
-      )}
+          <form onSubmit={(e) => onSubmit(e)}>
+            <button type="submit">Connect to this Conference!</button>
+          </form>
+        )}
     </div>
   );
 };

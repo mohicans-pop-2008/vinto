@@ -1,6 +1,7 @@
 import React from 'react';
 
-const Audio = ({ track }) => {
+const Audio = (props) => {
+  const { track } = props;
   if (track.isLocal()) {
     return null;
   }
