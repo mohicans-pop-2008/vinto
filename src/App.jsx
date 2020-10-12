@@ -11,58 +11,57 @@ import {
 
 window.$ = $;
 
-const loadAndConnect = ({ domain, room }) =>
-  new Promise((resolve) => {
-    const script = document.createElement('script');
-    script.src = `https://${domain}/libs/lib-jitsi-meet.min.js`;
-    document.querySelector('head').appendChild(script);
-    script.onload = async () => {
-      console.log('=============> lib-jitsi-meet Loaded <=============');
-      JitsiMeetJS.init();
-      const configScript = document.createElement('script');
-      configScript.src = `https://${domain}/config.js`;
-      document.querySelector('head').appendChild(configScript);
-      configScript.onload = async () => {
-        console.log('=============> jitsi config Loaded <=============');
-        config.serviceUrl = config.websocket || config.bosh;
-        config.serviceUrl += `?room=${room}`;
-        const connection = new JitsiMeetJS.JitsiConnection(
-          null,
-          undefined,
-          config
-        );
-        connection.addEventListener(
-          JitsiMeetJS.events.connection.CONNECTION_ESTABLISHED,
-          async () => {
-            console.log('=============> CONNECTION ESTABLISHED <=============');
-            const conference = connection.initJitsiConference(room, {});
-            await conference.join();
-            console.log('=============> CONFERENCE JOINED <=============');
-            const localTracks = await JitsiMeetJS.createLocalTracks(
-              { devices: ['video', 'audio'], facingMode: 'user' },
-              true
-            );
-            console.log(
-              '=============> Video & Audio Tracks Created <============='
-            );
-            const localVideoTrack = localTracks.find(
-              (track) => track.getType() === 'video'
-            );
-            const localAudioTrack = localTracks.find(
-              (track) => track.getType() === 'audio'
-            );
-            conference.addTrack(localVideoTrack);
-            conference.addTrack(localAudioTrack);
-            console.log(
-              '=============> Video & Audio Tracks Connected <============='
-            );
-            resolve({ conference, localVideoTrack });
-          }
-        );
-        await connection.connect();
-      };
+const loadAndConnect = ({ domain, room }) => new Promise((resolve) => {
+  const script = document.createElement('script');
+  script.src = `https://${domain}/libs/lib-jitsi-meet.min.js`;
+  document.querySelector('head').appendChild(script);
+  script.onload = async () => {
+    console.log('=============> lib-jitsi-meet Loaded <=============');
+    JitsiMeetJS.init();
+    const configScript = document.createElement('script');
+    configScript.src = `https://${domain}/config.js`;
+    document.querySelector('head').appendChild(configScript);
+    configScript.onload = async () => {
+      console.log('=============> jitsi config Loaded <=============');
+      config.serviceUrl = config.websocket || config.bosh;
+      config.serviceUrl += `?room=${room}`;
+      const connection = new JitsiMeetJS.JitsiConnection(
+        null,
+        undefined,
+        config
+      );
+      connection.addEventListener(
+        JitsiMeetJS.events.connection.CONNECTION_ESTABLISHED,
+        async () => {
+          console.log('=============> CONNECTION ESTABLISHED <=============');
+          const conference = connection.initJitsiConference(room, {});
+          await conference.join();
+          console.log('=============> CONFERENCE JOINED <=============');
+          const localTracks = await JitsiMeetJS.createLocalTracks(
+            { devices: ['video', 'audio'], facingMode: 'user' },
+            true
+          );
+          console.log(
+            '=============> Video & Audio Tracks Created <============='
+          );
+          const localVideoTrack = localTracks.find(
+            (track) => track.getType() === 'video'
+          );
+          const localAudioTrack = localTracks.find(
+            (track) => track.getType() === 'audio'
+          );
+          conference.addTrack(localVideoTrack);
+          conference.addTrack(localAudioTrack);
+          console.log(
+            '=============> Video & Audio Tracks Connected <============='
+          );
+          resolve({ conference, localVideoTrack });
+        }
+      );
+      await connection.connect();
     };
-  });
+  };
+});
 
 // JITSI STANDUP CUSTOM HOOK
 const useTracks = () => {
@@ -142,7 +141,7 @@ const App = () => {
   };
 
   const toggleMute = (trackType) => {
-    const [localTrack] = conference.getLocalTracks().filter((track) =>track.getType() === trackType);
+    const [localTrack] = conference.getLocalTracks().filter((track) => track.getType() === trackType);
     if (localTrack.isMuted()) {
       localTrack.unmute();
     } else {
@@ -167,10 +166,10 @@ const App = () => {
           <Controls toggleMute={toggleMute} />
         </div>
       ) : (
-        <form onSubmit={(e) => onSubmit(e)}>
-          <button type="submit">Connect to this Conference!</button>
-        </form>
-      )}
+          <form onSubmit={(e) => onSubmit(e)}>
+            <button type="submit">Connect to this Conference!</button>
+          </form>
+        )}
     </div>
   );
 };
