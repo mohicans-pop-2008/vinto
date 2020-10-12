@@ -120,22 +120,16 @@ const App = () => {
   );
 
   useEffect(() => {
-    if (!conference) return;
-    const alterTrack = (track) => {
-      if (track.isMuted()) {
-        removeTrack(track);
-      } else {
-        addTrack(track);
-      }
-    };
-    conference.on(JitsiMeetJS.events.conference.TRACK_ADDED, addTrack);
-    conference.on(JitsiMeetJS.events.conference.TRACK_REMOVED, removeTrack);
-    conference.on(JitsiMeetJS.events.conference.TRACK_MUTE_CHANGED, alterTrack);
-  }, [addTrack, conference, removeTrack]);
+    dispatch(engagementScoreChangeDetected(videoTracks));
+  }, []);
 
   useEffect(() => {
-    dispatch(engagementScoreChangeDetected(videoTracks));
-  }, [videoTracks]);
+    if (!conference) return;
+
+    conference.on(JitsiMeetJS.events.conference.TRACK_ADDED, addTrack);
+    conference.on(JitsiMeetJS.events.conference.TRACK_REMOVED, removeTrack);
+    conference.on(JitsiMeetJS.events.conference.TRACK_MUTE_CHANGED, () => dispatch(engagementScoreChangeDetected(videoTracks)));
+  }, [addTrack, conference, removeTrack, videoTracks, dispatch]);
 
   const onSubmit = async (event) => {
     event.preventDefault();

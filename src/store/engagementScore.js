@@ -31,8 +31,9 @@ export default function (state = defaultScore, action) {
   let newScore;
   switch (action.type) {
     case ENGAGEMENT_SCORE_CHANGED:
+      console.log(action.videoTracks.length);
       newScore = action.videoTracks.length > 0
-        ? (action.videoTracks.filter((track) => track.track.muted === false)
+        ? (action.videoTracks.filter((track) => track.isMuted() === false)
           .length
               / action.videoTracks.length)
             * 10
