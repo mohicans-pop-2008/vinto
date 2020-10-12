@@ -105,7 +105,7 @@ const App = () => {
   const addTrack = useCallback(
     (track) => {
       if (track.getType() === 'video') addVideoTrack(track);
-      if (track.getType() === 'audio') addAudioTrack(track);
+      if (track.getType() === 'audio' && track.isLocal() === false) addAudioTrack(track);
     },
     [addVideoTrack, addAudioTrack]
   );
