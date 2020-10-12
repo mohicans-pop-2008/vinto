@@ -56,11 +56,11 @@ Before Monday code review we want:
 - [x] A user can join a jitsi conference through Vinto.
 - [x] Another user could join the same conference through Vinto.
 - [x] Users can see other users in the same conference rendered in Vinto.
-- [ ] Users can shut off their own video.
+- [x] Users can shut off their own video.
 
 #### Audio
 - see Video
-- [ ] Users can mute themselves within Vinto. (use Track.mute in lib-jitsi-api)
+- [x] Users can mute themselves within Vinto and no one else can hear them. (use Track.mute in lib-jitsi-api)
 
 #### Screen
 - [ ] A user should be able to toggle share screen mode in Vinto.
@@ -74,6 +74,45 @@ Before Monday code review we want:
 - [ ] (OPTIONAL: All users should be able to see an icon with number of raised hands when hands our raised.)
 
 ### Milestone 2 : Beta : DUE 10/16/2020
+
+#### State
+- [ ] There should be a single conference.
+- [ ] We should be able to tell how many people are in a conference.
+- [ ] Should have every single video track in a given conference, number of participants.
+- [ ] Should have every single audio track EXCEPT for the local audio track, i.e. number of participants - 1.
+
+#### Video
+- [ ] When shutting off video, the user cell should go black, and every user should see this same view.
+  - [ ] When shutting off video, some other users see - we do not want any of these inconsistencies:
+    - [ ] frozen video feed
+    - [ ] blank white cell
+    - [ ] cell disappears
+- [ ] When turning video back on, every user should then see live video feed.
+
+#### Audio
+- [ ] When all 3 people were in the conference, some users saw 3 audio tracks in their local state, when they expected to have only 2.
+- [ ] Why is Tanveer's audio so bad coming through Jitsi?
+- [ ] Audio quality should be decent most of the time.
+
+#### Preparation for Beta : DUE 10/14/2020
+- [ ] What do we actually want users to test?
+
+#### Deploy
+- [ ] Build for deployment.
+- [ ] Get it running on Heroku.
+- [ ] How to deploy a Neutrino-based application?
+- [ ] Set up CI and continuous deployment.
+
+#### Layout
+- [ ] The application should exist within its own window.
+- [ ] Buttons should remain in fixed positions as long as my viewport is constant.
+
+#### Real-time Feedback
+- [ ] Create a socket to make it possible for the below feedback features to work.
+- [ ] Engagement score should always reflect the number of videos turned on divided by total video cells.
+- [ ] All users should be able to see the number of hands raised.
+- [ ] All users should be able to see when claps, and other reactions occur.
+- [ ] Presenters should be able to see who has raised their hands and in what order.
 
 ### Milestone 3 : Code Review : DUE 10/19/2020
 
