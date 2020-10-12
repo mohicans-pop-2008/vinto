@@ -113,35 +113,6 @@ const App = () => {
     [removeAudioTrack, removeVideoTrack],
   );
 
-  // MINE
-  // Add tracks
-  // const addVideo = useCallback((video) => {
-  //   setVideos([...videos, video]);
-  // }, [videos, setVideos]);
-
-  // const addAudio = useCallback((audio) => {
-  //   setAudios([...audios, audio]);
-  // }, [audios, setAudios]);
-
-  // const addTrack = useCallback((track) => {
-  //   if (track.getType() === 'video') addVideo(track);
-  //   if (track.getType() === 'audio') addAudio(track);
-  // }, [addVideo, addAudio]);
-
-  // Remove tracks
-  // const removeVideo = useCallback((video) => {
-  //   setVideos(videos.filter((track) => track.getId() !== video.getId()));
-  // }, [videos, setVideos]);
-
-  // const removeAudio = useCallback((audio) => {
-  //   setAudios(audios.filter((track) => track.getId() !== audio.getId()));
-  // }, [audios, setAudios]);
-
-  // const removeTrack = useCallback((track) => {
-  //   if (track.getType() === 'video') removeVideo(track);
-  //   if (track.getType() === 'audio') removeAudio(track);
-  // }, [removeVideo, removeAudio]);
-
   useEffect(() => {
     if (!conference) return;
 
