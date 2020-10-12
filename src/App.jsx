@@ -166,10 +166,10 @@ const App = () => {
           <Controls toggleMute={toggleMute} />
         </div>
       ) : (
-          <form onSubmit={(e) => onSubmit(e)}>
-            <button type="submit">Connect to this Conference!</button>
-          </form>
-        )}
+        <form onSubmit={(e) => onSubmit(e)}>
+          <button type="submit">Connect to this Conference!</button>
+        </form>
+      )}
     </div>
   );
 };
