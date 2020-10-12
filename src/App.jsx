@@ -120,12 +120,8 @@ const App = () => {
   );
 
   useEffect(() => {
-    dispatch(engagementScoreChangeDetected(videoTracks));
-  }, []);
-
-  useEffect(() => {
     if (!conference) return;
-
+    dispatch(engagementScoreChangeDetected(videoTracks));
     conference.on(JitsiMeetJS.events.conference.TRACK_ADDED, addTrack);
     conference.on(JitsiMeetJS.events.conference.TRACK_REMOVED, removeTrack);
     conference.on(JitsiMeetJS.events.conference.TRACK_MUTE_CHANGED, () => dispatch(engagementScoreChangeDetected(videoTracks)));
@@ -135,7 +131,7 @@ const App = () => {
     event.preventDefault();
     const { conference, localVideoTrack } = await loadAndConnect({
       domain: 'meet.jit.si',
-      room: 'some-default-room',
+      room: 'khu-debug',
     });
     setConference(conference);
     addTrack(localVideoTrack);
