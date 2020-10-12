@@ -116,9 +116,16 @@ const App = () => {
 
   useEffect(() => {
     if (!conference) return;
-
+    const alterTrack = (track) => {
+      if (track.isMuted()) {
+        removeTrack(track);
+      } else {
+        addTrack(track);
+      }
+    };
     conference.on(JitsiMeetJS.events.conference.TRACK_ADDED, addTrack);
     conference.on(JitsiMeetJS.events.conference.TRACK_REMOVED, removeTrack);
+    conference.on(JitsiMeetJS.events.conference.TRACK_MUTE_CHANGED, alterTrack);
   }, [addTrack, conference, removeTrack]);
 
   const onSubmit = async (event) => {
@@ -131,12 +138,13 @@ const App = () => {
     addTrack(localVideoTrack);
   };
 
-  const muteVideo = () => {
-    const localTracks = conference.getLocalTracks();
-    const myVideoTrack = localTracks.filter(
-      (track) => track.getType() === 'video'
-    )[0];
-    myVideoTrack.mute();
+  const toggleMute = (trackType) => {
+    const [localTrack] = conference.getLocalTracks().filter((track) =>track.getType() === trackType);
+    if (localTrack.isMuted()) {
+      localTrack.unmute();
+    } else {
+      localTrack.mute();
+    }
   };
 
   return (
@@ -153,7 +161,7 @@ const App = () => {
             ))}
             <Sidebar />
           </div>
-          <Controls mute={muteVideo} />
+          <Controls toggleMute={toggleMute} />
         </div>
       ) : (
         <form onSubmit={(e) => onSubmit(e)}>
