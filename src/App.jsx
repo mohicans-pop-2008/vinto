@@ -150,7 +150,7 @@ const App = () => {
   return (
     <div className="App">
       <h1>{message}</h1>
-      {videoTracks.length ? (
+      {conference ? (
         <div>
           <div>
             {videoTracks.map((video) => (
