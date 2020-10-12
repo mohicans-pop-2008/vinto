@@ -53,13 +53,9 @@ We are able to start meetings on meet.jit.si servers from an app on our local co
 Before Monday code review we want:
 
 #### Video
-- [ ] A user can join a jitsi conference through Vinto.
-- [ ] Another user could join the same conference through Vinto.
-  - [ ] `[modules/connectivity/ParticipantConnectionStatus.js] <g.onTrackRtcMuted>:  No participant for id: 62c19bbc`
-  - [ ] `2020-10-12T10:28:52.260Z [modules/RTC/BridgeChannel.js] <l._send>:  Bridge Channel send: no opened channel.` Occurs periodically throughout conference, typically two at a time, with the below warning in between.
-  - [ ] warning `2020-10-12T10:30:08.236Z [JitsiConference.js] <u.sendMessage>:  Failed to send E2E ping request or response. undefined`
-  - [ ] `GET http://localhost:5000/sockjs-node/info?t=1602498782547 net::ERR_CONNECTION_REFUSED`
-- [ ] Users can see other users in the same conference rendered in Vinto.
+- [x] A user can join a jitsi conference through Vinto.
+- [x] Another user could join the same conference through Vinto.
+- [x] Users can see other users in the same conference rendered in Vinto.
 - [ ] Users can shut off their own video.
 
 #### Audio
@@ -72,36 +68,10 @@ Before Monday code review we want:
 
 #### Feedback
 - [ ] The presenter should be able to see an icon (i.e. Engagement score) that reflects number of audience member cameras on.
+  - [ ] Vinto counts the number of users there are.
+  - [ ] Vinto counts the number of cameras are on.
 - [ ] (OPTIONAL: A user should be able to raise AND lower their hand.)
 - [ ] (OPTIONAL: All users should be able to see an icon with number of raised hands when hands our raised.)
-
-#### Task Breakdown
-
-*Components*
-
-- [ ] Audio track component
-- [ ] UI Container
-  - [ ] Main content window
-    - [ ] Video window gallery mode
-    - [ ] Screen share window
-  - [ ] Meeting controls bottom bar
-    - [ ] Screen share button
-    - [ ] Mute/Unmute button
-    - [ ] Video On/Off button
-    - [ ] Raise/lower hand button
-  - [ ] Icons side bar
-    - [ ] Engagement score icon
-    - [ ] Hands raised icon
-
-*State*
-
-- [ ] Use boilermaker scaffolding
-- [ ] Hand raise behavior
-- [ ] Hand raise counter
-- [ ] Video Mute behavior
-- [ ] Audio Mute behavior
-- [ ] Screen share and gallery mode toggle
-- [ ] Engagement score counter
 
 ### Milestone 2 : Beta : DUE 10/16/2020
 
