@@ -2,8 +2,12 @@
 import './App.css';
 import { hot } from 'react-hot-loader';
 import React, { useEffect, useState, useCallback } from 'react';
+import { useDispatch } from 'react-redux';
 import $ from 'jquery';
-import { Video, Audio, Controls, Sidebar } from './components';
+import { engagementScoreChangeDetected } from './store';
+import {
+  Video, Audio, Controls, Sidebar,
+} from './components';
 
 window.$ = $;
 
@@ -97,6 +101,7 @@ const App = () => {
   const [conference, setConference] = useState(null);
   const [videoTracks, addVideoTrack, removeVideoTrack] = useTracks();
   const [audioTracks, addAudioTrack, removeAudioTrack] = useTracks();
+  const dispatch = useDispatch();
 
   const addTrack = useCallback(
     (track) => {
@@ -127,6 +132,10 @@ const App = () => {
     conference.on(JitsiMeetJS.events.conference.TRACK_REMOVED, removeTrack);
     conference.on(JitsiMeetJS.events.conference.TRACK_MUTE_CHANGED, alterTrack);
   }, [addTrack, conference, removeTrack]);
+
+  useEffect(() => {
+    dispatch(engagementScoreChangeDetected(videoTracks));
+  }, [videoTracks]);
 
   const onSubmit = async (event) => {
     event.preventDefault();
