@@ -6,7 +6,7 @@ import RaiseHand from './raiseHand';
 const Controls = (props) => (
   <div>
     <ScreenShare />
-    <Mute />
+    <Mute mute={props.mute} />
     <Mute />
     <RaiseHand />
   </div>
