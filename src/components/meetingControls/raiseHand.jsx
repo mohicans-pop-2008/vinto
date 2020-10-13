@@ -1,7 +1,7 @@
 import React from 'react';
 
-const RaiseHand = (props) => (
-  <button>
+const RaiseHand = () => (
+  <button type="button">
     RaiseHand Button
   </button>
 );

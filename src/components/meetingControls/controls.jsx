@@ -3,11 +3,11 @@ import ScreenShare from './screenShare';
 import Mute from './mute';
 import RaiseHand from './raiseHand';
 
-const Controls = (props) => (
+const Controls = ({ toggleMute }) => (
   <div>
     <ScreenShare />
-    <Mute toggleMute={props.toggleMute} trackType="video" />
-    <Mute toggleMute={props.toggleMute} trackType="audio" />
+    <Mute toggleMute={toggleMute} trackType="video" />
+    <Mute toggleMute={toggleMute} trackType="audio" />
     <RaiseHand />
   </div>
 );
