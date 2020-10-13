@@ -127,7 +127,8 @@ const App = () => {
 
     conference.on(JitsiMeetJS.events.conference.TRACK_ADDED, addTrack);
     conference.on(JitsiMeetJS.events.conference.TRACK_REMOVED, removeTrack);
-    conference.on(JitsiMeetJS.events.conference.TRACK_MUTE_CHANGED, () => dispatch(engagementScoreChangeDetected(videoTracks)));
+    conference.on(JitsiMeetJS.events.conference.TRACK_MUTE_CHANGED,
+      () => dispatch(engagementScoreChangeDetected(videoTracks)));
   }, [addTrack, conference, removeTrack, videoTracks, dispatch]);
 
   const onSubmit = async (event) => {
