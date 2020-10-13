@@ -12,6 +12,8 @@ module.exports = {
         rules: {
           "jsx-a11y/media-has-caption": "off",
           "no-console": "off",
+          "no-shadow": "off",
+          "react/prop-types": "off",
         },
       },
     }),
