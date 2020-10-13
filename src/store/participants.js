@@ -8,7 +8,7 @@ const PARTICIPANTS_CHANGED = 'participants/changed';
  *
  * a full score is 10
  */
-const defaultParticipants = 1;
+const defaultParticipants = [];
 
 /**
  * ACTION CREATORS
@@ -24,7 +24,7 @@ export const numberOfParticipantsChanged = (videoTracks) => ({
  */
 const reducer = (state = defaultParticipants, action) => {
   switch (action.type) {
-    case PARTICIPANTS_CHANGED:
+    case ENGAGEMENT_SCORE_CHANGED:
       return action.videoTracks.length;
     default:
       return state;

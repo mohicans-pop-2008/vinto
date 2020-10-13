@@ -3,8 +3,8 @@ import './App.css';
 import { hot } from 'react-hot-loader';
 import React, { useEffect, useState, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
-import $ from 'jquery';
 import { engagementScoreChangeDetected } from './store';
+import $ from 'jquery';
 import {
   Video, Audio, Controls, Sidebar,
 } from './components';
@@ -28,7 +28,7 @@ const loadAndConnect = ({ domain, room }) => new Promise((resolve) => {
       const connection = new JitsiMeetJS.JitsiConnection(
         null,
         undefined,
-        config
+        config,
       );
       connection.addEventListener(
         JitsiMeetJS.events.connection.CONNECTION_ESTABLISHED,
@@ -39,16 +39,16 @@ const loadAndConnect = ({ domain, room }) => new Promise((resolve) => {
           console.log('=============> CONFERENCE JOINED <=============');
           const localTracks = await JitsiMeetJS.createLocalTracks(
             { devices: ['video', 'audio'], facingMode: 'user' },
-            true
+            true,
           );
           console.log(
-            '=============> Video & Audio Tracks Created <============='
+            '=============> Video & Audio Tracks Created <=============',
           );
           const localVideoTrack = localTracks.find(
-            (track) => track.getType() === 'video'
+            (track) => track.getType() === 'video',
           );
           const localAudioTrack = localTracks.find(
-            (track) => track.getType() === 'audio'
+            (track) => track.getType() === 'audio',
           );
           conference.addTrack(localVideoTrack);
           conference.addTrack(localAudioTrack);
@@ -65,13 +65,14 @@ const loadAndConnect = ({ domain, room }) => new Promise((resolve) => {
 
 // JITSI STANDUP CUSTOM HOOK
 const useTracks = () => {
+  console.log('==========> useTracks was called <==========')
   const [tracks, setTracks] = useState([]);
 
   const addTrack = useCallback(
     (track) => {
       setTracks((tracks) => {
         const hasTrack = tracks.find(
-          (_track) => track.getId() === _track.getId()
+          (_track) => track.getId() === _track.getId(),
         );
 
         if (hasTrack) return tracks;
@@ -79,16 +80,14 @@ const useTracks = () => {
         return [...tracks, track];
       });
     },
-    [setTracks]
+    [setTracks],
   );
 
   const removeTrack = useCallback(
     (track) => {
-      setTracks((tracks) =>
-        tracks.filter((_track) => track.getId() !== _track.getId())
-      );
+      setTracks((tracks) => tracks.filter((_track) => track.getId() !== _track.getId()));
     },
-    [setTracks]
+    [setTracks],
   );
 
   return [tracks, addTrack, removeTrack];
@@ -107,7 +106,7 @@ const App = () => {
       if (track.getType() === 'video') addVideoTrack(track);
       if (track.getType() === 'audio' && track.isLocal() === false) addAudioTrack(track);
     },
-    [addVideoTrack, addAudioTrack]
+    [addVideoTrack, addAudioTrack],
   );
 
   const removeTrack = useCallback(
@@ -115,7 +114,7 @@ const App = () => {
       if (track.getType() === 'video') removeVideoTrack(track);
       if (track.getType() === 'audio') removeAudioTrack(track);
     },
-    [removeAudioTrack, removeVideoTrack]
+    [removeAudioTrack, removeVideoTrack],
   );
 
   useEffect(() => {
@@ -142,7 +141,13 @@ const App = () => {
   };
 
   const toggleMute = (trackType) => {
+<<<<<<< HEAD
     const [localTrack] = conference.getLocalTracks().filter((track) => track.getType() === trackType);
+=======
+    const [localTrack] = conference
+      .getLocalTracks()
+      .filter((track) => track.getType() === trackType);
+>>>>>>> e5eedf5... fmt: minor import statement swap
     if (localTrack.isMuted()) {
       localTrack.unmute();
     } else {
