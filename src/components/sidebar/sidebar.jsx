@@ -2,7 +2,7 @@ import React from 'react';
 import Engagement from './engagement';
 import Hands from './hands';
 
-const Sidebar = (props) => (
+const Sidebar = () => (
   <div>
     <Engagement />
     <Hands />

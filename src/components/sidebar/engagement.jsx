@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 const Engagement = () => {
   const engagementScore = useSelector((state) => state.engagementScore);
   return (
-    <button>
+    <button type="button">
       Engagement Score:
       {' '}
       {engagementScore}
