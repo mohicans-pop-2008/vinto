@@ -7,10 +7,15 @@
     "node": "12.x"
   },
   "scripts": {
+<<<<<<< HEAD
     "test": "mocha",
     "start": "NODE_ENV='development' webpack -w & NODE_ENV='development' npm run start-server",
     "start-server": "nodemon server -e js --ignore public --ignore client",
     "start-prod": "http-server ./build -p 5000",
+=======
+    "test": "mocha -r chai/register-expect",
+    "start": "webpack-dev-server --mode development --open",
+>>>>>>> 116b156... test: wire up chai assertion library
     "build": "webpack --mode production",
     "lint": "eslint --cache --format codeframe --ext mjs,jsx,js src test"
   },
@@ -44,9 +49,13 @@
     "@neutrinojs/airbnb": "^9.4.0",
     "@neutrinojs/mocha": "^9.4.0",
     "@neutrinojs/react": "^9.4.0",
+<<<<<<< HEAD
     "babel-eslint": "10.0.1",
     "babel-loader": "8.0.4",
     "core-js": "2.5.1",
+=======
+    "chai": "^4.2.0",
+>>>>>>> 116b156... test: wire up chai assertion library
     "eslint": "^7.10.0",
     "eslint-plugin-flowtype": "2.50.3",
     "eslint-plugin-import": "2.20.2",
