@@ -1,7 +1,7 @@
 import React from 'react';
 
 const Video = ({ track }) => {
-  console.log(`=====> Video track is Muted: ${track.isMuted()} <=====`);
+  console.log(`=====> Video track ${track.getId()} is Muted: ${track.isMuted()} <=====`);
   return (
     <div>
       {track.isMuted() ? (

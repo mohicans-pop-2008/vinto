@@ -3,8 +3,8 @@ import './App.css';
 import { hot } from 'react-hot-loader';
 import React, { useEffect, useState, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
-import { engagementScoreChangeDetected } from './store';
 import $ from 'jquery';
+import { engagementScoreChangeDetected } from './store';
 import {
   Video, Audio, Controls, Sidebar,
 } from './components';
@@ -53,10 +53,10 @@ const loadAndConnect = ({ domain, room }) => new Promise((resolve) => {
           conference.addTrack(localVideoTrack);
           conference.addTrack(localAudioTrack);
           console.log(
-            '=============> Video & Audio Tracks Connected <============='
+            '=============> Video & Audio Tracks Connected <=============',
           );
           resolve({ conference, localVideoTrack });
-        }
+        },
       );
       await connection.connect();
     };
@@ -65,7 +65,7 @@ const loadAndConnect = ({ domain, room }) => new Promise((resolve) => {
 
 // JITSI STANDUP CUSTOM HOOK
 const useTracks = () => {
-  console.log('==========> useTracks was called <==========')
+  console.log('==========> useTracks was called <==========');
   const [tracks, setTracks] = useState([]);
 
   const addTrack = useCallback(
@@ -90,25 +90,44 @@ const useTracks = () => {
     [setTracks],
   );
 
-  return [tracks, addTrack, removeTrack];
+  const updateTrack = useCallback((updatedTrack) => {
+    console.log('==========> Updated Track Here <==========');
+    console.log(updatedTrack);
+    console.dir(updatedTrack);
+    setTracks((tracks) => tracks.map((_track) => {
+      if (updatedTrack.getId() === _track.getId()) return updatedTrack;
+      return _track;
+    }));
+  });
+  return [tracks, addTrack, removeTrack, updateTrack];
 };
 
 const useMuteEvents = (videoTracks, dispatch) => {
-  console.log("=====> useMuteEvents <=====")
-  let isMutedArr = videoTracks.map((track) => track.isMuted())
-  console.log('isMutedArr before useTracks ===>', isMutedArr)
+  console.log('=====> useMuteEvents <=====');
+  let isMutedArr = videoTracks.map((track) => track.isMuted());
+  console.log('isMutedArr before useTracks ===>', isMutedArr);
   // [videoTracks, addVideoTrack, removeVideoTrack] = useTracks();
-  isMutedArr = videoTracks.map((track) => track.isMuted())
-  console.log('isMutedArr after useTracks ===>', isMutedArr)
-  dispatch(engagementScoreChangeDetected(videoTracks))
-}
+  isMutedArr = videoTracks.map((track) => track.isMuted());
+  console.log('isMutedArr after useTracks ===>', isMutedArr);
+  dispatch(engagementScoreChangeDetected(videoTracks));
+};
 
 const message = 'Welcome to vinto';
 
 const App = () => {
   const [conference, setConference] = useState(null);
-  const [videoTracks, addVideoTrack, removeVideoTrack] = useTracks();
-  const [audioTracks, addAudioTrack, removeAudioTrack] = useTracks();
+  const [
+    videoTracks,
+    addVideoTrack,
+    removeVideoTrack,
+    updateVideoTrack,
+  ] = useTracks();
+  const [
+    audioTracks,
+    addAudioTrack,
+    removeAudioTrack,
+    unusedUpdateFunc,
+  ] = useTracks();
   const dispatch = useDispatch();
 
   const addTrack = useCallback(
@@ -127,12 +146,20 @@ const App = () => {
     [removeAudioTrack, removeVideoTrack],
   );
 
+  const updateTrack = useCallback((track) => {
+    if (track.getType() === 'video') updateVideoTrack(track);
+  });
+
   useEffect(() => {
     if (!conference) return;
 
     conference.on(JitsiMeetJS.events.conference.TRACK_ADDED, addTrack);
     conference.on(JitsiMeetJS.events.conference.TRACK_REMOVED, removeTrack);
-    conference.on(JitsiMeetJS.events.conference.TRACK_MUTE_CHANGED, () => useMuteEvents(videoTracks, dispatch));
+    conference.on(
+      JitsiMeetJS.events.conference.TRACK_MUTE_CHANGED,
+      updateTrack,
+      () => dispatch(engagementScoreChangeDetected(videoTracks)),
+    );
   }, [addTrack, conference, removeTrack, videoTracks]);
 
   const onSubmit = async (event) => {

@@ -1,4 +1,4 @@
-import ENGAGEMENT_SCORE_CHANGED from './';
+import ENGAGEMENT_SCORE_CHANGED from '.';
 /**
  * ACTION TYPES
  */
@@ -9,7 +9,7 @@ const PARTICIPANTS_CHANGED = 'participants/changed';
  *
  * a full score is 10
  */
-const defaultParticipants = [];
+const defaultParticipants = [{0: false}];
 
 /**
  * ACTION CREATORS
