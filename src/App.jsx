@@ -3,6 +3,7 @@ import './App.css';
 import { hot } from 'react-hot-loader';
 import React, { useEffect, useState, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
+import JitsiMeetJS from 'lib-jitsi-meet';
 import $ from 'jquery';
 import { engagementScoreChangeDetected } from './store';
 import {
