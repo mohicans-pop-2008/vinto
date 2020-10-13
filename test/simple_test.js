@@ -1,7 +1,8 @@
-import assert from 'assert';
-
+/* global expect */
 describe('simple', () => {
   it('should be sane', () => {
-    assert.equal(true, !false);
+    expect(true).to.equal(!false);
   });
 });
+
+describe('videoTracks state');
