@@ -93,6 +93,16 @@ const useTracks = () => {
   return [tracks, addTrack, removeTrack];
 };
 
+const useMuteEvents = (videoTracks, dispatch) => {
+  console.log("=====> useMuteEvents <=====")
+  let isMutedArr = videoTracks.map((track) => track.isMuted())
+  console.log('isMutedArr before useTracks ===>', isMutedArr)
+  // [videoTracks, addVideoTrack, removeVideoTrack] = useTracks();
+  isMutedArr = videoTracks.map((track) => track.isMuted())
+  console.log('isMutedArr after useTracks ===>', isMutedArr)
+  dispatch(engagementScoreChangeDetected(videoTracks))
+}
+
 const message = 'Welcome to vinto';
 
 const App = () => {
@@ -118,17 +128,12 @@ const App = () => {
   );
 
   useEffect(() => {
-    dispatch(engagementScoreChangeDetected(videoTracks));
-  }, []);
-
-  useEffect(() => {
     if (!conference) return;
 
     conference.on(JitsiMeetJS.events.conference.TRACK_ADDED, addTrack);
     conference.on(JitsiMeetJS.events.conference.TRACK_REMOVED, removeTrack);
-    conference.on(JitsiMeetJS.events.conference.TRACK_MUTE_CHANGED,
-      () => dispatch(engagementScoreChangeDetected(videoTracks)));
-  }, [addTrack, conference, removeTrack, videoTracks, dispatch]);
+    conference.on(JitsiMeetJS.events.conference.TRACK_MUTE_CHANGED, () => useMuteEvents(videoTracks, dispatch));
+  }, [addTrack, conference, removeTrack, videoTracks]);
 
   const onSubmit = async (event) => {
     event.preventDefault();
@@ -141,13 +146,9 @@ const App = () => {
   };
 
   const toggleMute = (trackType) => {
-<<<<<<< HEAD
-    const [localTrack] = conference.getLocalTracks().filter((track) => track.getType() === trackType);
-=======
     const [localTrack] = conference
       .getLocalTracks()
       .filter((track) => track.getType() === trackType);
->>>>>>> e5eedf5... fmt: minor import statement swap
     if (localTrack.isMuted()) {
       localTrack.unmute();
     } else {
