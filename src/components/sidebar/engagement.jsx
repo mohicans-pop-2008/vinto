@@ -5,7 +5,9 @@ const Engagement = () => {
   const engagementScore = useSelector((state) => state.engagementScore);
   return (
     <button>
-      Engagement Score: {engagementScore}
+      Engagement Score:
+      {' '}
+      {engagementScore}
     </button>
   );
 };
