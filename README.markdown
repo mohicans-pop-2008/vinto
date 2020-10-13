@@ -76,21 +76,21 @@ Before Monday code review we want:
 ### Milestone 2 : Beta : DUE 10/16/2020
 
 #### State
-- [ ] There should be a single conference.
+- [x] There should be a single conference.
 - [ ] We should be able to tell how many people are in a conference.
-- [ ] Should have every single video track in a given conference, number of participants.
-- [ ] Should have every single audio track EXCEPT for the local audio track, i.e. number of participants - 1.
+- [x] Should have every single video track in a given conference, number of participants.
+- [x] Should have every single audio track EXCEPT for the local audio track, i.e. number of participants - 1.
 
 #### Video
 - [ ] When shutting off video, the user cell should go black, and every user should see this same view.
   - [ ] When shutting off video, some other users see - we do not want any of these inconsistencies:
-    - [ ] frozen video feed
-    - [ ] blank white cell
-    - [ ] cell disappears
-- [ ] When turning video back on, every user should then see live video feed.
+    - [x] frozen video feed
+    - [x] blank white cell
+    - [x] cell disappears
+- [x] When turning video back on, every user should then see live video feed.
 
 #### Audio
-- [ ] When all 3 people were in the conference, some users saw 3 audio tracks in their local state, when they expected to have only 2.
+- [x] When all 3 people were in the conference, some users saw 3 audio tracks in their local state, when they expected to have only 2.
 - [ ] Why is Tanveer's audio so bad coming through Jitsi?
 - [ ] Audio quality should be decent most of the time.
 
