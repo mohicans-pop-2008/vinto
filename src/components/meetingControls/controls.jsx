@@ -8,8 +8,8 @@ const Controls = (props) => {
   return (
     <div>
       <ScreenShare />
-      <Mute toggleMute={toggleMute} trackType='video' />
-      <Mute toggleMute={toggleMute} trackType='audio' />
+      <Mute toggleMute={toggleMute} trackType="video" />
+      <Mute toggleMute={toggleMute} trackType="audio" />
       <RaiseHand uniqueID={uniqueID} />
     </div>
   );
