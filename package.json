@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha",
+    "test": "mocha -r chai/register-expect",
     "start": "webpack-dev-server --mode development --open",
     "build": "webpack --mode production",
     "lint": "eslint --cache --format codeframe --ext mjs,jsx,js src test"
@@ -26,6 +26,7 @@
     "@neutrinojs/airbnb": "^9.4.0",
     "@neutrinojs/mocha": "^9.4.0",
     "@neutrinojs/react": "^9.4.0",
+    "chai": "^4.2.0",
     "eslint": "^7.10.0",
     "mocha": "^8.1.3",
     "neutrino": "^9.4.0",
