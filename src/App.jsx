@@ -5,6 +5,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import JitsiMeetJS from 'lib-jitsi-meet';
 import $ from 'jquery';
+import config from '../utils/jitsi.config';
 import { engagementScoreChangeDetected } from './store';
 import {
   Video, Audio, Controls, Sidebar,
@@ -12,56 +13,40 @@ import {
 
 window.$ = $;
 
-const loadAndConnect = ({ domain, room }) => new Promise((resolve) => {
-  const script = document.createElement('script');
-  script.src = `https://${domain}/libs/lib-jitsi-meet.min.js`;
-  document.querySelector('head').appendChild(script);
-  script.onload = async () => {
-    console.log('=============> lib-jitsi-meet Loaded <=============');
-    JitsiMeetJS.init();
-    const configScript = document.createElement('script');
-    configScript.src = `https://${domain}/config.js`;
-    document.querySelector('head').appendChild(configScript);
-    configScript.onload = async () => {
-      console.log('=============> jitsi config Loaded <=============');
-      config.serviceUrl = config.websocket || config.bosh;
-      config.serviceUrl += `?room=${room}`;
-      const connection = new JitsiMeetJS.JitsiConnection(
-        null,
-        undefined,
-        config,
+const loadAndConnect = ({ room }) => new Promise(async (resolve) => {
+  JitsiMeetJS.init();
+  config.serviceUrl = config.websocket || config.bosh;
+  config.serviceUrl += `?room=${room}`;
+  const connection = new JitsiMeetJS.JitsiConnection(null, undefined, config);
+  await connection.connect();
+  connection.addEventListener(
+    JitsiMeetJS.events.connection.CONNECTION_ESTABLISHED,
+    async () => {
+      console.log('=============> CONNECTION ESTABLISHED <=============');
+      const conference = connection.initJitsiConference(room, {});
+      await conference.join();
+      console.log('=============> CONFERENCE JOINED <=============');
+      const localTracks = await JitsiMeetJS.createLocalTracks(
+        { devices: ['video', 'audio'], facingMode: 'user' },
+        true,
       );
-      connection.addEventListener(
-        JitsiMeetJS.events.connection.CONNECTION_ESTABLISHED,
-        async () => {
-          console.log('=============> CONNECTION ESTABLISHED <=============');
-          const conference = connection.initJitsiConference(room, {});
-          await conference.join();
-          console.log('=============> CONFERENCE JOINED <=============');
-          const localTracks = await JitsiMeetJS.createLocalTracks(
-            { devices: ['video', 'audio'], facingMode: 'user' },
-            true,
-          );
-          console.log(
-            '=============> Video & Audio Tracks Created <=============',
-          );
-          const localVideoTrack = localTracks.find(
-            (track) => track.getType() === 'video',
-          );
-          const localAudioTrack = localTracks.find(
-            (track) => track.getType() === 'audio',
-          );
-          conference.addTrack(localVideoTrack);
-          conference.addTrack(localAudioTrack);
-          console.log(
-            '=============> Video & Audio Tracks Connected <=============',
-          );
-          resolve({ conference, localVideoTrack });
-        },
+      console.log(
+        '=============> Video & Audio Tracks Created <=============',
       );
-      await connection.connect();
-    };
-  };
+      const localVideoTrack = localTracks.find(
+        (track) => track.getType() === 'video',
+      );
+      const localAudioTrack = localTracks.find(
+        (track) => track.getType() === 'audio',
+      );
+      conference.addTrack(localVideoTrack);
+      conference.addTrack(localAudioTrack);
+      console.log(
+        '=============> Video & Audio Tracks Connected <=============',
+      );
+      resolve({ conference, localVideoTrack });
+    },
+  );
 });
 
 // JITSI STANDUP CUSTOM HOOK
@@ -166,7 +151,6 @@ const App = () => {
   const onSubmit = async (event) => {
     event.preventDefault();
     const { conference, localVideoTrack } = await loadAndConnect({
-      domain: 'meet.jit.si',
       room: 'some-default-room',
     });
     setConference(conference);
