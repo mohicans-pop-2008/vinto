@@ -10,6 +10,7 @@
   "scripts": {
     "test": "mocha",
     "start": "webpack-dev-server --mode development --open",
+    "start-dev": "webpack-dev-server --mode production --open",
     "build": "webpack --mode production",
     "lint": "eslint --cache --format codeframe --ext mjs,jsx,js src test",
     "heroku-prebuild": "npm install --only=dev",
@@ -20,14 +21,14 @@
   "license": "ISC",
   "dependencies": {
     "jquery": "^3.5.1",
+    "lib-jitsi-meet": "github:jitsi/lib-jitsi-meet#jitsi-meet_5076",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-hot-loader": "^4.13.0",
     "react-redux": "^7.2.1",
     "redux": "^4.0.5",
-    "redux-thunk": "^2.3.0",
-    "lib-jitsi-meet": "github:jitsi/lib-jitsi-meet#jitsi-meet_5076"
+    "redux-thunk": "^2.3.0"
   },
   "devDependencies": {
     "@babel/core": "7.5.5",
