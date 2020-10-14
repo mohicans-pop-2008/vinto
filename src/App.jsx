@@ -5,11 +5,10 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import JitsiMeetJS from 'lib-jitsi-meet';
 import $ from 'jquery';
+import { UIGridLayout } from './uicontainers';
 import config from '../utils/jitsi.config';
 import { engagementScoreChangeDetected } from './store';
-import {
-  Video, Audio, Controls, Sidebar,
-} from './components';
+import { Conference, Controls, Sidebar } from './components';
 
 window.$ = $;
 
@@ -169,27 +168,26 @@ const App = () => {
   };
 
   return (
-    <div className="App">
-      <h1>{message}</h1>
+    <>
       {conference ? (
-        <div>
+        <UIGridLayout>
+          <Conference videoTracks={videoTracks} audioTracks={audioTracks} />
           <div>
-            {videoTracks.map((video) => (
-              <Video key={video.getId()} track={video} />
-            ))}
-            {audioTracks.map((audio) => (
-              <Audio key={audio.getId()} track={audio} />
-            ))}
             <Sidebar />
           </div>
-          <Controls toggleMute={toggleMute} />
-        </div>
+          <div>
+            <Controls toggleMute={toggleMute} />
+          </div>
+        </UIGridLayout>
       ) : (
-        <form onSubmit={(e) => onSubmit(e)}>
-          <button type="submit">Connect to this Conference!</button>
-        </form>
+        <>
+          <h1>{message}</h1>
+          <form onSubmit={(e) => onSubmit(e)}>
+            <button type="submit">Connect to this Conference!</button>
+          </form>
+        </>
       )}
-    </div>
+    </>
   );
 };
 
