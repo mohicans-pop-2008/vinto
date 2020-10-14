@@ -2,6 +2,7 @@
 
 <details>
   <summary>Quick Links</summary>
+  
 - [Vinto Design Specifications](https://docs.google.com/document/d/10Fm_WHXpDYoZezVVbXlR9CZoDP--0YnIRoQh3BCuYdg/edit?usp=sharing)
   - [Wireframe and Frontend State](https://docs.google.com/presentation/d/1AFjcZvJZWQtv_HhX-1dZmH0AtKYrF7m3alAe72k7LT4/edit?usp=sharing)
   - [Schema and API](https://drive.google.com/file/d/1veoxu8lWvBJcykzOP_nmxFGTidL7ea84/view)
