@@ -1,7 +1,7 @@
 .gridContainer {
   display: grid;
-  grid-template-columns: 600px 100px;
-  grid-template-rows: auto 100px;
+  grid-template-columns: 90% 10%;
+  grid-template-rows: 80% 20%;
   grid-template-areas:
   "content sidebar"
   "meetingControls sidebar"
