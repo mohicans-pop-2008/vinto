@@ -68,6 +68,7 @@ Source: [Mohicans Team Contract and Norms](https://docs.google.com/document/d/1a
 - A jitsi-meet server (currently using meet.jit.si) / self-hosted server also possible.
 - A very specific working version of "lib-jitsi-meet": "github:jitsi/lib-jitsi-meet#15dcc57424cc937290e1963b8eb402c1fcf48ccb".
 
+<img src="https://embed.creately.com/6CjggNvGTBE?token=VgFz8YTVxZms4yYo&type=svg">
 ## Project Status
 
 Also see the [Vinto Project Board](https://github.com/orgs/mohicans-pop-2008/projects/1) to get a sense of what we are actually working on.
