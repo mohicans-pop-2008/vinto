@@ -4,8 +4,12 @@ module.exports = (io) => {
   io.on('connection', (socket) => {
     console.log(socket.id, ' has made a persistent connection to the server!');
 
-    socket.on('hand-raised', (hand) => {
-      socket.broadcast.emit('hand-raised', hand);
+    socket.on('hand/raised', (hand) => {
+      socket.broadcast.emit('hand/raised', hand);
+    });
+
+    socket.on('hand/lowered', (hand) => {
+      socket.broadcast.emit('hand/lowered', hand);
     });
 
     socket.on('disconnect', () => {

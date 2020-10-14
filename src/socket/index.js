@@ -1,5 +1,5 @@
 import io from 'socket.io-client';
-import store from '../store';
+import store, { handRaiseDetected, handLowerDetected } from '../store';
 
 const socket = io(window.location.origin);
 
@@ -7,8 +7,12 @@ socket.on('connect', () => {
   console.log('I am now connected to the server!');
 });
 
-socket.on('hand-raised', (hand) => {
-  store.dispatch(/* some function to dispatch a raised hand */);
+socket.on('hand/raised', (hand) => {
+  store.dispatch(handRaiseDetected(hand));
+});
+
+socket.on('hand/lowered', (hand) => {
+  store.dispatch(handLowerDetected(hand));
 });
 
 export default socket;
