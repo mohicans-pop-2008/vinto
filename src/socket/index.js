@@ -7,7 +7,7 @@ socket.on('connect', () => {
   console.log('I am now connected to the server!');
 });
 
-socket.on('hand-raised', (message) => {
+socket.on('hand-raised', (hand) => {
   store.dispatch(/* some function to dispatch a raised hand */);
 });
 
