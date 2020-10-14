@@ -7,12 +7,12 @@ const RaiseHand = (props) => {
   const [handRaised, setHandRaised] = useState(false);
   const dispatch = useDispatch();
   const onClick = () => {
-    setHandRaised(!handRaised);
     if (handRaised) {
-      dispatch(raiseHand(/*NEEDS ACCESS TO HAND - { name: string, uniqueID: string } */));
+      dispatch(lowerHand({ name: 'Chikara', uniqueID: 'UNIQUEID' }));
     } else {
-      dispatch(lowerHand(/*NEEDS ACCESS TO HAND - { name: string, uniqueID: string } */));
+      dispatch(raiseHand({ name: 'Chikara', uniqueID: 'UNIQUEID' }));
     }
+    setHandRaised(!handRaised);
   };
   return (
     <button type="button" onClick={onClick}>

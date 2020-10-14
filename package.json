@@ -7,7 +7,9 @@
     "test": "mocha",
     "start": "webpack-dev-server --mode development --open",
     "build": "webpack --mode production",
-    "lint": "eslint --cache --format codeframe --ext mjs,jsx,js src test"
+    "lint": "eslint --cache --format codeframe --ext mjs,jsx,js src test",
+    "start-server": "nodemon server -e js --ignore public --ignore client",
+    "start-dev": "NODE_ENV='development' webpack -w & NODE_ENV='development' npm run start-server"
   },
   "keywords": [],
   "author": "",

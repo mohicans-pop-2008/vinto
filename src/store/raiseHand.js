@@ -37,15 +37,17 @@ export const handLowerDetected = (hand) => ({
  */
 export const raiseHand = (hand) => {
   return (dispatch) => {
-    dispatch(handRaiseDetected(hand))
+    console.log('emitting hand raise event')
     socket.emit('hand/raised', hand)
+    dispatch(handRaiseDetected(hand))
   };
 };
 
 export const lowerHand = (hand) => {
   return (dispatch) => {
-    dispatch(handLowerDetected(hand))
+    console.log('emitting hand lower event')
     socket.emit('hand/lowered', hand)
+    dispatch(handLowerDetected(hand))
   };
 };
 

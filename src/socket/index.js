@@ -8,10 +8,12 @@ socket.on('connect', () => {
 });
 
 socket.on('hand/raised', (hand) => {
+  console.log('receiving hand raise event');
   store.dispatch(handRaiseDetected(hand));
 });
 
 socket.on('hand/lowered', (hand) => {
+  console.log('receiving hand lower event');
   store.dispatch(handLowerDetected(hand));
 });
 
