@@ -182,7 +182,7 @@ const App = () => {
             ))}
             <Sidebar />
           </div>
-          <Controls toggleMute={toggleMute} />
+          <Controls toggleMute={toggleMute} uniqueID='some unique ID for now'/>
         </div>
       ) : (
         <form onSubmit={(e) => onSubmit(e)}>
