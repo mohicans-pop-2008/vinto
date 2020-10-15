@@ -8,11 +8,11 @@
   },
   "scripts": {
     "test": "mocha",
+    "start": "NODE_ENV='development' webpack -w & NODE_ENV='development' npm run start-server",
+    "start-server": "nodemon server -e js --ignore public --ignore client",
     "start-prod": "http-server ./build -p 5000",
     "build": "webpack --mode production",
-    "lint": "eslint --cache --format codeframe --ext mjs,jsx,js src test",
-    "start-server": "nodemon server -e js --ignore public --ignore client",
-    "start-dev": "NODE_ENV='development' webpack -w & NODE_ENV='development' npm run start-server"
+    "lint": "eslint --cache --format codeframe --ext mjs,jsx,js src test"
   },
   "keywords": [],
   "author": "",
