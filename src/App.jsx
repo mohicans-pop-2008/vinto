@@ -186,9 +186,9 @@ const App = () => {
         <>
           <h1>{message}</h1>
           <form onSubmit={(e) => onSubmit(e)}>
-            <label>
+            <label for="name">
               Name:
-              <input type="text" name="name" />
+              <input id="name" type="text" name="name" />
             </label>
             <button type="submit">Connect to this Conference!</button>
           </form>
