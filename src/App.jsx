@@ -186,7 +186,7 @@ const App = () => {
         <>
           <h1>{message}</h1>
           <form onSubmit={(e) => onSubmit(e)}>
-            <label for="name">
+            <label htmlFor="name">
               Name:
               <input id="name" type="text" name="name" />
             </label>
