@@ -99,9 +99,9 @@ const useMuteEvents = (videoTracks, dispatch) => {
 
 const message = 'Welcome to vinto';
 
+const uniqueID = Math.floor(Math.random() * 10000);
 const App = () => {
   const [name, setName] = useState('');
-  const uniqueID = Math.floor(Math.random() * 10000);
   const [conference, setConference] = useState(null);
   const [
     videoTracks,
