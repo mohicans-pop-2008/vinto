@@ -28,12 +28,10 @@ export const emojiClicked = (emojiType) => ({
  * THUNKS
  * These will be bound to the emoji/click con
  */
-export const emojiClick = (emojiType) => {
-  return (dispatch) => {
-    console.log('some emoji');
-    socket.emit('emoji/clicked', emojiType);
-    dispatch(emojiClicked(emojiType));
-  };
+export const emojiClick = (emojiType) => (dispatch) => {
+  console.log('some emoji');
+  socket.emit('emoji/clicked', emojiType);
+  dispatch(emojiClicked(emojiType));
 };
 
 /**

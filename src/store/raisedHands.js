@@ -23,32 +23,28 @@ const defaultHands = [];
 export const handRaiseDetected = (hand) => ({
   type: HAND_RAISED,
   name: hand.name,
-  uniqueID: hand.uniqueID
+  uniqueID: hand.uniqueID,
 });
 
 export const handLowerDetected = (hand) => ({
   type: HAND_LOWERED,
-  uniqueID: hand.uniqueID
+  uniqueID: hand.uniqueID,
 });
 
 /**
  * THUNKS
  * These will be bound to the hand raise/lower con
  */
-export const raiseHand = (hand) => {
-  return (dispatch) => {
-    console.log('emitting hand raise event')
-    socket.emit('hand/raised', hand)
-    dispatch(handRaiseDetected(hand))
-  };
+export const raiseHand = (hand) => (dispatch) => {
+  console.log('emitting hand raise event');
+  socket.emit('hand/raised', hand);
+  dispatch(handRaiseDetected(hand));
 };
 
-export const lowerHand = (hand) => {
-  return (dispatch) => {
-    console.log('emitting hand lower event')
-    socket.emit('hand/lowered', hand)
-    dispatch(handLowerDetected(hand))
-  };
+export const lowerHand = (hand) => (dispatch) => {
+  console.log('emitting hand lower event');
+  socket.emit('hand/lowered', hand);
+  dispatch(handLowerDetected(hand));
 };
 
 /**
@@ -64,7 +60,7 @@ let key = 0; // for continuous maintenance of new raised hands
 export default function (state = defaultHands, action) {
   switch (action.type) {
     case HAND_RAISED:
-      const handObj = { key, name: action.name, uniqueID: action.uniqueID }
+      const handObj = { key, name: action.name, uniqueID: action.uniqueID };
       key += 1;
       return [...state, handObj];
     case HAND_LOWERED:
