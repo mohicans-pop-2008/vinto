@@ -5,7 +5,7 @@ const Hands = () => {
   const onClick = () => {
     console.log('==================THIS WILL EVENTUALLY BE REPLACED WITH expanding/collapsing an element to show whos hands are raised!==================');
   };
-  const HandsRaised = useSelector((state) => state.raiseHand);
+  const HandsRaised = useSelector((state) => state.raisedHands);
   return (
     <button type="button" onClick={onClick}>
       {`Number of hands raised: ${HandsRaised.length}`}
