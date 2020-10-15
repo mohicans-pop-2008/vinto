@@ -4,8 +4,7 @@ import Mute from './mute';
 import RaiseHand from './raiseHand';
 import Emoji from './emoji';
 
-const Controls = (props) => {
-  const { name, toggleMute, uniqueID } = props;
+const Controls = ({ name, toggleMute, uniqueID }) => {
   return (
     <div>
       <ScreenShare />

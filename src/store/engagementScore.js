@@ -27,7 +27,8 @@ export const engagementScoreChangeDetected = (videoTracks) => ({
  * - expects engagement score of 10 when all cameras are onload
  * - expects engagement score of 0 when all cameras are off
  */
-export default function (state = defaultScore, action) {
+
+const reducer = (state = defaultScore, action) => {
   let newScore;
   switch (action.type) {
     case ENGAGEMENT_SCORE_CHANGED:
@@ -42,4 +43,6 @@ export default function (state = defaultScore, action) {
     default:
       return state;
   }
-}
+};
+
+export default reducer;

@@ -2,9 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { raiseHand, lowerHand } from '../../store';
 
-const RaiseHand = (props) => {
-  // need to get hand into the props so that it can be passed.
-  const { name, uniqueID } = props;
+const RaiseHand = ({ name, uniqueID }) => {
   const [handRaised, setHandRaised] = useState(false);
   const dispatch = useDispatch();
   const onClick = () => {

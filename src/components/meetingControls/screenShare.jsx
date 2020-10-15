@@ -1,7 +1,7 @@
 import React from 'react';
 
-const ScreenShare = (props) => (
-  <button>
+const ScreenShare = () => (
+  <button type="button">
     ScreenShare Button
   </button>
 );

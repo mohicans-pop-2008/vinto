@@ -1,4 +1,3 @@
-/* global JitsiMeetJS config */
 import './App.css';
 import { hot } from 'react-hot-loader';
 import React, { useEffect, useState, useCallback } from 'react';
@@ -83,18 +82,8 @@ const useTracks = () => {
       if (updatedTrack.getId() === _track.getId()) return updatedTrack;
       return _track;
     }));
-  });
+  }, [setTracks]);
   return [tracks, addTrack, removeTrack, updateTrack];
-};
-
-const useMuteEvents = (videoTracks, dispatch) => {
-  console.log('=====> useMuteEvents <=====');
-  let isMutedArr = videoTracks.map((track) => track.isMuted());
-  console.log('isMutedArr before useTracks ===>', isMutedArr);
-  // [videoTracks, addVideoTrack, removeVideoTrack] = useTracks();
-  isMutedArr = videoTracks.map((track) => track.isMuted());
-  console.log('isMutedArr after useTracks ===>', isMutedArr);
-  dispatch(engagementScoreChangeDetected(videoTracks));
 };
 
 const message = 'Welcome to vinto';
@@ -113,7 +102,6 @@ const App = () => {
     audioTracks,
     addAudioTrack,
     removeAudioTrack,
-    unusedUpdateFunc,
   ] = useTracks();
   const dispatch = useDispatch();
 

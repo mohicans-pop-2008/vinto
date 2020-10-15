@@ -57,10 +57,11 @@ export const lowerHand = (hand) => (dispatch) => {
  * - expects the number to accurately reflect the number of hands raised
  */
 let key = 0; // for continuous maintenance of new raised hands
-export default function (state = defaultHands, action) {
+const reducer = (state = defaultHands, action) => {
+  let handObj;
   switch (action.type) {
     case HAND_RAISED:
-      const handObj = { key, name: action.name, uniqueID: action.uniqueID };
+      handObj = { key, name: action.name, uniqueID: action.uniqueID };
       key += 1;
       return [...state, handObj];
     case HAND_LOWERED:
@@ -68,4 +69,6 @@ export default function (state = defaultHands, action) {
     default:
       return state;
   }
-}
+};
+
+export default reducer;
