@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "mocha",
-    "start": "webpack-dev-server --mode development --open",
+    "start-prod": "http-server ./build -p 5000",
     "build": "webpack --mode production",
     "lint": "eslint --cache --format codeframe --ext mjs,jsx,js src test",
     "start-server": "nodemon server -e js --ignore public --ignore client",
@@ -18,9 +18,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.1",
+    "http-server": "^0.12.3",
     "jquery": "^3.5.1",
-    "lib-jitsi-meet": "github:jitsi/lib-jitsi-meet#15dcc57424cc937290e1963b8eb402c1fcf48ccb",
+    "lib-jitsi-meet": "github:jitsi/lib-jitsi-meet#jitsi-meet_5076",
+    "express": "^4.17.1",
     "morgan": "^1.10.0",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
@@ -30,8 +31,7 @@
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
     "socket.io": "^2.3.0",
-    "socket.io-client": "^2.3.1",
-    "lib-jitsi-meet": "github:jitsi/lib-jitsi-meet#jitsi-meet_5076"
+    "socket.io-client": "^2.3.1"
   },
   "devDependencies": {
     "@babel/core": "7.5.5",
