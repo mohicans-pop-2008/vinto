@@ -1,5 +1,7 @@
 .conference {
   display: flex;
-  flex-wrap: wrap;
+  background: #eee8d5;
+  flex-wrap: nowrap;
   align-items: center;
+  grid-area: conference;
 }
