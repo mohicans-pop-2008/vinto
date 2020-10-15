@@ -8,7 +8,6 @@
   },
   "scripts": {
     "test": "mocha",
-    "start": "DANGEROUSLY_DISABLE_HOST_CHECK=true webpack-dev-server --mode development --open",
     "start-prod": "http-server ./build -p 5000",
     "build": "webpack --mode production",
     "lint": "eslint --cache --format codeframe --ext mjs,jsx,js src test"
