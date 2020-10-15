@@ -101,6 +101,7 @@ const message = 'Welcome to vinto';
 
 const App = () => {
   const [name, setName] = useState('');
+  const uniqueID = Math.floor(Math.random() * 10000);
   const [conference, setConference] = useState(null);
   const [
     videoTracks,
@@ -178,7 +179,7 @@ const App = () => {
             <Sidebar />
           </div>
           <div>
-            <Controls toggleMute={toggleMute} name={name} uniqueID='some unique ID for now'/>
+            <Controls toggleMute={toggleMute} name={name} uniqueID={name + uniqueID} />
           </div>
         </UIGridLayout>
       ) : (
