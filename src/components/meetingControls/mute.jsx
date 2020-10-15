@@ -15,8 +15,8 @@ const Mute = (props) => {
       {trackType === 'video'
         ? (muted ? 'Turn on video' : 'Turn off video')
         : (muted ? 'Unmute mic' : 'Mute mic')}
-    </button >
-  )
-}
+    </button>
+  );
+};
 
 export default Mute;

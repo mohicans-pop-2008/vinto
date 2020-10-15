@@ -10,7 +10,9 @@
     "test": "mocha",
     "start-prod": "http-server ./build -p 5000",
     "build": "webpack --mode production",
-    "lint": "eslint --cache --format codeframe --ext mjs,jsx,js src test"
+    "lint": "eslint --cache --format codeframe --ext mjs,jsx,js src test",
+    "start-server": "nodemon server -e js --ignore public --ignore client",
+    "start-dev": "NODE_ENV='development' webpack -w & NODE_ENV='development' npm run start-server"
   },
   "keywords": [],
   "author": "",
@@ -19,13 +21,17 @@
     "http-server": "^0.12.3",
     "jquery": "^3.5.1",
     "lib-jitsi-meet": "github:jitsi/lib-jitsi-meet#jitsi-meet_5076",
+    "express": "^4.17.1",
+    "morgan": "^1.10.0",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-hot-loader": "^4.13.0",
     "react-redux": "^7.2.1",
     "redux": "^4.0.5",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "socket.io": "^2.3.0",
+    "socket.io-client": "^2.3.1"
   },
   "devDependencies": {
     "@babel/core": "7.5.5",
