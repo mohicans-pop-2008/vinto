@@ -100,6 +100,7 @@ const useMuteEvents = (videoTracks, dispatch) => {
 const message = 'Welcome to vinto';
 
 const App = () => {
+  const [name, setName] = useState('');
   const [conference, setConference] = useState(null);
   const [
     videoTracks,
@@ -149,6 +150,7 @@ const App = () => {
 
   const onSubmit = async (event) => {
     event.preventDefault();
+    setName(event.target.name.value);
     const { conference, localVideoTrack } = await loadAndConnect({
       room: 'some-default-room',
     });
@@ -176,13 +178,17 @@ const App = () => {
             <Sidebar />
           </div>
           <div>
-            <Controls toggleMute={toggleMute} uniqueID='some unique ID for now'/>
+            <Controls toggleMute={toggleMute} name={name} uniqueID='some unique ID for now'/>
           </div>
         </UIGridLayout>
       ) : (
         <>
           <h1>{message}</h1>
           <form onSubmit={(e) => onSubmit(e)}>
+            <label>
+              Name:
+              <input type="text" name="name" />
+            </label>
             <button type="submit">Connect to this Conference!</button>
           </form>
         </>

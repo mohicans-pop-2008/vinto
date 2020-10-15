@@ -4,14 +4,14 @@ import { raiseHand, lowerHand } from '../../store';
 
 const RaiseHand = (props) => {
   // need to get hand into the props so that it can be passed.
-  const { uniqueID } = props;
+  const { name, uniqueID } = props;
   const [handRaised, setHandRaised] = useState(false);
   const dispatch = useDispatch();
   const onClick = () => {
     if (handRaised) {
-      dispatch(lowerHand({ name: 'TODO-NAME', uniqueID }));
+      dispatch(lowerHand({ name, uniqueID }));
     } else {
-      dispatch(raiseHand({ name: 'TODO-NAME', uniqueID }));
+      dispatch(raiseHand({ name, uniqueID }));
     }
     setHandRaised(!handRaised);
   };
