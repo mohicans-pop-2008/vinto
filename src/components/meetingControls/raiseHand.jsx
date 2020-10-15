@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { raiseHand, lowerHand } from '../../store';
 
-const RaiseHand = ({ uniqueID }) => {
+const RaiseHand = ({ name, uniqueID }) => {
   const [handRaised, setHandRaised] = useState(false);
   const dispatch = useDispatch();
   const onClick = () => {
     if (handRaised) {
-      dispatch(lowerHand({ name: 'TODO-NAME', uniqueID }));
+      dispatch(lowerHand({ name, uniqueID }));
     } else {
-      dispatch(raiseHand({ name: 'TODO-NAME', uniqueID }));
+      dispatch(raiseHand({ name, uniqueID }));
     }
     setHandRaised(!handRaised);
   };

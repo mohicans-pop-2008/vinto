@@ -88,7 +88,9 @@ const useTracks = () => {
 
 const message = 'Welcome to vinto';
 
+const uniqueID = Math.floor(Math.random() * 10000);
 const App = () => {
+  const [name, setName] = useState('');
   const [conference, setConference] = useState(null);
   const [
     videoTracks,
@@ -137,6 +139,7 @@ const App = () => {
 
   const onSubmit = async (event) => {
     event.preventDefault();
+    setName(event.target.name.value);
     const { conference, localVideoTrack } = await loadAndConnect({
       room: 'some-default-room',
     });
@@ -164,13 +167,17 @@ const App = () => {
             <Sidebar />
           </div>
           <div>
-            <Controls toggleMute={toggleMute} uniqueID="some unique ID for now" />
+            <Controls toggleMute={toggleMute} name={name} uniqueID={name + uniqueID} />
           </div>
         </UIGridLayout>
       ) : (
         <>
           <h1>{message}</h1>
           <form onSubmit={(e) => onSubmit(e)}>
+            <label htmlFor="name">
+              Name:
+              <input id="name" type="text" name="name" />
+            </label>
             <button type="submit">Connect to this Conference!</button>
           </form>
         </>
