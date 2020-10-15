@@ -1,52 +1,77 @@
-# README 
+# README
+
+<details>
+  <summary>Quick Links</summary>
+  
+- [Vinto Design Specifications](https://docs.google.com/document/d/10Fm_WHXpDYoZezVVbXlR9CZoDP--0YnIRoQh3BCuYdg/edit?usp=sharing)
+  - [Wireframe and Frontend State](https://docs.google.com/presentation/d/1AFjcZvJZWQtv_HhX-1dZmH0AtKYrF7m3alAe72k7LT4/edit?usp=sharing)
+  - [Schema and API](https://drive.google.com/file/d/1veoxu8lWvBJcykzOP_nmxFGTidL7ea84/view)
+- [Vinto Project Board](https://github.com/orgs/mohicans-pop-2008/projects/1) to get a sense of what we are actually working on.
+</details>
 
 ## Contribution Guidelines
 
-- [Mohicans Team Contract and Norms](https://docs.google.com/document/d/1aHNAhwWkPEynwzW29mGgXruK7I7cTa0y4Q_sDHNT3Wk/edit?usp=sharing)
-  - Roles
-    - 📅 Project Manager (PM)
-      - Communicate the target tasks at the beginning of each day.
-      - Lead the morning standup.
-    - 🔃 Head of Code Quality and Version Control (HVC)
-      - Lead end-of-the-day PR/merge party.
-    - 📲 DevOps Guru (DOG)
-      - Makes sure our tests pass and deploys are always working.
-      - Leads a daily learning session.
+Source: [Mohicans Team Contract and Norms](https://docs.google.com/document/d/1aHNAhwWkPEynwzW29mGgXruK7I7cTa0y4Q_sDHNT3Wk/edit?usp=sharing)
+
+- Roles
+  - 📅 Project Manager (PM)
+    - Communicate the target tasks at the beginning of each day.
+    - Lead the morning standup.
+  - 🔃 Head of Code Quality and Version Control (HVC)
+    - Lead end-of-the-day PR/merge party.
+    - Whispers words of encouragement to commit often, commit democratic.
+  - 📲 DevOps Guru (DOG)
+    - Makes sure our tests pass and deploys are always working.
+    - Leads a daily learning session.
+
+### Role Assignments
+
+|     10/12 |     10/13 |     10/14 |     10/15 |     10/16 |
+|----------:|----------:|----------:|----------:|----------:|
+| 📅 Chikara | 📅 Kevin   | 📅 Tanveer | 📅 Chikara | 📅 Kevin   |
+| 🔃 Tanveer | 🔃 Chikara | 🔃 Kevin   | 🔃 Tanveer | 🔃 Chikara |
+| 📲 Kevin   | 📲 Tanveer | 📲 Chikara | 📲 Kevin   | 📲 Tanveer |
+
+|     10/19 |     10/20 |     10/21 |     10/22 |     10/23 |
+|----------:|----------:|----------:|----------:|----------:|
+| 📅 Tanveer | 📅 Chikara | 📅 Kevin   | 📅 Tanveer | 📅 Chikara |
+| 🔃 Kevin   | 🔃 Tanveer | 🔃 Chikara | 🔃 Kevin   | 🔃 Tanveer |
+| 📲 Chikara | 📲 Kevin   | 📲 Tanveer | 📲 Chikara | 📲 Kevin   |
+
+### Daily Process
+
+- @10:35 (after REACTO), PM leads morning standup 
+  - Everybody: Yesterday? Today? Obstacles?
+  - HVC repo and branch updates
+  - DevOps deployment and testing updates
+  - (OPTIONAL: Daily learning session)
+- @10:50, PM delegates tasks
+  - Group discussion is useful for defining and outlining a difficult or complex problem / making lots of architectural or workflow related decisions.
+  - Pair programming is useful for tackling complex tasks or for when both team members are relatively unfamiliar with a given topic/tool/task.
+  - Solo tasks are useful for tasks that are well-defined and that we know how to do.
+- After problems defined and tasks clearly delegated ... we work! While working...
+  - Everyone will keep track of issues they encounter that are non-blocking to be discussed right after lunch at re-group meeting.
+  - Bring up any blocking issues after an earnest effort (up to half an hour) of spinning your wheels.
+- @14:30 EST, PM leads re-group meeting to check-in with blockers, status updates, and plan for EOD merge.
+- @17:30 EST, HVC leads PR/Merge reviews as needed.
+
+## Background
 
 - [Vinto Design Specifications](https://docs.google.com/document/d/10Fm_WHXpDYoZezVVbXlR9CZoDP--0YnIRoQh3BCuYdg/edit?usp=sharing)
   - [Wireframe and Frontend State](https://docs.google.com/presentation/d/1AFjcZvJZWQtv_HhX-1dZmH0AtKYrF7m3alAe72k7LT4/edit?usp=sharing)
   - [Schema and API](https://drive.google.com/file/d/1veoxu8lWvBJcykzOP_nmxFGTidL7ea84/view)
 
-- [Vinto Project Board](https://github.com/orgs/mohicans-pop-2008/projects/1)
+### Key Ingredients
 
-### Role Assignments
+<img src="https://embed.creately.com/xC8wnKn63IY?token=GN2A93FluMC4doDQ&type=svg">
 
-- 10/12
-  - 📅 Chikara
-  - 🔃 Tanveer
-  - 📲 Kevin
-- 10/13
-  - 📅 Kevin
-  - 🔃 Chikara
-  - 📲 Tanveer
-- 10/14
-  - 📅 Tanveer
-  - 🔃 Kevin
-  - 📲 Chikara
-- 10/15
-  - 📅 Chikara
-  - 🔃 Tanveer
-  - 📲 Kevin
-- 10/16
-  - 📅 Kevin
-  - 🔃 Chikara
-  - 📲 Tanveer
+- A jitsi-meet server (currently using meet.jit.si) / self-hosted server also possible.
+- A very specific working version of "lib-jitsi-meet": "github:jitsi/lib-jitsi-meet#15dcc57424cc937290e1963b8eb402c1fcf48ccb".
 
-## Background
+<img src="https://embed.creately.com/6CjggNvGTBE?token=VgFz8YTVxZms4yYo&type=svg">
+## Project Status
 
-We are able to start meetings on meet.jit.si servers from an app on our local computer.
-
-## Minimum Viable Product
+Also see the [Vinto Project Board](https://github.com/orgs/mohicans-pop-2008/projects/1) to get a sense of what we are actually working on.
 
 ### Milestone 1 : Code Review : Proof of Concept : DUE 10/12/2020 15:00 EST
 
@@ -76,21 +101,21 @@ Before Monday code review we want:
 ### Milestone 2 : Beta : DUE 10/16/2020
 
 #### State
-- [ ] There should be a single conference.
+- [x] There should be a single conference.
 - [ ] We should be able to tell how many people are in a conference.
-- [ ] Should have every single video track in a given conference, number of participants.
-- [ ] Should have every single audio track EXCEPT for the local audio track, i.e. number of participants - 1.
+- [x] Should have every single video track in a given conference, number of participants.
+- [x] Should have every single audio track EXCEPT for the local audio track, i.e. number of participants - 1.
 
 #### Video
 - [ ] When shutting off video, the user cell should go black, and every user should see this same view.
   - [ ] When shutting off video, some other users see - we do not want any of these inconsistencies:
-    - [ ] frozen video feed
-    - [ ] blank white cell
-    - [ ] cell disappears
-- [ ] When turning video back on, every user should then see live video feed.
+    - [x] frozen video feed
+    - [x] blank white cell
+    - [x] cell disappears
+- [x] When turning video back on, every user should then see live video feed.
 
 #### Audio
-- [ ] When all 3 people were in the conference, some users saw 3 audio tracks in their local state, when they expected to have only 2.
+- [x] When all 3 people were in the conference, some users saw 3 audio tracks in their local state, when they expected to have only 2.
 - [ ] Why is Tanveer's audio so bad coming through Jitsi?
 - [ ] Audio quality should be decent most of the time.
 
