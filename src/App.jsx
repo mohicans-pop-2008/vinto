@@ -133,7 +133,7 @@ const App = () => {
       updateTrack,
       () => dispatch(engagementScoreChangeDetected(videoTracks)),
     );
-  }, [addTrack, conference, removeTrack, videoTracks, dispatch, updateTrack]);
+  }, [addTrack, conference, removeTrack, videoTracks]);
 
   const onSubmit = async (event) => {
     event.preventDefault();
