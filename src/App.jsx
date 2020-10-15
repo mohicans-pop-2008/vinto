@@ -176,7 +176,7 @@ const App = () => {
             <Sidebar />
           </div>
           <div>
-            <Controls toggleMute={toggleMute} uniqueID='some unique ID for now'/>
+            <Controls toggleMute={toggleMute} uniqueID="some unique ID for now" />
           </div>
         </UIGridLayout>
       ) : (

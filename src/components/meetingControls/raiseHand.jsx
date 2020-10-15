@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { raiseHand, lowerHand } from '../../store';
 
-const RaiseHand = ({uniqueID}) => {
+const RaiseHand = ({ uniqueID }) => {
   const [handRaised, setHandRaised] = useState(false);
   const dispatch = useDispatch();
   const onClick = () => {

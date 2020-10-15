@@ -9,7 +9,7 @@ const PARTICIPANTS_CHANGED = 'participants/changed';
  *
  * a full score is 10
  */
-const defaultParticipants = [{0: false}];
+const defaultParticipants = [{ 0: false }];
 
 /**
  * ACTION CREATORS
