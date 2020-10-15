@@ -10,11 +10,13 @@ const Video = ({ track }) => {
       {track.isMuted() ? (
         <h3 color="white">Camera is off</h3>
       ) : (
-        <video
-          className={styles.videoTile}
-          autoPlay="1"
-          ref={(ref) => ref && track.attach(ref)}
-        />
+        <div className={styles.videoTile}>
+          <video
+            className={styles.videoTrack}
+            autoPlay="1"
+            ref={(ref) => ref && track.attach(ref)}
+          />
+        </div>
       )}
     </>
   );

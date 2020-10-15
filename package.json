@@ -13,15 +13,16 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@neutrinojs/copy": "^9.4.0",
     "jquery": "^3.5.1",
+    "lib-jitsi-meet": "github:jitsi/lib-jitsi-meet#15dcc57424cc937290e1963b8eb402c1fcf48ccb",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-hot-loader": "^4.13.0",
     "react-redux": "^7.2.1",
     "redux": "^4.0.5",
-    "redux-thunk": "^2.3.0",
-    "lib-jitsi-meet": "github:jitsi/lib-jitsi-meet#15dcc57424cc937290e1963b8eb402c1fcf48ccb"
+    "redux-thunk": "^2.3.0"
   },
   "devDependencies": {
     "@babel/core": "7.5.5",

@@ -1,8 +1,10 @@
 .gridContainer {
+  background: #fdf6e3;
+  height: 100%;
   display: grid;
   grid-template-columns: 90% 10%;
   grid-template-rows: 80% 20%;
   grid-template-areas:
-  "content sidebar"
+  "conference sidebar"
   "meetingControls sidebar"
 }
