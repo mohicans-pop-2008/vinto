@@ -118,12 +118,12 @@ const App = () => {
       if (track.getType() === 'video') removeVideoTrack(track);
       if (track.getType() === 'audio') removeAudioTrack(track);
     },
-    [removeAudioTrack, removeVideoTrack],
+    [removeVideoTrack, removeAudioTrack],
   );
 
   const updateTrack = useCallback((track) => {
     if (track.getType() === 'video') updateVideoTrack(track);
-  });
+  }, [updateVideoTrack]);
 
   useEffect(() => {
     if (!conference) return;
@@ -171,17 +171,17 @@ const App = () => {
           </div>
         </UIGridLayout>
       ) : (
-        <>
-          <h1>{message}</h1>
-          <form onSubmit={(e) => onSubmit(e)}>
-            <label htmlFor="name">
-              Name:
+          <>
+            <h1>{message}</h1>
+            <form onSubmit={(e) => onSubmit(e)}>
+              <label htmlFor="name">
+                Name:
               <input id="name" type="text" name="name" />
-            </label>
-            <button type="submit">Connect to this Conference!</button>
-          </form>
-        </>
-      )}
+              </label>
+              <button type="submit">Connect to this Conference!</button>
+            </form>
+          </>
+        )}
     </>
   );
 };
