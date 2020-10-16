@@ -7,7 +7,12 @@ import $ from 'jquery';
 import { UIGridLayout } from './uicontainers';
 import config from '../utils/jitsi.config';
 import { engagementScoreChangeDetected } from './store';
-import { Conference, Controls, JoinForm, Sidebar } from './components';
+import {
+  Conference,
+  Controls,
+  JoinForm,
+  Sidebar,
+} from './components';
 
 window.$ = $;
 
