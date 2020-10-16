@@ -6,7 +6,9 @@ import name from './name';
 import participants from './participants';
 import raisedHands from './raisedHands';
 
-const reducer = combineReducers({ engagementScore, name, participants, raisedHands });
+const reducer = combineReducers({
+  engagementScore, name, participants, raisedHands,
+});
 const middleware = applyMiddleware(thunkMiddleware, createLogger({ collapsed: true }));
 const store = createStore(reducer, middleware);
 

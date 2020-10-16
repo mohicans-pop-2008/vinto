@@ -6,13 +6,12 @@ import JitsiMeetJS from 'lib-jitsi-meet';
 import $ from 'jquery';
 import { UIGridLayout } from './uicontainers';
 import config from '../utils/jitsi.config';
-import { engagementScoreChangeDetected, nameChangeDetected } from './store';
+import { nameChangeDetected } from './store';
 import {
-  Conference,
-  Controls,
-  JoinForm,
-  Sidebar,
+  Conference, Controls, JoinForm, Sidebar,
 } from './components';
+
+// Need to add engagementScore action creator
 
 window.$ = $;
 
@@ -79,32 +78,14 @@ const useTracks = () => {
     [setTracks],
   );
 
-  const updateTrack = useCallback((updatedTrack) => {
-    console.log('==========> Updated Track Here <==========');
-    console.log(updatedTrack);
-    console.dir(updatedTrack);
-    setTracks((tracks) => tracks.map((_track) => {
-      if (updatedTrack.getId() === _track.getId()) return updatedTrack;
-      return _track;
-    }));
-  }, [setTracks]);
-  return [tracks, addTrack, removeTrack, updateTrack];
+  return [tracks, addTrack, removeTrack];
 };
 
 const uniqueID = Math.floor(Math.random() * 10000);
 const App = () => {
   const [conference, setConference] = useState(null);
-  const [
-    videoTracks,
-    addVideoTrack,
-    removeVideoTrack,
-    updateVideoTrack,
-  ] = useTracks();
-  const [
-    audioTracks,
-    addAudioTrack,
-    removeAudioTrack,
-  ] = useTracks();
+  const [videoTracks, addVideoTrack, removeVideoTrack] = useTracks();
+  const [audioTracks, addAudioTrack, removeAudioTrack] = useTracks();
   const dispatch = useDispatch();
 
   const addTrack = useCallback(
@@ -123,9 +104,9 @@ const App = () => {
     [removeVideoTrack, removeAudioTrack],
   );
 
-  const updateTrack = useCallback((track) => {
-    if (track.getType() === 'video') updateVideoTrack(track);
-  }, [updateVideoTrack]);
+  const rerenderVideo = () => {
+    console.log('=========> TRACK_MUTE_CHANGED <==========');
+  };
 
   useEffect(() => {
     if (!conference) return;
@@ -134,8 +115,7 @@ const App = () => {
     conference.on(JitsiMeetJS.events.conference.TRACK_REMOVED, removeTrack);
     conference.on(
       JitsiMeetJS.events.conference.TRACK_MUTE_CHANGED,
-      updateTrack,
-      () => dispatch(engagementScoreChangeDetected(videoTracks)),
+      rerenderVideo,
     );
   }, [addTrack, conference, removeTrack, videoTracks]);
 
@@ -178,7 +158,7 @@ const App = () => {
             <Controls toggleMute={toggleMute} uniqueID={uniqueID} />
           </div>
           <div>
-            <button type='button' onClick={getIdTest}>
+            <button type="button" onClick={getIdTest}>
               click to test ID
             </button>
           </div>
