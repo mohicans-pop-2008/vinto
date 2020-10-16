@@ -1,6 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-const JoinForm = ({ name, onChange, onSubmit }) => (
+const JoinForm = ({ onSubmit }) => {
+  const [name, setName] = useState('');
+  const onChange = (e) => {
+    setName(e.target.value);
+  };
+
+  return (
   <>
     <h1>Welcome to vinto</h1>
     <form onSubmit={(e) => onSubmit(e)}>
@@ -11,6 +17,6 @@ const JoinForm = ({ name, onChange, onSubmit }) => (
       <button type="submit" disabled={!name}>Connect to this Conference!</button>
     </form>
   </>
-);
+)};
 
 export default JoinForm;

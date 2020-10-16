@@ -6,7 +6,7 @@ import JitsiMeetJS from 'lib-jitsi-meet';
 import $ from 'jquery';
 import { UIGridLayout } from './uicontainers';
 import config from '../utils/jitsi.config';
-import { engagementScoreChangeDetected } from './store';
+import { engagementScoreChangeDetected, nameChangeDetected } from './store';
 import {
   Conference,
   Controls,
@@ -93,7 +93,6 @@ const useTracks = () => {
 
 const uniqueID = Math.floor(Math.random() * 10000);
 const App = () => {
-  const [name, setName] = useState('');
   const [conference, setConference] = useState(null);
   const [
     videoTracks,
@@ -142,7 +141,7 @@ const App = () => {
 
   const onSubmit = async (event) => {
     event.preventDefault();
-    setName(event.target.name.value);
+    dispatch(nameChangeDetected(event.target.name.value));
     const { conference, localVideoTrack } = await loadAndConnect({
       room: 'some-default-room',
     });
@@ -160,8 +159,11 @@ const App = () => {
       localTrack.mute();
     }
   };
-  const onChange = (e) => {
-    setName(e.target.value);
+
+  const getIdTest = () => {
+    conference.getLocalTracks().forEach((track) => {
+      console.log('TRACK TYPE', track.getType(), 'TRACK ID', track.getId());
+    });
   };
 
   return (
@@ -173,11 +175,16 @@ const App = () => {
             <Sidebar />
           </div>
           <div>
-            <Controls toggleMute={toggleMute} name={name} uniqueID={name + uniqueID} />
+            <Controls toggleMute={toggleMute} uniqueID={uniqueID} />
+          </div>
+          <div>
+            <button type='button' onClick={getIdTest}>
+              click to test ID
+            </button>
           </div>
         </UIGridLayout>
       ) : (
-        <JoinForm name={name} onChange={onChange} onSubmit={onSubmit} />
+        <JoinForm onSubmit={onSubmit} />
       )}
     </>
   );
