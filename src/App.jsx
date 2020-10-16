@@ -7,7 +7,7 @@ import $ from 'jquery';
 import { UIGridLayout } from './uicontainers';
 import config from '../utils/jitsi.config';
 import { engagementScoreChangeDetected } from './store';
-import { Conference, Controls, Sidebar } from './components';
+import { Conference, Controls, JoinForm, Sidebar } from './components';
 
 window.$ = $;
 
@@ -86,8 +86,6 @@ const useTracks = () => {
   return [tracks, addTrack, removeTrack, updateTrack];
 };
 
-const message = 'Welcome to vinto';
-
 const uniqueID = Math.floor(Math.random() * 10000);
 const App = () => {
   const [name, setName] = useState('');
@@ -157,6 +155,9 @@ const App = () => {
       localTrack.mute();
     }
   };
+  const onChange = (e) => {
+    setName(e.target.value);
+  };
 
   return (
     <>
@@ -171,16 +172,7 @@ const App = () => {
           </div>
         </UIGridLayout>
       ) : (
-        <>
-          <h1>{message}</h1>
-          <form onSubmit={(e) => onSubmit(e)}>
-            <label htmlFor="name">
-              Name:
-              <input id="name" type="text" name="name" />
-            </label>
-            <button type="submit">Connect to this Conference!</button>
-          </form>
-        </>
+        <JoinForm name={name} onChange={onChange} onSubmit={onSubmit} />
       )}
     </>
   );
