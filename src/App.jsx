@@ -121,12 +121,12 @@ const App = () => {
       if (track.getType() === 'video') removeVideoTrack(track);
       if (track.getType() === 'audio') removeAudioTrack(track);
     },
-    [removeAudioTrack, removeVideoTrack],
+    [removeVideoTrack, removeAudioTrack],
   );
 
   const updateTrack = useCallback((track) => {
     if (track.getType() === 'video') updateVideoTrack(track);
-  });
+  }, [updateVideoTrack]);
 
   useEffect(() => {
     if (!conference) return;
