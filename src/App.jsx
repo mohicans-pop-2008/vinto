@@ -6,13 +6,12 @@ import JitsiMeetJS from 'lib-jitsi-meet';
 import $ from 'jquery';
 import { UIGridLayout } from './uicontainers';
 import config from '../utils/jitsi.config';
-import { engagementScoreChangeDetected } from './store';
+import { nameChangeDetected } from './store';
 import {
-  Conference,
-  Controls,
-  JoinForm,
-  Sidebar,
+  Conference, Controls, JoinForm, Sidebar,
 } from './components';
+
+// Need to add engagementScore action creator
 
 window.$ = $;
 
@@ -79,33 +78,14 @@ const useTracks = () => {
     [setTracks],
   );
 
-  const updateTrack = useCallback((updatedTrack) => {
-    console.log('==========> Updated Track Here <==========');
-    console.log(updatedTrack);
-    console.dir(updatedTrack);
-    setTracks((tracks) => tracks.map((_track) => {
-      if (updatedTrack.getId() === _track.getId()) return updatedTrack;
-      return _track;
-    }));
-  }, [setTracks]);
-  return [tracks, addTrack, removeTrack, updateTrack];
+  return [tracks, addTrack, removeTrack];
 };
 
 const uniqueID = Math.floor(Math.random() * 10000);
 const App = () => {
-  const [name, setName] = useState('');
   const [conference, setConference] = useState(null);
-  const [
-    videoTracks,
-    addVideoTrack,
-    removeVideoTrack,
-    updateVideoTrack,
-  ] = useTracks();
-  const [
-    audioTracks,
-    addAudioTrack,
-    removeAudioTrack,
-  ] = useTracks();
+  const [videoTracks, addVideoTrack, removeVideoTrack] = useTracks();
+  const [audioTracks, addAudioTrack, removeAudioTrack] = useTracks();
   const dispatch = useDispatch();
 
   const addTrack = useCallback(
@@ -124,9 +104,9 @@ const App = () => {
     [removeVideoTrack, removeAudioTrack],
   );
 
-  const updateTrack = useCallback((track) => {
-    if (track.getType() === 'video') updateVideoTrack(track);
-  }, [updateVideoTrack]);
+  const rerenderVideo = () => {
+    console.log('=========> TRACK_MUTE_CHANGED <==========');
+  };
 
   useEffect(() => {
     if (!conference) return;
@@ -135,14 +115,13 @@ const App = () => {
     conference.on(JitsiMeetJS.events.conference.TRACK_REMOVED, removeTrack);
     conference.on(
       JitsiMeetJS.events.conference.TRACK_MUTE_CHANGED,
-      updateTrack,
-      () => dispatch(engagementScoreChangeDetected(videoTracks)),
+      rerenderVideo,
     );
   }, [addTrack, conference, removeTrack, videoTracks]);
 
   const onSubmit = async (event) => {
     event.preventDefault();
-    setName(event.target.name.value);
+    dispatch(nameChangeDetected(event.target.name.value));
     const { conference, localVideoTrack } = await loadAndConnect({
       room: 'some-default-room',
     });
@@ -160,8 +139,11 @@ const App = () => {
       localTrack.mute();
     }
   };
-  const onChange = (e) => {
-    setName(e.target.value);
+
+  const getIdTest = () => {
+    conference.getLocalTracks().forEach((track) => {
+      console.log('TRACK TYPE', track.getType(), 'TRACK ID', track.getId());
+    });
   };
 
   return (
@@ -173,11 +155,16 @@ const App = () => {
             <Sidebar />
           </div>
           <div>
-            <Controls toggleMute={toggleMute} name={name} uniqueID={name + uniqueID} />
+            <Controls toggleMute={toggleMute} uniqueID={uniqueID} />
+          </div>
+          <div>
+            <button type="button" onClick={getIdTest}>
+              click to test ID
+            </button>
           </div>
         </UIGridLayout>
       ) : (
-        <JoinForm name={name} onChange={onChange} onSubmit={onSubmit} />
+        <JoinForm onSubmit={onSubmit} />
       )}
     </>
   );

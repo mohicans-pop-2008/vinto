@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { raiseHand, lowerHand } from '../../store';
 
-const RaiseHand = ({ name, uniqueID }) => {
+const RaiseHand = ({ uniqueID }) => {
   const [handRaised, setHandRaised] = useState(false);
   const dispatch = useDispatch();
+  const name = useSelector((state) => state.name);
   const onClick = () => {
     if (handRaised) {
-      dispatch(lowerHand({ name, uniqueID }));
+      dispatch(lowerHand({ uniqueID: name + uniqueID }));
     } else {
-      dispatch(raiseHand({ name, uniqueID }));
+      dispatch(raiseHand({ name, uniqueID: name + uniqueID }));
     }
     setHandRaised(!handRaised);
   };
