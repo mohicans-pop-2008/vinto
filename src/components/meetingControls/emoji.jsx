@@ -1,8 +1,8 @@
 import React from 'react';
 
-const Emoji = (props) => {
+const Emoji = () => {
   const onClick = () => {
-    dispatch();
+    // call a dispatch() here;
   };
 
   return (
