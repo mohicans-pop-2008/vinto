@@ -38,6 +38,13 @@ export const emojiClick = (emojiType) => (dispatch) => {
  * REDUCER
  *
  */
-const reducer = (state = defaultEmojis) => state;
+const reducer = (state = defaultEmojis, action) => {
+  switch (action.type) {
+    case EMOJI_CLICKED:
+      return state[action.emojiType];
+    default:
+      return state;
+  }
+};
 
 export default reducer;

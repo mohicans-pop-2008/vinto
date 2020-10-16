@@ -1,8 +1,10 @@
 import React from 'react';
+import { emojiClick } from '../../store';
 
 const Emoji = () => {
-  const onClick = () => {
+  const onClick = (e) => {
     // call a dispatch() here;
+    dispatch(emojiClick(emojiType));
   };
 
   return (
