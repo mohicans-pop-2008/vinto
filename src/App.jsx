@@ -1,7 +1,20 @@
 import React, { useEffect, useState, useCallback } from "react";
 import regeneratorRuntime from "regenerator-runtime";
 
+/**
+ * Random Number Generator
+ *
+ * You get a number and you get a number!
+ */
+
 const createRandomNum = () => Math.floor(Math.random() * 10000);
+
+/**
+ * MOCK Jitsi Connection Functionality
+ *
+ * Called by our React application when someone tries to join
+ * the conference by clicking the join conference button.
+ */
 
 const loadAndConnect = ({ room }) => {
   const conference = {
@@ -12,6 +25,7 @@ const loadAndConnect = ({ room }) => {
       elem.addEventListener(eventType, fn);
     },
     removeEventListener: function (eventType, fn) {
+      console.log("Removing an old event listener");
       const elem = document.getElementById("root");
       elem.removeEventListener(eventType, fn);
     },
@@ -23,7 +37,11 @@ const loadAndConnect = ({ room }) => {
   };
 };
 
-window.setTimeout(mimicAddTrack, 4000);
+/**
+ * MOCK Jitsi Meet Server
+ *
+ * Emits a TRACK_ADDED event 5 times (to mimic 5 people joining)
+ */
 
 function mimicAddTrack() {
   console.log("MIMIC ADD TRACK FIRED");
@@ -32,10 +50,28 @@ function mimicAddTrack() {
   root.dispatchEvent(trackAdded);
 }
 
+let x = 5;
+while (x > 0) {
+  window.setTimeout(mimicAddTrack, 4000);
+  x--;
+}
+
+/**
+ * REACT application starts
+ */
+
 const App = () => {
-  console.log("RENDERED");
+  console.log("RENDERED or RE-RENDERED");
   const [conference, setConference] = useState(null);
   const [tracks, setTracks] = useState([]);
+
+  /**
+   * EVENT HANDLERS
+   *
+   * #connect - handles the onClick event of the connect button
+   * #respondToTrackAdded - handles the TRACK_ADDED event, and expect
+   *   to update the state.
+   */
 
   const connect = (e) => {
     e.preventDefault();
@@ -46,50 +82,43 @@ const App = () => {
     setTracks([...tracks, localTrack]);
   };
 
-  const respondToTrackAdded = useCallback(
-    function (e) {
-      console.log("target --->", e.target);
-      console.log("React app detects TRACK_ADDED");
-      console.log("tracks before", tracks);
-      const trackId = createRandomNum();
-      const newTrack = { id: trackId };
-      const newTracksArray = [...tracks, newTrack];
-      console.log("tracks array", newTracksArray);
-      setTracks(newTracksArray);
-    },
-    [tracks]
-  );
-
-  const registerEventListener = (e) => {
-    console.log("Button clicked -->", e.target);
-    conference.on("TRACK_ADDED", respondToTrackAdded);
+  const respondToTrackAdded = (e) => {
+    console.log("target --->", e.target);
+    console.log("React app detects TRACK_ADDED");
+    console.log("tracks before", tracks);
+    const trackId = createRandomNum();
+    const newTrack = { id: trackId };
+    const newTracksArray = [...tracks, newTrack];
+    console.log("tracks array", newTracksArray);
+    setTracks(newTracksArray);
   };
 
+  /**
+   * REACT EFFECT HOOKS
+   *
+   * These detect changes in state and perform necessary actions
+   * in response.
+   */
+
   useEffect(() => {
-    console.log("Conference changed");
+    console.log("Either track or conference changed");
     if (!conference) return;
     conference.on("TRACK_ADDED", respondToTrackAdded);
-  }, [conference]);
+    return () => {
+      conference.removeEventListener("TRACK_ADDED", respondToTrackAdded);
+    };
+  }, [tracks, conference]);
 
-  // useEffect(() => {
-  //   console.log('This is basically component did mount')
-  // }, [])
-
-  // useEffect(() => {
-  //   mimicAddTrack()
-  // }, [tracks])
+  /**
+   * RENDER METHOD
+   */
 
   return (
     <div>
       {createRandomNum()}
       <button type="submit" onClick={connect}>
-        Connect
+        Join (Or start ...) Conference
       </button>
-      {conference && (
-        <button type="submit" onClick={registerEventListener}>
-          Update event listener for tracks added
-        </button>
-      )}
       {conference && conference.room}
       {tracks && tracks.type}
     </div>
