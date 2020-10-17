@@ -50,11 +50,13 @@ function mimicAddTrack() {
   root.dispatchEvent(trackAdded);
 }
 
-let x = 5;
-while (x > 0) {
-  window.setTimeout(mimicAddTrack, 4000);
-  x--;
-}
+(async () => {
+  let x = 5;
+  while (x > 0) {
+    window.setTimeout(mimicAddTrack, x * 2000);
+    x--;
+  }
+})();
 
 /**
  * REACT application starts
