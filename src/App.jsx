@@ -43,7 +43,7 @@ const App = () => {
       room: "some-default-room",
     });
     setConference(alias);
-    setTracks([localTrack]);
+    setTracks([...tracks, localTrack]);
   };
 
   const respondToTrackAdded = useCallback(
@@ -52,29 +52,28 @@ const App = () => {
       console.log("React app detects TRACK_ADDED");
       console.log("tracks before", tracks);
       const trackId = createRandomNum();
-      const newTracksArray = [...tracks, { id: trackId }];
+      const newTrack = { id: trackId };
+      const newTracksArray = [...tracks, newTrack];
       console.log("tracks array", newTracksArray);
       setTracks(newTracksArray);
     },
-    [tracks, setTracks]
+    [tracks]
   );
 
-  // useEffect(() => {
-  //   console.log('This is basically component did mount')
-  // }, [])
-
-  const registerEventListener = () => {
-    conference.on()
-  }
+  const registerEventListener = (e) => {
+    console.log("Button clicked -->", e.target);
+    conference.on("TRACK_ADDED", respondToTrackAdded);
+  };
 
   useEffect(() => {
     console.log("Conference changed");
     if (!conference) return;
     conference.on("TRACK_ADDED", respondToTrackAdded);
-    return () => {
-      conference.removeEventListener("TRACK_ADDED", respondToTrackAdded);
-    };
   }, [conference]);
+
+  // useEffect(() => {
+  //   console.log('This is basically component did mount')
+  // }, [])
 
   // useEffect(() => {
   //   mimicAddTrack()
@@ -83,12 +82,14 @@ const App = () => {
   return (
     <div>
       {createRandomNum()}
-      <button
-        type="submit"
-        onClick={connect}
-      >
+      <button type="submit" onClick={connect}>
         Connect
       </button>
+      {conference && (
+        <button type="submit" onClick={registerEventListener}>
+          Update event listener for tracks added
+        </button>
+      )}
       {conference && conference.room}
       {tracks && tracks.type}
     </div>
