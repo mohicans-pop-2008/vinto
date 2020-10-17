@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import regeneratorRuntime from "regenerator-runtime";
 
 const createRandomNum = () => Math.floor(Math.random() * 10000);
@@ -35,7 +35,7 @@ function mimicAddTrack() {
 const App = () => {
   console.log("RENDERED");
   const [conference, setConference] = useState(null);
-  const [tracks, setTracks] = useState(null);
+  const [tracks, setTracks] = useState([]);
 
   const connect = (e) => {
     e.preventDefault();
@@ -46,16 +46,26 @@ const App = () => {
     setTracks([localTrack]);
   };
 
-  const respondToTrackAdded = (e) => {
-    console.log("target --->", e.target);
-    console.log("React app detects TRACK_ADDED");
-    const trackId = createRandomNum();
-    setTracks([...tracks, { id: trackId }]);
-  };
+  const respondToTrackAdded = useCallback(
+    function (e) {
+      console.log("target --->", e.target);
+      console.log("React app detects TRACK_ADDED");
+      console.log("tracks before", tracks);
+      const trackId = createRandomNum();
+      const newTracksArray = [...tracks, { id: trackId }];
+      console.log("tracks array", newTracksArray);
+      setTracks(newTracksArray);
+    },
+    [tracks, setTracks]
+  );
 
   // useEffect(() => {
   //   console.log('This is basically component did mount')
   // }, [])
+
+  const registerEventListener = () => {
+    conference.on()
+  }
 
   useEffect(() => {
     console.log("Conference changed");
@@ -73,8 +83,11 @@ const App = () => {
   return (
     <div>
       {createRandomNum()}
-      <button type="submit" onClick={connect}>
-        Submit
+      <button
+        type="submit"
+        onClick={connect}
+      >
+        Connect
       </button>
       {conference && conference.room}
       {tracks && tracks.type}
