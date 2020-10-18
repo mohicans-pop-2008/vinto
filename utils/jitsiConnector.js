@@ -7,26 +7,20 @@ window.$ = $;
  * EVENT Handlers
  */
 
-let conferenceObject;
-
 /**
- * UNUSED AND DEPRECATED onConnectionSuccess
- *
  * meant to run when CONNECTION_ESTABLISHED event fires
  */
-const onConnectionSuccess = (room, connection) => {
-  console.log("room", room);
-  console.log("connection", connection);
-  console.log("Connection Established");
-
+const connectToAConference = ({ room, connection }) => {
   // create the local representation of the conference
   const conference = connection.initJitsiConference(room, {});
-  conference.on(JitsiMeetJS.events.conference.CONFERENCE_JOINED, () => {
-    conferenceObject = conference;
-  });
-
-  // join the conference
-  conference.join();
+  return new Promise((resolve) => {
+    // register event handler for successful joining of the conference
+    conference.on(JitsiMeetJS.events.conference.CONFERENCE_JOINED, () => {
+      resolve(conference);
+    });
+    // join the conference
+    conference.join();
+  })
 };
 
 /**
@@ -84,21 +78,24 @@ const connectToAServer = async ({ room }) => {
  */
 const connect = async ({room}) => {
   const connection = await connectToAServer({room})
-  console.log("Connection object", connection)
-  return new Promise((resolve, reject) => {
-    let theConference;
-    let localTrack;
+  console.log("Connection object", connection);
+  const conference = await connectToAConference({ room, connection })
+  console.log("Conference object", conference);
+  return { theConference: conference }
+  // return new Promise((resolve, reject) => {
+  //   let theConference;
+  //   let localTrack;
 
-    // call resolve on an object that includes
-    // theConference and localTrack
-    if (theConference && localTrack) {
-      console.log("Gettin there!")
-      resolve({ theConference, localTrack });
-    } else {
-      console.log("Something went horribly wrong")
-      reject(new Error("theConference is falsy"));
-    }
-  });
+  //   // call resolve on an object that includes
+  //   // theConference and localTrack
+  //   if (theConference) {
+  //     console.log("Gettin there!")
+  //     resolve({ theConference, localTrack });
+  //   } else {
+  //     console.log("Something went horribly wrong")
+  //     reject(new Error("theConference is falsy"));
+  //   }
+  // });
 };
 
 export default connect;

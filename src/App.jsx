@@ -151,8 +151,8 @@ const App = () => {
       <button type="submit" onClick={connect}>
         Join a Conference
       </button>
-      {conference && conference.room}
-      {tracks && tracks.type}
+      {/* {conference && conference.room}
+      {tracks && tracks.type} */}
     </div>
   );
 };
