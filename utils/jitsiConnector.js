@@ -5,6 +5,8 @@ import config from "./jitsi.config";
  * EVENT Handlers
  */
 
+ let conferenceObject;
+
 const onConnectionSuccess = (room, connection) => {
   console.log("room", room);
   console.log("connection", connection);
@@ -12,6 +14,9 @@ const onConnectionSuccess = (room, connection) => {
 
   // create the local representation of the conference
   const conference = createLocalConferenceRepresentation({ room, connection });
+  conference.on(JitsiMeetJS.events.conference.CONFERENCE_JOINED, () => {
+    conferenceObject = conference
+  })
 
   // join the conference
   conference.join();
@@ -74,5 +79,3 @@ const createLocalConferenceRepresentation = ({ room, connection }) => {
 /**
  * return the conference and track for use by React app
  */
-
-export default connectToAConference;
