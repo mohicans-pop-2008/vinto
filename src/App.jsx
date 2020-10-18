@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import regeneratorRuntime from "regenerator-runtime";
+import connectToAConference from "../utils/jitsiConnector";
 
 /**
  * Random Number Generator
@@ -16,7 +17,7 @@ const createRandomNum = () => Math.floor(Math.random() * 10000);
  * the conference by clicking the join conference button.
  */
 
-const loadAndConnect = ({ room }) => {
+const connectToAConference = connectToAConference || ({ room }) => {
   const conference = {
     room: "abc",
     on: function (eventType, fn) {
@@ -60,12 +61,12 @@ function mimicRemoveTrack() {
 (async () => {
   let x = 10;
   while (x > 0) {
-    if(x < 6) {
+    if (x < 6) {
       window.setTimeout(mimicAddTrack, x * 2000);
       x--;
     } else {
       window.setTimeout(mimicRemoveTrack, x * 2000);
-      x--
+      x--;
     }
   }
 })();
@@ -89,17 +90,12 @@ const App = () => {
 
   const connect = (e) => {
     e.preventDefault();
-    const { conference: alias, localTrack } = loadAndConnect({
+    const { theConference, localTrack } = connectToAConference({
       room: "some-default-room",
     });
-    setConference(alias);
+    setConference(theConference);
     setTracks([...tracks, localTrack]);
   };
-
-  const onConnectionSuccess = (connection, room) => {
-    const newConference = connection.initJitsiConference(room, {});
-    setConference(newConference);
-  }
 
   const respondToTrackAdded = (e) => {
     console.log("target --->", e.target);
@@ -118,11 +114,11 @@ const App = () => {
     console.log("tracks before", tracks);
     const randomIndex = Math.floor(Math.random() * tracks.length);
     const newTracksArray = tracks.filter((element, index) => {
-      return index !== randomIndex
-    })
+      return index !== randomIndex;
+    });
     console.log("tracks after", newTracksArray);
     setTracks(newTracksArray);
-  }
+  };
 
   /**
    * REACT EFFECT HOOKS
@@ -130,6 +126,14 @@ const App = () => {
    * These detect changes in state and perform necessary actions
    * in response.
    */
+
+  useEffect(() => {
+    if (!conference) return;
+    conference.on("CONFERENCE_JOINED", onConferenceJoined);
+    return () => {
+      conference.off("CONFERENCE_JOINED", onConferenceJoined);
+    }
+  }, [conference])
 
   useEffect(() => {
     console.log("Either track or conference changed");
