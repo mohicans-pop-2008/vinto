@@ -96,6 +96,11 @@ const App = () => {
     setTracks([...tracks, localTrack]);
   };
 
+  const onConnectionSuccess = (connection, room) => {
+    const newConference = connection.initJitsiConference(room, {});
+    setConference(newConference);
+  }
+
   const respondToTrackAdded = (e) => {
     console.log("target --->", e.target);
     console.log("React app detects TRACK_ADDED");
