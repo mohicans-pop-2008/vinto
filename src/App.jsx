@@ -1,8 +1,9 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import regeneratorRuntime from 'regenerator-runtime';
+import React, { useEffect, useState, useCallback } from "react";
+import regeneratorRuntime from "regenerator-runtime";
 import connect, {
   connectLocalTracksToAConference,
-} from '../utils/jitsiConnector';
+  getRemoteVideoTracks
+} from "../utils/jitsiConnector";
 
 /**
  * Random Number Generator
@@ -23,19 +24,19 @@ const connectToAConference = connect
   ? connect
   : ({ room }) => {
       const conference = {
-        room: 'abc',
+        room: "abc",
         on: function (eventType, fn) {
-          console.log('Registering event listener');
-          const elem = document.getElementById('root');
+          console.log("Registering event listener");
+          const elem = document.getElementById("root");
           elem.addEventListener(eventType, fn);
         },
         removeEventListener: function (eventType, fn) {
-          console.log('Removing an old event listener');
-          const elem = document.getElementById('root');
+          console.log("Removing an old event listener");
+          const elem = document.getElementById("root");
           elem.removeEventListener(eventType, fn);
         },
       };
-      const localTrack = { type: 'video' };
+      const localTrack = { type: "video" };
       return {
         conference,
         localTrack,
@@ -49,16 +50,16 @@ const connectToAConference = connect
  */
 
 function mimicAddTrack() {
-  console.log('MIMIC ADD TRACK FIRED');
-  const trackAdded = new Event('TRACK_ADDED');
-  const root = document.getElementById('root');
+  console.log("MIMIC ADD TRACK FIRED");
+  const trackAdded = new Event("TRACK_ADDED");
+  const root = document.getElementById("root");
   root.dispatchEvent(trackAdded);
 }
 
 function mimicRemoveTrack() {
-  console.log('MIMIC REMOVE TRACK FIRED');
-  const trackRemoved = new Event('TRACK_REMOVED');
-  const root = document.getElementById('root');
+  console.log("MIMIC REMOVE TRACK FIRED");
+  const trackRemoved = new Event("TRACK_REMOVED");
+  const root = document.getElementById("root");
   root.dispatchEvent(trackRemoved);
 }
 
@@ -80,7 +81,7 @@ function mimicRemoveTrack() {
  */
 
 const App = () => {
-  console.log('RENDERED or RE-RENDERED');
+  console.log("RENDERED or RE-RENDERED");
   const [conference, setConference] = useState(null);
   const [tracks, setTracks] = useState([]);
 
@@ -95,34 +96,35 @@ const App = () => {
   const connect = async (e) => {
     console.log("Let's join a conference now");
     e.preventDefault();
-    const { theConference, localTrack } = await connectToAConference({
-      room: 'some-default-room',
+    const { theConference } = await connectToAConference({
+      room: "some-default-room",
     });
-    await connectLocalTracksToAConference({ conference: theConference });
+    const localVideoTrack = await connectLocalTracksToAConference({ conference: theConference });
+    const remoteVideoTracks = getRemoteVideoTracks({ conference: theConference })
     setConference(theConference);
-    setTracks([...tracks, localTrack]);
+    setTracks([...tracks, ...remoteVideoTracks, localVideoTrack]);
   };
 
   const respondToTrackAdded = (e) => {
-    console.log('target --->', e.target);
-    console.log('React app detects TRACK_ADDED');
-    console.log('tracks before', tracks);
+    console.log("target --->", e.target);
+    console.log("React app detects TRACK_ADDED");
+    console.log("tracks before", tracks);
     const trackId = createRandomNum();
     const newTrack = { id: trackId };
     const newTracksArray = [...tracks, newTrack];
-    console.log('tracks array', newTracksArray);
+    console.log("tracks array", newTracksArray);
     setTracks(newTracksArray);
   };
 
   const respondToTrackRemoved = (e) => {
-    console.log('target --->', e.target);
-    console.log('React app detects TRACK_REMOVED');
-    console.log('tracks before', tracks);
+    console.log("target --->", e.target);
+    console.log("React app detects TRACK_REMOVED");
+    console.log("tracks before", tracks);
     const randomIndex = Math.floor(Math.random() * tracks.length);
     const newTracksArray = tracks.filter((element, index) => {
       return index !== randomIndex;
     });
-    console.log('tracks after', newTracksArray);
+    console.log("tracks after", newTracksArray);
     setTracks(newTracksArray);
   };
 
@@ -134,13 +136,13 @@ const App = () => {
    */
 
   useEffect(() => {
-    console.log('Either track or conference changed');
+    console.log("Either track or conference changed");
     if (!conference) return;
-    conference.on('TRACK_ADDED', respondToTrackAdded);
-    conference.on('TRACK_REMOVED', respondToTrackRemoved);
+    conference.on("TRACK_ADDED", respondToTrackAdded);
+    conference.on("TRACK_REMOVED", respondToTrackRemoved);
     return () => {
-      conference.removeEventListener('TRACK_ADDED', respondToTrackAdded);
-      conference.removeEventListener('TRACK_REMOVED', respondToTrackRemoved);
+      conference.removeEventListener("TRACK_ADDED", respondToTrackAdded);
+      conference.removeEventListener("TRACK_REMOVED", respondToTrackRemoved);
     };
   }, [tracks, conference]);
 

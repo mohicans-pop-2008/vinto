@@ -1,6 +1,6 @@
-import JitsiMeetJS from 'lib-jitsi-meet';
-import $ from 'jquery';
-import config from './jitsi.config';
+import JitsiMeetJS from "lib-jitsi-meet";
+import $ from "jquery";
+import config from "./jitsi.config";
 
 window.$ = $;
 /**
@@ -25,16 +25,39 @@ const connectToAConference = ({ room, connection }) => {
 
 /**
  * creates local tracks and adds them to conference
+ *
+ * returns only our localVideoTrack - because who wants to hear themselves speak?
  */
-
 export const connectLocalTracksToAConference = async ({ conference }) => {
   const localTracks = await JitsiMeetJS.createLocalTracks(
-    { devices: ['video', 'audio'], facingMode: 'user' },
+    { devices: ["video"], facingMode: "user" },
     true
   );
+  console.log("The length of localTracks is 1", localTracks.length === 1);
   localTracks.forEach((track) => {
     conference.addTrack(track);
   });
+  const [localVideoTrack] = localTracks.filter(
+    (track) => track.getType() === "video"
+  );
+  return localVideoTrack;
+};
+
+/**
+ * grabs all the other participant tracks from the Meet server
+ *
+ * returns an array of videoTracks corresponding to all participants
+ * in conference prior to the time of this client joining.
+ */
+export const getRemoteVideoTracks = ({ conference }) => {
+  const participants = conference.getParticipants();
+  const remoteVideoTracks = participants.map((participant) => {
+    const [theVideoTrack] = participant
+      .getTracks()
+      .filter((track) => track.getType() === "video");
+    return theVideoTrack;
+  });
+  return remoteVideoTracks;
 };
 
 /**
@@ -67,11 +90,11 @@ const connectToAServer = async ({ room }) => {
     );
     connection.addEventListener(
       JitsiMeetJS.events.connection.CONNECTION_FAILED,
-      () => console.log('Connection failed')
+      () => console.log("Connection failed")
     );
     connection.addEventListener(
       JitsiMeetJS.events.connection.CONNECTION_DISCONNECTED,
-      () => console.log('Connection disconnected')
+      () => console.log("Connection disconnected")
     );
     connection.connect();
   });
@@ -92,9 +115,9 @@ const connectToAServer = async ({ room }) => {
  */
 const connect = async ({ room }) => {
   const connection = await connectToAServer({ room });
-  console.log('Connection object', connection);
+  console.log("Connection object", connection);
   const conference = await connectToAConference({ room, connection });
-  console.log('Conference object', conference);
+  console.log("Conference object", conference);
   return { theConference: conference };
   // return new Promise((resolve, reject) => {
   //   let theConference;
