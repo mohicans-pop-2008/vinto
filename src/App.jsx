@@ -50,11 +50,23 @@ function mimicAddTrack() {
   root.dispatchEvent(trackAdded);
 }
 
+function mimicRemoveTrack() {
+  console.log("MIMIC REMOVE TRACK FIRED");
+  const trackRemoved = new Event("TRACK_REMOVED");
+  const root = document.getElementById("root");
+  root.dispatchEvent(trackRemoved);
+}
+
 (async () => {
-  let x = 5;
+  let x = 10;
   while (x > 0) {
-    window.setTimeout(mimicAddTrack, x * 2000);
-    x--;
+    if(x < 6) {
+      window.setTimeout(mimicAddTrack, x * 2000);
+      x--;
+    } else {
+      window.setTimeout(mimicRemoveTrack, x * 2000);
+      x--
+    }
   }
 })();
 
@@ -95,6 +107,18 @@ const App = () => {
     setTracks(newTracksArray);
   };
 
+  const respondToTrackRemoved = (e) => {
+    console.log("target --->", e.target);
+    console.log("React app detects TRACK_REMOVED");
+    console.log("tracks before", tracks);
+    const randomIndex = Math.floor(Math.random() * tracks.length);
+    const newTracksArray = tracks.filter((element, index) => {
+      return index !== randomIndex
+    })
+    console.log("tracks after", newTracksArray);
+    setTracks(newTracksArray);
+  }
+
   /**
    * REACT EFFECT HOOKS
    *
@@ -106,8 +130,10 @@ const App = () => {
     console.log("Either track or conference changed");
     if (!conference) return;
     conference.on("TRACK_ADDED", respondToTrackAdded);
+    conference.on("TRACK_REMOVED", respondToTrackRemoved);
     return () => {
       conference.removeEventListener("TRACK_ADDED", respondToTrackAdded);
+      conference.removeEventListener("TRACK_REMOVED", respondToTrackRemoved);
     };
   }, [tracks, conference]);
 
