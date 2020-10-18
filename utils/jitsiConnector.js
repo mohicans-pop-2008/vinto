@@ -1,22 +1,29 @@
 import JitsiMeetJS from "lib-jitsi-meet";
+import $ from "jquery";
 import config from "./jitsi.config";
 
+window.$ = $;
 /**
  * EVENT Handlers
  */
 
- let conferenceObject;
+let conferenceObject;
 
+/**
+ * UNUSED AND DEPRECATED onConnectionSuccess
+ *
+ * meant to run when CONNECTION_ESTABLISHED event fires
+ */
 const onConnectionSuccess = (room, connection) => {
   console.log("room", room);
   console.log("connection", connection);
   console.log("Connection Established");
 
   // create the local representation of the conference
-  const conference = createLocalConferenceRepresentation({ room, connection });
+  const conference = connection.initJitsiConference(room, {});
   conference.on(JitsiMeetJS.events.conference.CONFERENCE_JOINED, () => {
-    conferenceObject = conference
-  })
+    conferenceObject = conference;
+  });
 
   // join the conference
   conference.join();
@@ -31,7 +38,7 @@ const onConnectionSuccess = (room, connection) => {
  * - specify a room name
  */
 
-const connectToAServer = ({ room }) => {
+const connectToAServer = async ({ room }) => {
   // initialize
   JitsiMeetJS.init();
 
@@ -43,22 +50,23 @@ const connectToAServer = ({ room }) => {
   config.serviceUrl += `?room=${room}`;
   const connection = new JitsiMeetJS.JitsiConnection(null, null, config);
 
-  // registers event listeners onto a connection
-  connection.addEventListener(
-    JitsiMeetJS.events.connection.CONNECTION_ESTABLISHED,
-    () => onConnectionSuccess(room, connection)
-  );
-  connection.addEventListener(
-    JitsiMeetJS.events.connection.CONNECTION_FAILED,
-    () => console.log("Connection failed")
-  );
-  connection.addEventListener(
-    JitsiMeetJS.events.connection.CONNECTION_DISCONNECTED,
-    () => console.log("Connection disconnected")
-  );
-
   // attempt a connection
-  connection.connect();
+  return new Promise((resolve) => {
+    // registers event listeners onto a connection
+    connection.addEventListener(
+      JitsiMeetJS.events.connection.CONNECTION_ESTABLISHED,
+      () => resolve(connection)
+    );
+    connection.addEventListener(
+      JitsiMeetJS.events.connection.CONNECTION_FAILED,
+      () => console.log("Connection failed")
+    );
+    connection.addEventListener(
+      JitsiMeetJS.events.connection.CONNECTION_DISCONNECTED,
+      () => console.log("Connection disconnected")
+    );
+    connection.connect();
+  });
 };
 
 /**
@@ -67,11 +75,6 @@ const connectToAServer = ({ room }) => {
  *   expect to join and see other people
  */
 
-const createLocalConferenceRepresentation = ({ room, connection }) => {
-  const conference = connection.initJitsiConference(room, {});
-  return conference;
-};
-
 /**
  * set up tracks
  */
@@ -79,3 +82,23 @@ const createLocalConferenceRepresentation = ({ room, connection }) => {
 /**
  * return the conference and track for use by React app
  */
+const connect = async ({room}) => {
+  const connection = await connectToAServer({room})
+  console.log("Connection object", connection)
+  return new Promise((resolve, reject) => {
+    let theConference;
+    let localTrack;
+
+    // call resolve on an object that includes
+    // theConference and localTrack
+    if (theConference && localTrack) {
+      console.log("Gettin there!")
+      resolve({ theConference, localTrack });
+    } else {
+      console.log("Something went horribly wrong")
+      reject(new Error("theConference is falsy"));
+    }
+  });
+};
+
+export default connect;

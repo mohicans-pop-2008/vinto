@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import regeneratorRuntime from "regenerator-runtime";
-import connectToAConference from "../utils/jitsiConnector";
+import connect from "../utils/jitsiConnector";
 
 /**
  * Random Number Generator
@@ -17,8 +17,8 @@ const createRandomNum = () => Math.floor(Math.random() * 10000);
  * the conference by clicking the join conference button.
  */
 
-const connectToAConference = connectToAConference
-  ? connectToAConference
+const connectToAConference = connect
+  ? connect
   : ({ room }) => {
       const conference = {
         room: "abc",
@@ -90,9 +90,10 @@ const App = () => {
    *   to update the state.
    */
 
-  const connect = (e) => {
+  const connect = async (e) => {
+    console.log("Let's join a conference now")
     e.preventDefault();
-    const { theConference, localTrack } = connectToAConference({
+    const { theConference, localTrack } = await connectToAConference({
       room: "some-default-room",
     });
     setConference(theConference);
@@ -130,14 +131,6 @@ const App = () => {
    */
 
   useEffect(() => {
-    if (!conference) return;
-    conference.on("CONFERENCE_JOINED", onConferenceJoined);
-    return () => {
-      conference.off("CONFERENCE_JOINED", onConferenceJoined);
-    };
-  }, [conference]);
-
-  useEffect(() => {
     console.log("Either track or conference changed");
     if (!conference) return;
     conference.on("TRACK_ADDED", respondToTrackAdded);
@@ -156,7 +149,7 @@ const App = () => {
     <div>
       {createRandomNum()}
       <button type="submit" onClick={connect}>
-        Join (Or start ...) Conference
+        Join a Conference
       </button>
       {conference && conference.room}
       {tracks && tracks.type}
