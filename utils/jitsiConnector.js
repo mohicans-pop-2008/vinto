@@ -1,6 +1,6 @@
-import JitsiMeetJS from "lib-jitsi-meet";
-import $ from "jquery";
-import config from "./jitsi.config";
+import JitsiMeetJS from 'lib-jitsi-meet';
+import $ from 'jquery';
+import config from './jitsi.config';
 
 window.$ = $;
 /**
@@ -20,7 +20,21 @@ const connectToAConference = ({ room, connection }) => {
     });
     // join the conference
     conference.join();
-  })
+  });
+};
+
+/**
+ * creates local tracks and adds them to conference
+ */
+
+export const connectLocalTracksToAConference = async ({ conference }) => {
+  const localTracks = await JitsiMeetJS.createLocalTracks(
+    { devices: ['video', 'audio'], facingMode: 'user' },
+    true
+  );
+  localTracks.forEach((track) => {
+    conference.addTrack(track);
+  });
 };
 
 /**
@@ -53,11 +67,11 @@ const connectToAServer = async ({ room }) => {
     );
     connection.addEventListener(
       JitsiMeetJS.events.connection.CONNECTION_FAILED,
-      () => console.log("Connection failed")
+      () => console.log('Connection failed')
     );
     connection.addEventListener(
       JitsiMeetJS.events.connection.CONNECTION_DISCONNECTED,
-      () => console.log("Connection disconnected")
+      () => console.log('Connection disconnected')
     );
     connection.connect();
   });
@@ -76,12 +90,12 @@ const connectToAServer = async ({ room }) => {
 /**
  * return the conference and track for use by React app
  */
-const connect = async ({room}) => {
-  const connection = await connectToAServer({room})
-  console.log("Connection object", connection);
-  const conference = await connectToAConference({ room, connection })
-  console.log("Conference object", conference);
-  return { theConference: conference }
+const connect = async ({ room }) => {
+  const connection = await connectToAServer({ room });
+  console.log('Connection object', connection);
+  const conference = await connectToAConference({ room, connection });
+  console.log('Conference object', conference);
+  return { theConference: conference };
   // return new Promise((resolve, reject) => {
   //   let theConference;
   //   let localTrack;
