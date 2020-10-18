@@ -17,26 +17,28 @@ const createRandomNum = () => Math.floor(Math.random() * 10000);
  * the conference by clicking the join conference button.
  */
 
-const connectToAConference = connectToAConference || ({ room }) => {
-  const conference = {
-    room: "abc",
-    on: function (eventType, fn) {
-      console.log("Registering event listener");
-      const elem = document.getElementById("root");
-      elem.addEventListener(eventType, fn);
-    },
-    removeEventListener: function (eventType, fn) {
-      console.log("Removing an old event listener");
-      const elem = document.getElementById("root");
-      elem.removeEventListener(eventType, fn);
-    },
-  };
-  const localTrack = { type: "video" };
-  return {
-    conference,
-    localTrack,
-  };
-};
+const connectToAConference = connectToAConference
+  ? connectToAConference
+  : ({ room }) => {
+      const conference = {
+        room: "abc",
+        on: function (eventType, fn) {
+          console.log("Registering event listener");
+          const elem = document.getElementById("root");
+          elem.addEventListener(eventType, fn);
+        },
+        removeEventListener: function (eventType, fn) {
+          console.log("Removing an old event listener");
+          const elem = document.getElementById("root");
+          elem.removeEventListener(eventType, fn);
+        },
+      };
+      const localTrack = { type: "video" };
+      return {
+        conference,
+        localTrack,
+      };
+    };
 
 /**
  * MOCK Jitsi Meet Server
@@ -132,8 +134,8 @@ const App = () => {
     conference.on("CONFERENCE_JOINED", onConferenceJoined);
     return () => {
       conference.off("CONFERENCE_JOINED", onConferenceJoined);
-    }
-  }, [conference])
+    };
+  }, [conference]);
 
   useEffect(() => {
     console.log("Either track or conference changed");
