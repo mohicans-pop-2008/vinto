@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import regeneratorRuntime from "regenerator-runtime";
-import connect, {
+import jitsiConnect, {
   connectLocalTracksToAConference,
   getRemoteVideoTracks,
   TRACK_ADDED,
@@ -21,28 +21,28 @@ const createRandomNum = () => Math.floor(Math.random() * 10000);
  * the conference by clicking the join conference button.
  */
 
-const connectToAConference = connect
-  ? connect
-  : ({ room }) => {
-      const conference = {
-        room: "abc",
-        on: function (eventType, fn) {
-          console.log("Registering event listener");
-          const elem = document.getElementById("root");
-          elem.addEventListener(eventType, fn);
-        },
-        removeEventListener: function (eventType, fn) {
-          console.log("Removing an old event listener");
-          const elem = document.getElementById("root");
-          elem.removeEventListener(eventType, fn);
-        },
-      };
-      const localTrack = { type: "video" };
-      return {
-        conference,
-        localTrack,
-      };
-    };
+// const connectToAConference = connect
+//   ? connect
+//   : ({ room }) => {
+//       const conference = {
+//         room: "abc",
+//         on: function (eventType, fn) {
+//           console.log("Registering event listener");
+//           const elem = document.getElementById("root");
+//           elem.addEventListener(eventType, fn);
+//         },
+//         removeEventListener: function (eventType, fn) {
+//           console.log("Removing an old event listener");
+//           const elem = document.getElementById("root");
+//           elem.removeEventListener(eventType, fn);
+//         },
+//       };
+//       const localTrack = { type: "video" };
+//       return {
+//         conference,
+//         localTrack,
+//       };
+//     };
 
 /**
  * MOCK Jitsi Meet Server
@@ -87,7 +87,8 @@ const connectToAConference = connect
 const App = () => {
   console.log("RENDERED or RE-RENDERED");
   const [conference, setConference] = useState(null);
-  const [tracks, setTracks] = useState([]);
+  // const [tracks, setTracks] = useState([]);
+  const [participants, setParticipants] = useState({});
 
   /**
    * EVENT HANDLERS
@@ -97,36 +98,40 @@ const App = () => {
    *   to update the state.
    */
 
+  const respondToTrackAdded = (track) => {
+    console.log("React app detects TRACK_ADDED");
+    console.log("the track that was added --->", participants);
+    console.log("tracks at this time", participants);
+    console.log("participant ID --->", track.getParticipantId());
+
+    const participantId = track.getParticipantId();
+    const trackType = track.getType();
+    const key = `${participantId}-${trackType}`;
+
+    // If we are joining an existing meeting, we want to check for other
+    // tracks.
+    if (track.isLocal()) {
+      // setTracks((tracks) => [...tracks, track]);
+      setParticipants((participants) => ({ ...participants, [key]: track }));
+      return;
+    }
+
+    // setTracks((tracks) => [...tracks, track]);
+    setParticipants((participants) => ({ ...participants, [key]: track }));
+  };
+
   const connect = async (e) => {
     console.log("Let's join a conference now");
     e.preventDefault();
-    const { theConference } = await connectToAConference({
+    const { theConference } = await jitsiConnect({
       room: "some-default-room",
+      trackAddedHandler: respondToTrackAdded,
     });
     const localVideoTrack = await connectLocalTracksToAConference({
       conference: theConference,
     });
     setConference(theConference);
     // setTracks(tracks => [...tracks, localVideoTrack]);
-  };
-
-  const respondToTrackAdded = (track) => {
-    console.log("React app detects TRACK_ADDED");
-    console.log("the track that was added --->", track);
-    console.log("tracks at this time", tracks);
-
-    // If we are joining an existing meeting, we want to check for other
-    // tracks.
-    if (track.isLocal()) {
-      setTracks((tracks) => [...tracks, track]);
-      return;
-    }
-
-    // if (track.getType() === "audio") {
-    //   return;
-    // }
-
-    setTracks((tracks) => [...tracks, track]);
   };
 
   const respondToTrackRemoved = (e) => {
@@ -148,17 +153,17 @@ const App = () => {
    * in response.
    */
 
-  useEffect(() => {
-    if (!conference) return;
-    console.log("Adding TRACK_ADDED event listener to the conference");
-    conference.on(TRACK_ADDED, respondToTrackAdded);
-    conference.on("TRACK_REMOVED", respondToTrackRemoved);
-    return () => {
-      console.log("Removing TRACK_ADDED listener from conference");
-      conference.removeEventListener(TRACK_ADDED, respondToTrackAdded);
-      conference.removeEventListener("TRACK_REMOVED", respondToTrackRemoved);
-    };
-  }, [tracks, conference]);
+  // useEffect(() => {
+  //   if (!conference) return;
+  //   console.log("Adding TRACK_ADDED event listener to the conference");
+  //   conference.on(TRACK_ADDED, respondToTrackAdded);
+  //   conference.on("TRACK_REMOVED", respondToTrackRemoved);
+  //   return () => {
+  //     console.log("Removing TRACK_ADDED listener from conference");
+  //     conference.removeEventListener(TRACK_ADDED, respondToTrackAdded);
+  //     conference.removeEventListener("TRACK_REMOVED", respondToTrackRemoved);
+  //   };
+  // }, [tracks, conference]);
 
   /**
    * RENDER METHOD

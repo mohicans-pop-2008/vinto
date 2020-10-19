@@ -52,10 +52,11 @@ const connectToAServer = ({ room }) => {
  * - returns {Promise} that resolves to the conference object
  *   when CONFERENCE_JOINED fires
  */
-const connectToAConference = ({ room, connection }) => {
+const connectToAConference = ({ room, connection, trackAddedHandler }) => {
   // create the local representation of the conference
   const conference = connection.initJitsiConference(room, {});
   return new Promise((resolve) => {
+    conference.on(JitsiMeetJS.events.conference.TRACK_ADDED, trackAddedHandler)
     // register event handler for successful joining of the conference
     conference.on(JitsiMeetJS.events.conference.CONFERENCE_JOINED, () => {
       resolve(conference);
@@ -120,12 +121,12 @@ export const getRemoteVideoTracks = ({ conference }) => {
  * - awaits conference and joining
  * - returns the conference and track for use by React app
  */
-const connect = async ({ room }) => {
+const jitsiConnect = async ({ room, trackAddedHandler }) => {
   const connection = await connectToAServer({ room });
   console.log("Connection object", connection);
-  const conference = await connectToAConference({ room, connection });
+  const conference = await connectToAConference({ room, connection, trackAddedHandler });
   console.log("Conference object", conference);
   return { theConference: conference };
 };
 
-export default connect;
+export default jitsiConnect;
