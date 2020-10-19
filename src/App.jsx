@@ -1,5 +1,5 @@
-import './App.css'
-import { UIGridLayout } from './uicontainers/'
+import "./App.css";
+import { UIGridLayout } from "./uicontainers/";
 import React, { useEffect, useState, useCallback } from "react";
 import regeneratorRuntime from "regenerator-runtime";
 import jitsiConnect, {
@@ -7,8 +7,7 @@ import jitsiConnect, {
   getRemoteVideoTracks,
   TRACK_ADDED,
 } from "../utils/jitsiConnector";
-import { Conference } from "./components"
-
+import { Conference } from "./components";
 
 /**
  * REACT application starts
@@ -40,15 +39,6 @@ const App = () => {
     const trackType = track.getType();
     const key = `${participantId}-${trackType}`;
 
-    // If we are joining an existing meeting, we want to check for other
-    // tracks.
-    if (track.isLocal()) {
-      // setTracks((tracks) => [...tracks, track]);
-      setTracks((tracks) => ({ ...tracks, [key]: track }));
-      return;
-    }
-
-    // setTracks((tracks) => [...tracks, track]);
     setTracks((tracks) => ({ ...tracks, [key]: track }));
   };
 
@@ -63,27 +53,23 @@ const App = () => {
       conference: theConference,
     });
     setConference(theConference);
-    // setTracks(tracks => [...tracks, localVideoTrack]);
   };
-
-  // const respondToTrackRemoved = (e) => {
-  //   console.log("target --->", e.target);
-  //   console.log("React app detects TRACK_REMOVED");
-  //   console.log("tracks before", tracks);
-  //   const randomIndex = Math.floor(Math.random() * tracks.length);
-  // };
 
   /**
    * RENDER METHOD
    */
 
-  return conference ? (<UIGridLayout>
-    <Conference tracks={tracks} />
-  </UIGridLayout>) : (<div>
-    <button type="submit" onClick={connect}>
-      Join a Conference
-    </button>
-  </div>)
+  return conference ? (
+    <UIGridLayout>
+      <Conference tracks={tracks} />
+    </UIGridLayout>
+  ) : (
+    <div>
+      <button type="submit" onClick={connect}>
+        Join a Conference
+      </button>
+    </div>
+  );
 };
 
 export default App;
