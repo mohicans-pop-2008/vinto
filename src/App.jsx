@@ -1,173 +1,190 @@
-import './App.css';
-import { hot } from 'react-hot-loader';
-import React, { useEffect, useState, useCallback } from 'react';
-import { useDispatch } from 'react-redux';
-import JitsiMeetJS from 'lib-jitsi-meet';
-import $ from 'jquery';
-import { UIGridLayout } from './uicontainers';
-import config from '../utils/jitsi.config';
-import { nameChangeDetected } from './store';
-import {
-  Conference, Controls, JoinForm, Sidebar,
-} from './components';
+import React, { useEffect, useState, useCallback } from "react";
+import regeneratorRuntime from "regenerator-runtime";
+import jitsiConnect, {
+  connectLocalTracksToAConference,
+  getRemoteVideoTracks,
+  TRACK_ADDED,
+} from "../utils/jitsiConnector";
 
-// Need to add engagementScore action creator
+/**
+ * Random Number Generator
+ *
+ * You get a number and you get a number!
+ */
 
-window.$ = $;
+const createRandomNum = () => Math.floor(Math.random() * 10000);
 
-const loadAndConnect = ({ room }) => new Promise(async (resolve) => {
-  JitsiMeetJS.init();
-  config.serviceUrl = config.websocket || config.bosh;
-  config.serviceUrl += `?room=${room}`;
-  const connection = new JitsiMeetJS.JitsiConnection(null, undefined, config);
-  await connection.connect();
-  connection.addEventListener(
-    JitsiMeetJS.events.connection.CONNECTION_ESTABLISHED,
-    async () => {
-      console.log('=============> CONNECTION ESTABLISHED <=============');
-      const conference = connection.initJitsiConference(room, {});
-      await conference.join();
-      console.log('=============> CONFERENCE JOINED <=============');
-      const localTracks = await JitsiMeetJS.createLocalTracks(
-        { devices: ['video', 'audio'], facingMode: 'user' },
-        true,
-      );
-      console.log(
-        '=============> Video & Audio Tracks Created <=============',
-      );
-      const localVideoTrack = localTracks.find(
-        (track) => track.getType() === 'video',
-      );
-      const localAudioTrack = localTracks.find(
-        (track) => track.getType() === 'audio',
-      );
-      conference.addTrack(localVideoTrack);
-      conference.addTrack(localAudioTrack);
-      console.log(
-        '=============> Video & Audio Tracks Connected <=============',
-      );
-      resolve({ conference, localVideoTrack });
-    },
-  );
-});
+/**
+ * MOCK Jitsi Connection Functionality
+ *
+ * Called by our React application when someone tries to join
+ * the conference by clicking the join conference button.
+ */
 
-// JITSI STANDUP CUSTOM HOOK
-const useTracks = () => {
-  console.log('==========> useTracks was called <==========');
-  const [tracks, setTracks] = useState([]);
+// const connectToAConference = connect
+//   ? connect
+//   : ({ room }) => {
+//       const conference = {
+//         room: "abc",
+//         on: function (eventType, fn) {
+//           console.log("Registering event listener");
+//           const elem = document.getElementById("root");
+//           elem.addEventListener(eventType, fn);
+//         },
+//         removeEventListener: function (eventType, fn) {
+//           console.log("Removing an old event listener");
+//           const elem = document.getElementById("root");
+//           elem.removeEventListener(eventType, fn);
+//         },
+//       };
+//       const localTrack = { type: "video" };
+//       return {
+//         conference,
+//         localTrack,
+//       };
+//     };
 
-  const addTrack = useCallback(
-    (track) => {
-      setTracks((tracks) => {
-        const hasTrack = tracks.find(
-          (_track) => track.getId() === _track.getId(),
-        );
+/**
+ * MOCK Jitsi Meet Server
+ *
+ * Emits a TRACK_ADDED event 5 times (to mimic 5 people joining)
+ */
 
-        if (hasTrack) return tracks;
+// function mimicAddTrack() {
+//   console.log("MIMIC ADD TRACK FIRED");
+//   const trackAdded = new Event("TRACK_ADDED");
+//   const root = document.getElementById("root");
+//   root.dispatchEvent(trackAdded);
+// }
 
-        return [...tracks, track];
-      });
-    },
-    [setTracks],
-  );
+// function mimicRemoveTrack() {
+//   console.log("MIMIC REMOVE TRACK FIRED");
+//   const trackRemoved = new Event("TRACK_REMOVED");
+//   const root = document.getElementById("root");
+//   root.dispatchEvent(trackRemoved);
+// }
 
-  const removeTrack = useCallback(
-    (track) => {
-      setTracks((tracks) => tracks.filter((_track) => track.getId() !== _track.getId()));
-    },
-    [setTracks],
-  );
+// (async () => {
+//   let x = 10;
+//   while (x > 0) {
+//     if (x < 6) {
+//       window.setTimeout(mimicAddTrack, x * 2000);
+//       x--;
+//     } else {
+//       window.setTimeout(mimicRemoveTrack, x * 2000);
+//       x--;
+//     }
+//   }
+// })();
 
-  return [tracks, addTrack, removeTrack];
-};
+/**
+ * REACT application starts
+ *
+ * tracks state should be updated each time TRACK_ADDED is run,
+ * and it should always reflect all the local and remote tracks in the conference
+ */
 
-const uniqueID = Math.floor(Math.random() * 10000);
 const App = () => {
+  console.log("RENDERED or RE-RENDERED");
   const [conference, setConference] = useState(null);
-  const [videoTracks, addVideoTrack, removeVideoTrack] = useTracks();
-  const [audioTracks, addAudioTrack, removeAudioTrack] = useTracks();
-  const dispatch = useDispatch();
+  // const [tracks, setTracks] = useState([]);
+  const [participants, setParticipants] = useState({});
 
-  const addTrack = useCallback(
-    (track) => {
-      if (track.getType() === 'video') addVideoTrack(track);
-      if (track.getType() === 'audio' && track.isLocal() === false) addAudioTrack(track);
-    },
-    [addVideoTrack, addAudioTrack],
-  );
+  /**
+   * EVENT HANDLERS
+   *
+   * #connect - handles the onClick event of the connect button
+   * #respondToTrackAdded - handles the TRACK_ADDED event, and expect
+   *   to update the state.
+   */
 
-  const removeTrack = useCallback(
-    (track) => {
-      if (track.getType() === 'video') removeVideoTrack(track);
-      if (track.getType() === 'audio') removeAudioTrack(track);
-    },
-    [removeVideoTrack, removeAudioTrack],
-  );
+  const respondToTrackAdded = (track) => {
+    console.log("React app detects TRACK_ADDED");
+    console.log("the track that was added --->", participants);
+    console.log("tracks at this time", participants);
+    console.log("participant ID --->", track.getParticipantId());
 
-  const rerenderVideo = () => {
-    console.log('=========> TRACK_MUTE_CHANGED <==========');
-  };
+    const participantId = track.getParticipantId();
+    const trackType = track.getType();
+    const key = `${participantId}-${trackType}`;
 
-  useEffect(() => {
-    if (!conference) return;
-
-    conference.on(JitsiMeetJS.events.conference.TRACK_ADDED, addTrack);
-    conference.on(JitsiMeetJS.events.conference.TRACK_REMOVED, removeTrack);
-    conference.on(
-      JitsiMeetJS.events.conference.TRACK_MUTE_CHANGED,
-      rerenderVideo,
-    );
-  }, [addTrack, conference, removeTrack, videoTracks]);
-
-  const onSubmit = async (event) => {
-    event.preventDefault();
-    dispatch(nameChangeDetected(event.target.name.value));
-    const { conference, localVideoTrack } = await loadAndConnect({
-      room: 'some-default-room',
-    });
-    setConference(conference);
-    addTrack(localVideoTrack);
-  };
-
-  const toggleMute = (trackType) => {
-    const [localTrack] = conference
-      .getLocalTracks()
-      .filter((track) => track.getType() === trackType);
-    if (localTrack.isMuted()) {
-      localTrack.unmute();
-    } else {
-      localTrack.mute();
+    // If we are joining an existing meeting, we want to check for other
+    // tracks.
+    if (track.isLocal()) {
+      // setTracks((tracks) => [...tracks, track]);
+      setParticipants((participants) => ({ ...participants, [key]: track }));
+      return;
     }
+
+    // setTracks((tracks) => [...tracks, track]);
+    setParticipants((participants) => ({ ...participants, [key]: track }));
   };
 
-  const getIdTest = () => {
-    conference.getLocalTracks().forEach((track) => {
-      console.log('TRACK TYPE', track.getType(), 'TRACK ID', track.getId());
+  const connect = async (e) => {
+    console.log("Let's join a conference now");
+    e.preventDefault();
+    const { theConference } = await jitsiConnect({
+      room: "some-default-room",
+      trackAddedHandler: respondToTrackAdded,
     });
+    const localVideoTrack = await connectLocalTracksToAConference({
+      conference: theConference,
+    });
+    setConference(theConference);
+    // setTracks(tracks => [...tracks, localVideoTrack]);
   };
+
+  const respondToTrackRemoved = (e) => {
+    console.log("target --->", e.target);
+    console.log("React app detects TRACK_REMOVED");
+    console.log("tracks before", tracks);
+    const randomIndex = Math.floor(Math.random() * tracks.length);
+    // const newTracksArray = tracks.filter((element, index) => {
+    //   return index !== randomIndex;
+    // });
+    // console.log("tracks after", newTracksArray);
+    // setTracks(newTracksArray);
+  };
+
+  /**
+   * REACT EFFECT HOOKS
+   *
+   * These detect changes in state and perform necessary actions
+   * in response.
+   */
+
+  // useEffect(() => {
+  //   if (!conference) return;
+  //   console.log("Adding TRACK_ADDED event listener to the conference");
+  //   conference.on(TRACK_ADDED, respondToTrackAdded);
+  //   conference.on("TRACK_REMOVED", respondToTrackRemoved);
+  //   return () => {
+  //     console.log("Removing TRACK_ADDED listener from conference");
+  //     conference.removeEventListener(TRACK_ADDED, respondToTrackAdded);
+  //     conference.removeEventListener("TRACK_REMOVED", respondToTrackRemoved);
+  //   };
+  // }, [tracks, conference]);
+
+  /**
+   * RENDER METHOD
+   */
 
   return (
-    <>
-      {conference ? (
-        <UIGridLayout>
-          <Conference videoTracks={videoTracks} audioTracks={audioTracks} />
-          <div>
-            <Sidebar />
-          </div>
-          <div>
-            <Controls toggleMute={toggleMute} uniqueID={uniqueID} />
-          </div>
-          <div>
-            <button type="button" onClick={getIdTest}>
-              click to test ID
-            </button>
-          </div>
-        </UIGridLayout>
-      ) : (
-        <JoinForm onSubmit={onSubmit} />
-      )}
-    </>
+    <div>
+      {createRandomNum()}
+      <button type="submit" onClick={connect}>
+        Join a Conference
+      </button>
+      {/* {conference && conference.room}
+      {tracks && tracks.type} */}
+      {/* {tracks ? Object.keys(tracks).map(track => {
+        <video id={track.id} width='250' type='video' src=''>
+
+      </video>
+      }):<h3>no tracks found</h3>} */}
+      <video width="250" type="video" src=""></video>
+    </div>
   );
 };
 
-export default hot(module)(App);
+export default App;
