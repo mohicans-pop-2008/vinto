@@ -2,7 +2,8 @@ import React, { useEffect, useState, useCallback } from "react";
 import regeneratorRuntime from "regenerator-runtime";
 import connect, {
   connectLocalTracksToAConference,
-  getRemoteVideoTracks
+  getRemoteVideoTracks,
+  TRACK_ADDED,
 } from "../utils/jitsiConnector";
 
 /**
@@ -78,6 +79,9 @@ const connectToAConference = connect
 
 /**
  * REACT application starts
+ *
+ * tracks state should be updated each time TRACK_ADDED is run,
+ * and it should always reflect all the local and remote tracks in the conference
  */
 
 const App = () => {
@@ -99,21 +103,32 @@ const App = () => {
     const { theConference } = await connectToAConference({
       room: "some-default-room",
     });
-    const localVideoTrack = await connectLocalTracksToAConference({ conference: theConference });
-    const remoteVideoTracks = getRemoteVideoTracks({ conference: theConference })
-    setConference(theConference);
-    setTracks([...tracks, ...remoteVideoTracks, localVideoTrack]);
+    const localVideoTrack = await connectLocalTracksToAConference({
+      conference: theConference,
+    });
+    // const remoteVideoTracks = getRemoteVideoTracks({
+    //   conference: theConference,
+    // });
+    setConference(conference => theConference);
+    // setTracks(tracks => [...tracks, localVideoTrack]);
   };
 
-  const respondToTrackAdded = (e) => {
-    console.log("target --->", e.target);
+  const respondToTrackAdded = (track) => {
     console.log("React app detects TRACK_ADDED");
-    console.log("tracks before", tracks);
-    const trackId = createRandomNum();
-    const newTrack = { id: trackId };
-    const newTracksArray = [...tracks, newTrack];
-    console.log("tracks array", newTracksArray);
-    setTracks(newTracksArray);
+    console.log("the track that was added --->", track);
+    console.log("tracks at this time", tracks);
+
+    // TRACK_ADDED sometimes fires for the user's own track
+    // in this case, don't add it to our state again
+    // if (track.isLocal()) {
+    //   return;
+    // }
+
+    // if (track.getType() === "audio") {
+    //   return;
+    // }
+
+    setTracks(tracks => [...tracks, track]);
   };
 
   const respondToTrackRemoved = (e) => {
@@ -121,11 +136,11 @@ const App = () => {
     console.log("React app detects TRACK_REMOVED");
     console.log("tracks before", tracks);
     const randomIndex = Math.floor(Math.random() * tracks.length);
-    const newTracksArray = tracks.filter((element, index) => {
-      return index !== randomIndex;
-    });
-    console.log("tracks after", newTracksArray);
-    setTracks(newTracksArray);
+    // const newTracksArray = tracks.filter((element, index) => {
+    //   return index !== randomIndex;
+    // });
+    // console.log("tracks after", newTracksArray);
+    // setTracks(newTracksArray);
   };
 
   /**
@@ -136,12 +151,13 @@ const App = () => {
    */
 
   useEffect(() => {
-    console.log("Either track or conference changed");
+    console.log("Adding TRACK_ADDED event listener to the conference");
     if (!conference) return;
-    conference.on("TRACK_ADDED", respondToTrackAdded);
+    conference.on(TRACK_ADDED, respondToTrackAdded);
     conference.on("TRACK_REMOVED", respondToTrackRemoved);
     return () => {
-      conference.removeEventListener("TRACK_ADDED", respondToTrackAdded);
+      console.log("Removing TRACK_ADDED listener from conference");
+      conference.removeEventListener(TRACK_ADDED, respondToTrackAdded);
       conference.removeEventListener("TRACK_REMOVED", respondToTrackRemoved);
     };
   }, [tracks, conference]);
@@ -158,7 +174,7 @@ const App = () => {
       </button>
       {/* {conference && conference.room}
       {tracks && tracks.type} */}
-      {/* {tracks ? tracks.map(track => {
+      {/* {tracks ? Object.keys(tracks).map(track => {
         <video id={track.id} width='250' type='video' src=''>
 
       </video>
