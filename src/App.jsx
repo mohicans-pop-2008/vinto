@@ -106,10 +106,7 @@ const App = () => {
     const localVideoTrack = await connectLocalTracksToAConference({
       conference: theConference,
     });
-    // const remoteVideoTracks = getRemoteVideoTracks({
-    //   conference: theConference,
-    // });
-    setConference(conference => theConference);
+    setConference(theConference);
     // setTracks(tracks => [...tracks, localVideoTrack]);
   };
 
@@ -118,17 +115,18 @@ const App = () => {
     console.log("the track that was added --->", track);
     console.log("tracks at this time", tracks);
 
-    // TRACK_ADDED sometimes fires for the user's own track
-    // in this case, don't add it to our state again
-    // if (track.isLocal()) {
-    //   return;
-    // }
+    // If we are joining an existing meeting, we want to check for other
+    // tracks.
+    if (track.isLocal()) {
+      setTracks((tracks) => [...tracks, track]);
+      return;
+    }
 
     // if (track.getType() === "audio") {
     //   return;
     // }
 
-    setTracks(tracks => [...tracks, track]);
+    setTracks((tracks) => [...tracks, track]);
   };
 
   const respondToTrackRemoved = (e) => {
@@ -151,8 +149,8 @@ const App = () => {
    */
 
   useEffect(() => {
-    console.log("Adding TRACK_ADDED event listener to the conference");
     if (!conference) return;
+    console.log("Adding TRACK_ADDED event listener to the conference");
     conference.on(TRACK_ADDED, respondToTrackAdded);
     conference.on("TRACK_REMOVED", respondToTrackRemoved);
     return () => {

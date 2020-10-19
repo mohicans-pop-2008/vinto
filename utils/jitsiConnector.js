@@ -90,6 +90,7 @@ export const connectLocalTracksToAConference = async ({ conference }) => {
  *
  * NOTE: unpredictable behavior, sometimes tracks are there, other times
  * no
+ *
  * loads all the other participant tracks from the Jitsi Meet server
  * returns an array of videoTracks corresponding to all participants
  * in conference prior to the time of this client joining.
