@@ -1,3 +1,5 @@
+import './App.css'
+import { UIGridLayout } from './uicontainers/'
 import React, { useEffect, useState, useCallback } from "react";
 import regeneratorRuntime from "regenerator-runtime";
 import jitsiConnect, {
@@ -5,15 +7,8 @@ import jitsiConnect, {
   getRemoteVideoTracks,
   TRACK_ADDED,
 } from "../utils/jitsiConnector";
-import { Video } from "./components"
+import { Conference } from "./components"
 
-/**
- * Random Number Generator
- *
- * You get a number and you get a number!
- */
-
-const createRandomNum = () => Math.floor(Math.random() * 10000);
 
 /**
  * REACT application starts
@@ -82,24 +77,13 @@ const App = () => {
    * RENDER METHOD
    */
 
-  return (
-    <div>
-      {createRandomNum()}
-      <button type="submit" onClick={connect}>
-        Join a Conference
-      </button>
-      {tracks ? (
-        Object.keys(tracks)
-          .filter((trackKey) => trackKey.includes("video"))
-          .map((vTrackKey) => {
-            const videoTrack = tracks[vTrackKey];
-            return <Video track={videoTrack} />
-          })
-      ) : (
-        <h3>No tracks</h3>
-      )}
-    </div>
-  );
+  return conference ? (<UIGridLayout>
+    <Conference tracks={tracks} />
+  </UIGridLayout>) : (<div>
+    <button type="submit" onClick={connect}>
+      Join a Conference
+    </button>
+  </div>)
 };
 
 export default App;
