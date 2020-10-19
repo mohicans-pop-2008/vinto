@@ -49,32 +49,32 @@ const connectToAConference = connect
  * Emits a TRACK_ADDED event 5 times (to mimic 5 people joining)
  */
 
-function mimicAddTrack() {
-  console.log("MIMIC ADD TRACK FIRED");
-  const trackAdded = new Event("TRACK_ADDED");
-  const root = document.getElementById("root");
-  root.dispatchEvent(trackAdded);
-}
+// function mimicAddTrack() {
+//   console.log("MIMIC ADD TRACK FIRED");
+//   const trackAdded = new Event("TRACK_ADDED");
+//   const root = document.getElementById("root");
+//   root.dispatchEvent(trackAdded);
+// }
 
-function mimicRemoveTrack() {
-  console.log("MIMIC REMOVE TRACK FIRED");
-  const trackRemoved = new Event("TRACK_REMOVED");
-  const root = document.getElementById("root");
-  root.dispatchEvent(trackRemoved);
-}
+// function mimicRemoveTrack() {
+//   console.log("MIMIC REMOVE TRACK FIRED");
+//   const trackRemoved = new Event("TRACK_REMOVED");
+//   const root = document.getElementById("root");
+//   root.dispatchEvent(trackRemoved);
+// }
 
-(async () => {
-  let x = 10;
-  while (x > 0) {
-    if (x < 6) {
-      window.setTimeout(mimicAddTrack, x * 2000);
-      x--;
-    } else {
-      window.setTimeout(mimicRemoveTrack, x * 2000);
-      x--;
-    }
-  }
-})();
+// (async () => {
+//   let x = 10;
+//   while (x > 0) {
+//     if (x < 6) {
+//       window.setTimeout(mimicAddTrack, x * 2000);
+//       x--;
+//     } else {
+//       window.setTimeout(mimicRemoveTrack, x * 2000);
+//       x--;
+//     }
+//   }
+// })();
 
 /**
  * REACT application starts

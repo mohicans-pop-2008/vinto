@@ -51,12 +51,19 @@ export const connectLocalTracksToAConference = async ({ conference }) => {
  */
 export const getRemoteVideoTracks = ({ conference }) => {
   const participants = conference.getParticipants();
+  console.log("Are participants undefined?", participants)
   const remoteVideoTracks = participants.map((participant) => {
+    if (participant._tracks.length) {
+      console.log("_tracks has stuff in it <==")
+    } else {
+      console.log("_tracks is empty <==")
+    }
     const [theVideoTrack] = participant
-      .getTracks()
+      ._tracks
       .filter((track) => track.getType() === "video");
     return theVideoTrack;
   });
+  console.log("Is remoteVideoTracks undefined?", remoteVideoTracks)
   return remoteVideoTracks;
 };
 
@@ -69,12 +76,12 @@ export const getRemoteVideoTracks = ({ conference }) => {
  * - specify a room name
  */
 
-const connectToAServer = async ({ room }) => {
+const connectToAServer = ({ room }) => {
   // initialize
   JitsiMeetJS.init();
 
   // set log level
-  JitsiMeetJS.setLogLevel(JitsiMeetJS.logLevels.DEBUG);
+  JitsiMeetJS.setLogLevel(JitsiMeetJS.logLevels.ERROR);
 
   // connect to a server
   config.serviceUrl = config.websocket || config.bosh;
