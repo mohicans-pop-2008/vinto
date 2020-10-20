@@ -64,15 +64,23 @@ const connectToAConference = ({
   const conference = connection.initJitsiConference(room, {});
   return new Promise(async (resolve) => {
     const localTracks = await JitsiMeetJS.createLocalTracks(
-      { devices: ["video"], facingMode: "user" },
+      { devices: ["video", "audio"], facingMode: "user" },
       true
     );
+    localTracks.forEach((track) => {
+      if(track.getType() === 'audio') {
+        track.mute();
+      };
+    })
     console.log(
-      "Vinto: The length of localTracks is 1",
-      localTracks.length === 1
+      "Vinto: The length of localTracks is 2",
+      localTracks.length === 2
     );
     const [localVideoTrack] = localTracks.filter(
       (track) => track.getType() === "video"
+    );
+    const [localAudioTrack] = localTracks.filter(
+      (track) => track.getType() === "audio"
     );
     conference.on(JitsiMeetJS.events.conference.TRACK_ADDED, trackAddedHandler);
     conference.on(
@@ -82,7 +90,7 @@ const connectToAConference = ({
     conference.on(JitsiMeetJS.events.conference.USER_LEFT, userLeftHandler);
     // register event handler for successful joining of the conference
     conference.on(JitsiMeetJS.events.conference.CONFERENCE_JOINED, () => {
-      resolve({ conference, localVideoTrack });
+      resolve({ conference, localVideoTrack, localAudioTrack });
     });
     // join the conference
     conference.join();
@@ -128,7 +136,7 @@ const jitsiConnect = async ({
 }) => {
   const connection = await connectToAServer({ room });
   console.log("Vinto: Connection object", connection);
-  const { conference, localVideoTrack } = await connectToAConference({
+  const { conference, localVideoTrack, localAudioTrack } = await connectToAConference({
     room,
     connection,
     trackAddedHandler,
@@ -136,6 +144,7 @@ const jitsiConnect = async ({
     userLeftHandler,
   });
   conference.addTrack(localVideoTrack);
+  conference.addTrack(localAudioTrack)
   console.log("Vinto: Conference object", conference);
   return { theConference: conference, localVideoTrack };
 };
