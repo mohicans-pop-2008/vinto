@@ -52,15 +52,17 @@ const App = () => {
   const connect = async (e) => {
     console.log("Vinto: Let's join a conference now");
     e.preventDefault();
-    const { theConference } = await jitsiConnect({
+    const { theConference, localVideoTrack } = await jitsiConnect({
       room: "some-default-room",
       trackAddedHandler: respondToTrackAdded,
       trackRemovedHandler: respondToTrackRemoved,
     });
-    const localVideoTrack = await connectLocalTracksToAConference({
-      conference: theConference,
-    });
+    // const localVideoTrack = await connectLocalTracksToAConference({
+    //   conference: theConference,
+    // });
+    const key = localVideoTrack.getParticipantId();
     setConference(theConference);
+    setTracks((tracks) => ({ ...tracks, [key]: localVideoTrack }));
   };
 
   /**

@@ -61,7 +61,18 @@ const connectToAConference = ({
 }) => {
   // create the local representation of the conference
   const conference = connection.initJitsiConference(room, {});
-  return new Promise((resolve) => {
+  return new Promise(async (resolve) => {
+    const localTracks = await JitsiMeetJS.createLocalTracks(
+      { devices: ["video"], facingMode: "user" },
+      true
+    );
+    console.log(
+      "Vinto: The length of localTracks is 1",
+      localTracks.length === 1
+    );
+    const [localVideoTrack] = localTracks.filter(
+      (track) => track.getType() === "video"
+    );
     conference.on(JitsiMeetJS.events.conference.TRACK_ADDED, trackAddedHandler);
     conference.on(
       JitsiMeetJS.events.conference.TRACK_REMOVED,
@@ -69,7 +80,7 @@ const connectToAConference = ({
     );
     // register event handler for successful joining of the conference
     conference.on(JitsiMeetJS.events.conference.CONFERENCE_JOINED, () => {
-      resolve(conference);
+      resolve({ conference, localVideoTrack });
     });
     // join the conference
     conference.join();
@@ -86,7 +97,10 @@ export const connectLocalTracksToAConference = async ({ conference }) => {
     { devices: ["video"], facingMode: "user" },
     true
   );
-  console.log("Vinto: The length of localTracks is 1", localTracks.length === 1);
+  console.log(
+    "Vinto: The length of localTracks is 1",
+    localTracks.length === 1
+  );
   localTracks.forEach((track) => {
     conference.addTrack(track);
   });
@@ -95,6 +109,34 @@ export const connectLocalTracksToAConference = async ({ conference }) => {
   );
   return localVideoTrack;
 };
+
+/**
+ * #connect
+ *
+ * - FINAL step
+ * - awaits initialization and connection
+ * - awaits conference and joining
+ * - returns the conference and track for use by React app
+ */
+const jitsiConnect = async ({
+  room,
+  trackAddedHandler,
+  trackRemovedHandler,
+}) => {
+  const connection = await connectToAServer({ room });
+  console.log("Vinto: Connection object", connection);
+  const { conference, localVideoTrack } = await connectToAConference({
+    room,
+    connection,
+    trackAddedHandler,
+    trackRemovedHandler,
+  });
+  conference.addTrack(localVideoTrack);
+  console.log("Vinto: Conference object", conference);
+  return { theConference: conference, localVideoTrack };
+};
+
+export default jitsiConnect;
 
 /**
  * #getRemoteVideoTracks
@@ -123,29 +165,3 @@ export const getRemoteVideoTracks = ({ conference }) => {
   console.log("Vinto: Is remoteVideoTracks undefined?", remoteVideoTracks);
   return remoteVideoTracks;
 };
-
-/**
- * #connect
- *
- * - awaits initialization and connection
- * - awaits conference and joining
- * - returns the conference and track for use by React app
- */
-const jitsiConnect = async ({
-  room,
-  trackAddedHandler,
-  trackRemovedHandler,
-}) => {
-  const connection = await connectToAServer({ room });
-  console.log("Vinto: Connection object", connection);
-  const conference = await connectToAConference({
-    room,
-    connection,
-    trackAddedHandler,
-    trackRemovedHandler,
-  });
-  console.log("Vinto: Conference object", conference);
-  return { theConference: conference };
-};
-
-export default jitsiConnect;
