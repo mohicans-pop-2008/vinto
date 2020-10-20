@@ -1,7 +1,7 @@
 .conference {
   display: flex;
   background: #eee8d5;
-  flex-wrap: nowrap;
+  flex-wrap: no-wrap;
   align-items: center;
   grid-area: conference;
 }

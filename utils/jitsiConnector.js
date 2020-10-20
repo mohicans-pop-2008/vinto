@@ -18,7 +18,7 @@ const connectToAServer = ({ room }) => {
   JitsiMeetJS.init();
 
   // set log level
-  JitsiMeetJS.setLogLevel(JitsiMeetJS.logLevels.ERROR);
+  JitsiMeetJS.setLogLevel(JitsiMeetJS.logLevels.TRACE);
 
   // connect to a server
   config.serviceUrl = config.websocket || config.bosh;
@@ -52,15 +52,25 @@ const connectToAServer = ({ room }) => {
  * - returns {Promise} that resolves to the conference object
  *   when CONFERENCE_JOINED fires
  */
-const connectToAConference = ({ room, connection, trackAddedHandler }) => {
+const connectToAConference = ({
+  room,
+  connection,
+  trackAddedHandler,
+  trackRemovedHandler,
+}) => {
   // create the local representation of the conference
   const conference = connection.initJitsiConference(room, {});
   return new Promise((resolve) => {
-    conference.on(JitsiMeetJS.events.conference.TRACK_ADDED, trackAddedHandler)
+    conference.on(JitsiMeetJS.events.conference.TRACK_ADDED, trackAddedHandler);
+    conference.on(
+      JitsiMeetJS.events.conference.TRACK_REMOVED,
+      trackRemovedHandler
+    );
     // register event handler for successful joining of the conference
-    conference.on(JitsiMeetJS.events.conference.CONFERENCE_JOINED, () => {
-      resolve(conference);
-    });
+    conference
+      .on(JitsiMeetJS.events.conference.CONFERENCE_JOINED, () => {
+        resolve(conference);
+      })
     // join the conference
     conference.join();
   });
@@ -98,19 +108,19 @@ export const connectLocalTracksToAConference = async ({ conference }) => {
  */
 export const getRemoteVideoTracks = ({ conference }) => {
   const participants = conference.getParticipants();
-  console.log("Are participants undefined?", participants)
+  console.log("Are participants undefined?", participants);
   const remoteVideoTracks = participants.map((participant) => {
     if (participant._tracks.length) {
-      console.log("_tracks has stuff in it <==")
+      console.log("_tracks has stuff in it <==");
     } else {
-      console.log("_tracks is empty <==")
+      console.log("_tracks is empty <==");
     }
-    const [theVideoTrack] = participant
-      ._tracks
-      .filter((track) => track.getType() === "video");
+    const [theVideoTrack] = participant._tracks.filter(
+      (track) => track.getType() === "video"
+    );
     return theVideoTrack;
   });
-  console.log("Is remoteVideoTracks undefined?", remoteVideoTracks)
+  console.log("Is remoteVideoTracks undefined?", remoteVideoTracks);
   return remoteVideoTracks;
 };
 
@@ -121,10 +131,15 @@ export const getRemoteVideoTracks = ({ conference }) => {
  * - awaits conference and joining
  * - returns the conference and track for use by React app
  */
-const jitsiConnect = async ({ room, trackAddedHandler }) => {
+const jitsiConnect = async ({ room, trackAddedHandler, trackRemovedHandler }) => {
   const connection = await connectToAServer({ room });
   console.log("Connection object", connection);
-  const conference = await connectToAConference({ room, connection, trackAddedHandler });
+  const conference = await connectToAConference({
+    room,
+    connection,
+    trackAddedHandler,
+    trackRemovedHandler
+  });
   console.log("Conference object", conference);
   return { theConference: conference };
 };

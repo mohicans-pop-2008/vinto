@@ -1,12 +1,10 @@
 import "./App.css";
-import { UIGridLayout } from "./uicontainers/";
-import React, { useEffect, useState, useCallback } from "react";
 import regeneratorRuntime from "regenerator-runtime";
+import React, { useEffect, useState, useCallback } from "react";
 import jitsiConnect, {
   connectLocalTracksToAConference,
-  getRemoteVideoTracks,
-  TRACK_ADDED,
 } from "../utils/jitsiConnector";
+import { UIGridLayout } from "./uicontainers/";
 import { Conference } from "./components";
 
 /**
@@ -42,12 +40,22 @@ const App = () => {
     setTracks((tracks) => ({ ...tracks, [key]: track }));
   };
 
+  const respondToTrackRemoved = (track) => {
+    console.log("React app detects TRACK_REMOVED");
+    // newObj = {};
+    // Object.entries(tracks)
+    //   .filter(([key, value]) => (key !== track.getParticipantId()))
+    //   .forEach(([key, value]) => {newObj[key] = value});
+    // setTracks((tracks) => newObj);
+  };
+
   const connect = async (e) => {
     console.log("Let's join a conference now");
     e.preventDefault();
     const { theConference } = await jitsiConnect({
       room: "some-default-room",
       trackAddedHandler: respondToTrackAdded,
+      trackRemovedHandler: respondToTrackRemoved,
     });
     const localVideoTrack = await connectLocalTracksToAConference({
       conference: theConference,
