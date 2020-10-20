@@ -58,6 +58,7 @@ const connectToAConference = ({
   connection,
   trackAddedHandler,
   trackRemovedHandler,
+  userLeftHandler,
 }) => {
   // create the local representation of the conference
   const conference = connection.initJitsiConference(room, {});
@@ -78,6 +79,7 @@ const connectToAConference = ({
       JitsiMeetJS.events.conference.TRACK_REMOVED,
       trackRemovedHandler
     );
+    conference.on(JitsiMeetJS.events.conference.USER_LEFT, userLeftHandler);
     // register event handler for successful joining of the conference
     conference.on(JitsiMeetJS.events.conference.CONFERENCE_JOINED, () => {
       resolve({ conference, localVideoTrack });
@@ -122,6 +124,7 @@ const jitsiConnect = async ({
   room,
   trackAddedHandler,
   trackRemovedHandler,
+  userLeftHandler,
 }) => {
   const connection = await connectToAServer({ room });
   console.log("Vinto: Connection object", connection);
@@ -130,6 +133,7 @@ const jitsiConnect = async ({
     connection,
     trackAddedHandler,
     trackRemovedHandler,
+    userLeftHandler,
   });
   conference.addTrack(localVideoTrack);
   console.log("Vinto: Conference object", conference);
