@@ -60,7 +60,7 @@ const App = () => {
     // const localVideoTrack = await connectLocalTracksToAConference({
     //   conference: theConference,
     // });
-    const key = localVideoTrack.getParticipantId();
+    const key = `${localVideoTrack.getParticipantId()}-${localVideoTrack.getType()}`;
     setConference(theConference);
     setTracks((tracks) => ({ ...tracks, [key]: localVideoTrack }));
   };
