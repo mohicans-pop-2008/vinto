@@ -1,11 +1,11 @@
-import './App.css';
-import regeneratorRuntime from 'regenerator-runtime';
-import React, { useEffect, useState, useCallback } from 'react';
+import "./App.css";
+import regeneratorRuntime from "regenerator-runtime";
+import React, { useEffect, useState, useCallback } from "react";
 import jitsiConnect, {
   connectLocalTracksToAConference,
-} from '../utils/jitsiConnector';
-import { UIGridLayout } from './uicontainers/';
-import { Conference, Controls, Sidebar } from './components';
+} from "../utils/jitsiConnector";
+import { UIGridLayout } from "./uicontainers/";
+import { Conference, Controls, Sidebar } from "./components";
 
 /**
  * REACT application starts
@@ -15,7 +15,7 @@ import { Conference, Controls, Sidebar } from './components';
  */
 
 const App = () => {
-  console.log('Vinto: RENDERED or RE-RENDERED');
+  console.log("Vinto: RENDERED or RE-RENDERED");
   const [conference, setConference] = useState(null);
   const [tracks, setTracks] = useState({});
 
@@ -42,7 +42,7 @@ const App = () => {
   };
 
   const respondToTrackRemoved = (track) => {
-    console.log('Vinto: React app detects TRACK_REMOVED');
+    console.log("Vinto: React app detects TRACK_REMOVED");
     // newObj = {};
     // Object.entries(tracks)
     //   .filter(([key, value]) => (key !== track.getParticipantId()))
@@ -50,13 +50,30 @@ const App = () => {
     // setTracks((tracks) => newObj);
   };
 
+  const respondToUserLeft = (id, user) => {
+    console.log(`Vinto: User ${id} Left`, user);
+    setTracks((tracks) => {
+      const updatedTracks = { ...tracks };
+      const videoKey = `${id}-video`;
+      const audioKey = `${id}-audio`;
+      try {
+        delete updatedTracks[videoKey];
+        delete updatedTracks[audioKey];
+        return updatedTracks;
+      } catch (err) {
+        console.log("Vinto: Failed to delete a track -->", err.message);
+      }
+    });
+  };
+
   const connect = async (e) => {
     console.log("Vinto: Let's join a conference now");
     e.preventDefault();
     const { theConference, localVideoTrack } = await jitsiConnect({
-      room: 'some-default-room',
+      room: "some-default-room",
       trackAddedHandler: respondToTrackAdded,
       trackRemovedHandler: respondToTrackRemoved,
+      userLeftHandler: respondToUserLeft,
     });
     const key = `${localVideoTrack.getParticipantId()}-${localVideoTrack.getType()}`;
     setConference(theConference);
