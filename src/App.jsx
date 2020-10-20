@@ -87,12 +87,15 @@ const App = () => {
   /**
    * RENDER METHOD
    */
-
+  let localTracks
+  if (conference) {
+    localTracks = conference.getLocalTracks();
+  }
   return conference ? (
     <UIGridLayout>
       <Conference tracks={tracks} />
       <Sidebar />
-      <Controls />
+      <Controls localTracks={localTracks} />
     </UIGridLayout>
   ) : (
     <div>
