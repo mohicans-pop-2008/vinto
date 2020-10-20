@@ -21,8 +21,9 @@ const connectToAServer = ({ room }) => {
   JitsiMeetJS.setLogLevel(JitsiMeetJS.logLevels.TRACE);
 
   // connect to a server
-  config.serviceUrl = config.websocket || config.bosh;
-  config.serviceUrl += `?room=${room}`;
+  let serviceUrl = config.websocket || config.bosh;
+  serviceUrl += `?room=${room}`;
+  config.serviceUrl = config.bosh = serviceUrl;
   const connection = new JitsiMeetJS.JitsiConnection(null, null, config);
 
   // attempt a connection
@@ -67,10 +68,9 @@ const connectToAConference = ({
       trackRemovedHandler
     );
     // register event handler for successful joining of the conference
-    conference
-      .on(JitsiMeetJS.events.conference.CONFERENCE_JOINED, () => {
-        resolve(conference);
-      })
+    conference.on(JitsiMeetJS.events.conference.CONFERENCE_JOINED, () => {
+      resolve(conference);
+    });
     // join the conference
     conference.join();
   });
@@ -131,14 +131,18 @@ export const getRemoteVideoTracks = ({ conference }) => {
  * - awaits conference and joining
  * - returns the conference and track for use by React app
  */
-const jitsiConnect = async ({ room, trackAddedHandler, trackRemovedHandler }) => {
+const jitsiConnect = async ({
+  room,
+  trackAddedHandler,
+  trackRemovedHandler,
+}) => {
   const connection = await connectToAServer({ room });
   console.log("Connection object", connection);
   const conference = await connectToAConference({
     room,
     connection,
     trackAddedHandler,
-    trackRemovedHandler
+    trackRemovedHandler,
   });
   console.log("Conference object", conference);
   return { theConference: conference };
