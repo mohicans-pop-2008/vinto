@@ -28,11 +28,15 @@ const App = () => {
    */
 
   const respondToTrackAdded = (track) => {
-    console.log('Vinto: React app detects TRACK_ADDED');
-    console.log('Vinto: the track that was added --->', track);
-    console.log('Vinto: tracks at this time', tracks);
-    console.log('Vinto: participant ID --->', track.getParticipantId());
-    if((track.isLocal() && track.getType() === 'audio') || !track.getParticipantId()) return;
+    console.log("Vinto: React app detects TRACK_ADDED");
+    console.log("Vinto: the track that was added --->", track);
+    console.log("Vinto: tracks at this time", tracks);
+    console.log("Vinto: participant ID --->", track.getParticipantId());
+    if (
+      (track.isLocal() && track.getType() === "audio") ||
+      !track.getParticipantId()
+    )
+      return;
 
     const participantId = track.getParticipantId();
     const trackType = track.getType();
@@ -43,11 +47,6 @@ const App = () => {
 
   const respondToTrackRemoved = (track) => {
     console.log("Vinto: React app detects TRACK_REMOVED");
-    // newObj = {};
-    // Object.entries(tracks)
-    //   .filter(([key, value]) => (key !== track.getParticipantId()))
-    //   .forEach(([key, value]) => {newObj[key] = value});
-    // setTracks((tracks) => newObj);
   };
 
   const respondToUserLeft = (id, user) => {
@@ -66,6 +65,9 @@ const App = () => {
     });
   };
 
+  /**
+   * Joins a conference
+   */
   const connect = async (e) => {
     console.log("Vinto: Let's join a conference now");
     e.preventDefault();
@@ -75,8 +77,10 @@ const App = () => {
       trackRemovedHandler: respondToTrackRemoved,
       userLeftHandler: respondToUserLeft,
     });
-    const key = `${localVideoTrack.getParticipantId()}-${localVideoTrack.getType()}`;
     setConference(theConference);
+    if (!localVideoTrack.getParticipantId()) return;
+    const key = `${localVideoTrack.getParticipantId()}-${localVideoTrack.getType()}`;
+    console.log("Vinto: key ========>", key);
     setTracks((tracks) => ({ ...tracks, [key]: localVideoTrack }));
   };
 
