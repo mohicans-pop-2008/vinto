@@ -15,7 +15,7 @@ import { Conference } from "./components";
  */
 
 const App = () => {
-  console.log("RENDERED or RE-RENDERED");
+  console.log("Vinto: RENDERED or RE-RENDERED");
   const [conference, setConference] = useState(null);
   const [tracks, setTracks] = useState({});
 
@@ -28,10 +28,10 @@ const App = () => {
    */
 
   const respondToTrackAdded = (track) => {
-    console.log("React app detects TRACK_ADDED");
-    console.log("the track that was added --->", tracks);
-    console.log("tracks at this time", tracks);
-    console.log("participant ID --->", track.getParticipantId());
+    console.log("Vinto: React app detects TRACK_ADDED");
+    console.log("Vinto: the track that was added --->", track);
+    console.log("Vinto: tracks at this time", tracks);
+    console.log("Vinto: participant ID --->", track.getParticipantId());
 
     const participantId = track.getParticipantId();
     const trackType = track.getType();
@@ -41,7 +41,7 @@ const App = () => {
   };
 
   const respondToTrackRemoved = (track) => {
-    console.log("React app detects TRACK_REMOVED");
+    console.log("Vinto: React app detects TRACK_REMOVED");
     // newObj = {};
     // Object.entries(tracks)
     //   .filter(([key, value]) => (key !== track.getParticipantId()))
@@ -50,7 +50,7 @@ const App = () => {
   };
 
   const connect = async (e) => {
-    console.log("Let's join a conference now");
+    console.log("Vinto: Let's join a conference now");
     e.preventDefault();
     const { theConference } = await jitsiConnect({
       room: "some-default-room",

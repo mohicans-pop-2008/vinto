@@ -2,7 +2,7 @@ import JitsiMeetJS from "lib-jitsi-meet";
 import $ from "jquery";
 import config from "./jitsi.config";
 
-window.$ = $; // JitsiMeetJS needs this to work
+window.$ = $; // JitsiMeetJS needs jQuery selector to work
 
 export const TRACK_ADDED = JitsiMeetJS.events.conference.TRACK_ADDED;
 
@@ -24,7 +24,7 @@ const connectToAServer = ({ room }) => {
   let serviceUrl = config.websocket || config.bosh;
   serviceUrl += `?room=${room}`;
   config.serviceUrl = config.bosh = serviceUrl;
-  const connection = new JitsiMeetJS.JitsiConnection(null, null, config);
+  const connection = new JitsiMeetJS.JitsiConnection(null, undefined, config);
 
   // attempt a connection
   return new Promise((resolve) => {
@@ -35,11 +35,11 @@ const connectToAServer = ({ room }) => {
     );
     connection.addEventListener(
       JitsiMeetJS.events.connection.CONNECTION_FAILED,
-      () => console.log("Connection failed")
+      () => console.log("Vinto: Connection failed")
     );
     connection.addEventListener(
       JitsiMeetJS.events.connection.CONNECTION_DISCONNECTED,
-      () => console.log("Connection disconnected")
+      () => console.log("Vinto: Connection disconnected")
     );
     connection.connect();
   });
@@ -86,7 +86,7 @@ export const connectLocalTracksToAConference = async ({ conference }) => {
     { devices: ["video"], facingMode: "user" },
     true
   );
-  console.log("The length of localTracks is 1", localTracks.length === 1);
+  console.log("Vinto: The length of localTracks is 1", localTracks.length === 1);
   localTracks.forEach((track) => {
     conference.addTrack(track);
   });
@@ -108,19 +108,19 @@ export const connectLocalTracksToAConference = async ({ conference }) => {
  */
 export const getRemoteVideoTracks = ({ conference }) => {
   const participants = conference.getParticipants();
-  console.log("Are participants undefined?", participants);
+  console.log("Vinto: Are participants undefined?", participants);
   const remoteVideoTracks = participants.map((participant) => {
     if (participant._tracks.length) {
-      console.log("_tracks has stuff in it <==");
+      console.log("Vinto: _tracks has stuff in it <==");
     } else {
-      console.log("_tracks is empty <==");
+      console.log("Vinto: _tracks is empty <==");
     }
     const [theVideoTrack] = participant._tracks.filter(
       (track) => track.getType() === "video"
     );
     return theVideoTrack;
   });
-  console.log("Is remoteVideoTracks undefined?", remoteVideoTracks);
+  console.log("Vinto: Is remoteVideoTracks undefined?", remoteVideoTracks);
   return remoteVideoTracks;
 };
 
@@ -137,14 +137,14 @@ const jitsiConnect = async ({
   trackRemovedHandler,
 }) => {
   const connection = await connectToAServer({ room });
-  console.log("Connection object", connection);
+  console.log("Vinto: Connection object", connection);
   const conference = await connectToAConference({
     room,
     connection,
     trackAddedHandler,
     trackRemovedHandler,
   });
-  console.log("Conference object", conference);
+  console.log("Vinto: Conference object", conference);
   return { theConference: conference };
 };
 
