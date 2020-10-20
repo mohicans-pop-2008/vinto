@@ -1,11 +1,11 @@
-import "./App.css";
-import regeneratorRuntime from "regenerator-runtime";
-import React, { useEffect, useState, useCallback } from "react";
+import './App.css';
+import regeneratorRuntime from 'regenerator-runtime';
+import React, { useEffect, useState, useCallback } from 'react';
 import jitsiConnect, {
   connectLocalTracksToAConference,
-} from "../utils/jitsiConnector";
-import { UIGridLayout } from "./uicontainers/";
-import { Conference } from "./components";
+} from '../utils/jitsiConnector';
+import { UIGridLayout } from './uicontainers/';
+import { Conference, Controls, Sidebar } from './components';
 
 /**
  * REACT application starts
@@ -15,7 +15,7 @@ import { Conference } from "./components";
  */
 
 const App = () => {
-  console.log("Vinto: RENDERED or RE-RENDERED");
+  console.log('Vinto: RENDERED or RE-RENDERED');
   const [conference, setConference] = useState(null);
   const [tracks, setTracks] = useState({});
 
@@ -28,10 +28,10 @@ const App = () => {
    */
 
   const respondToTrackAdded = (track) => {
-    console.log("Vinto: React app detects TRACK_ADDED");
-    console.log("Vinto: the track that was added --->", track);
-    console.log("Vinto: tracks at this time", tracks);
-    console.log("Vinto: participant ID --->", track.getParticipantId());
+    console.log('Vinto: React app detects TRACK_ADDED');
+    console.log('Vinto: the track that was added --->', track);
+    console.log('Vinto: tracks at this time', tracks);
+    console.log('Vinto: participant ID --->', track.getParticipantId());
 
     const participantId = track.getParticipantId();
     const trackType = track.getType();
@@ -41,7 +41,7 @@ const App = () => {
   };
 
   const respondToTrackRemoved = (track) => {
-    console.log("Vinto: React app detects TRACK_REMOVED");
+    console.log('Vinto: React app detects TRACK_REMOVED');
     // newObj = {};
     // Object.entries(tracks)
     //   .filter(([key, value]) => (key !== track.getParticipantId()))
@@ -53,7 +53,7 @@ const App = () => {
     console.log("Vinto: Let's join a conference now");
     e.preventDefault();
     const { theConference, localVideoTrack } = await jitsiConnect({
-      room: "some-default-room",
+      room: 'some-default-room',
       trackAddedHandler: respondToTrackAdded,
       trackRemovedHandler: respondToTrackRemoved,
     });
@@ -72,6 +72,8 @@ const App = () => {
   return conference ? (
     <UIGridLayout>
       <Conference tracks={tracks} />
+      <Sidebar />
+      <Controls />
     </UIGridLayout>
   ) : (
     <div>
