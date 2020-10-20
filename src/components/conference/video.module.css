@@ -1,12 +1,12 @@
 .videoTile {
   background: #93a1a1;
   border: 3px dotted #d33682;
-  min-height: 200px;
-  max-width: 100%;
-  min-width: 150px;
+  min-height: 150px;
   max-height: 100%;
-  flex-basis: 100%;
-  flex-grow: 1;
+  min-width: 150px;
+  max-width: 100%;
+  flex-basis: auto;
+  flex-grow: 0;
   flex-shrink: 1;
   display: flex;
 }
