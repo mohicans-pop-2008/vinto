@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 // This component can modularize for track type. For now just calling it mute
 const Mute = ({ track }) => {
-  const [muted, setMuted] = useState(true);
+  const [muted, setMuted] = useState(track.getType() === 'audio' ? true : false);
 
   const onClick = () => {
     muted ? track.unmute() : track.mute()
