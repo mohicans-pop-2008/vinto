@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import styles from "./video.module.css";
 
 const Video = ({ track, participantCount, height, width }) => {
-  const fallback = track.getParticipantId();
-
   return (
     <div style={{ height: height, width: width }} className={styles.videoTile}>
       {track ? (
@@ -13,7 +11,7 @@ const Video = ({ track, participantCount, height, width }) => {
           ref={(ref) => ref && track.attach(ref)}
         />
       ) : (
-        <h3 color="white">{fallback}</h3>
+        <h3 color="white">Participant</h3>
       )}
     </div>
   );
