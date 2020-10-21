@@ -1,11 +1,12 @@
 import "./App.css";
+import JitsiMeetJS from "lib-jitsi-meet";
 import regeneratorRuntime from "regenerator-runtime";
 import React, { useEffect, useState, useCallback } from "react";
 import jitsiConnect, {
   connectLocalTracksToAConference,
 } from "../utils/jitsiConnector";
 import { UIGridLayout } from "./uicontainers/";
-import { Conference, Controls, Sidebar } from "./components";
+import { Conference, Controls, JoinForm, Sidebar } from "./components";
 
 /**
  * REACT application starts
@@ -32,6 +33,7 @@ const App = () => {
     console.log("Vinto: the track that was added --->", track);
     console.log("Vinto: tracks at this time", tracks);
     console.log("Vinto: participant ID --->", track.getParticipantId());
+    track.addEventListener(JitsiMeetJS.events.track.TRACK_MUTE_CHANGED, respondToTrackMuteChanged)
     if (
       (track.isLocal() && track.getType() === "audio") ||
       !track.getParticipantId()
@@ -46,7 +48,13 @@ const App = () => {
   };
 
   const respondToTrackRemoved = (track) => {
-    console.log("Vinto: React app detects TRACK_REMOVED");
+    console.log(`Vinto: A track has been removed, this is the track that's been removed: ${track}`)
+    if(track.getType() === 'audio') return;
+    setTracks((tracks) => {
+      const updatedTracks = { ...tracks };
+      updatedTracks[`${track.getParticipantId()}-${track.getType()}`] = null
+      return updatedTracks
+    })
   };
 
   const respondToUserLeft = (id, user) => {
@@ -67,12 +75,22 @@ const App = () => {
 
   const respondToTrackMuteChanged = (track) => {
     console.log('Vinto: React app detects TRACK_MUTE_CHANGED. Here is the track', track)
+    console.log('Vinto: The new TrackID ---->', track.getId())
     if(track.getType() === 'audio') return;
-    setTracks((tracks) => {
-      const updatedTracks = { ... tracks };
-      updatedTracks[`${track.getParticipantId()}-${track.getType()}`] = track
-      return updatedTracks
-    })
+    if(track.isMuted()) {
+      setTracks((tracks) => {
+        const updatedTracks = { ...tracks };
+        updatedTracks[`${track.getParticipantId()}-${track.getType()}`] = null
+        return updatedTracks
+      })
+    } else {
+      setTracks((tracks) => {
+        const updatedTracks = { ...tracks };
+        updatedTracks[`${track.getParticipantId()}-${track.getType()}`] = track
+        return updatedTracks
+      })
+
+    }
   }
 
   /**
@@ -109,11 +127,7 @@ const App = () => {
       <Controls localTracks={localTracks} />
     </UIGridLayout>
   ) : (
-    <div>
-      <button type="submit" onClick={connect}>
-        Join a Conference
-      </button>
-    </div>
+    <JoinForm onSubmit={connect} />
   );
 };
 
