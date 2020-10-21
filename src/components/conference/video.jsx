@@ -3,9 +3,6 @@ import styles from "./video.module.css";
 
 const Video = ({ track, n }) => {
   if (track) {
-    console.log(
-      `=====> Video track ${track.getId()} is Muted: ${track.isMuted()} <=====`
-    );
 
     return (
       <div
