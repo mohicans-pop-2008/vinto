@@ -13,7 +13,6 @@ const Video = ({ track, n }) => {
    * it should have a calculated height and width
    * it should have some fallback content - ID for now, ideally a display name
    */
-  const aspectRatio = 16 / 9; // what is the actual aspectRatio for Jitsi tracks?
 
   const fallback = track.getParticipantId();
   return (
