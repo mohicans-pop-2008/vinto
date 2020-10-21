@@ -7,16 +7,16 @@ const Video = ({ track, participantCount, height, width }) => {
   return (
     <div style={{ height: height, width: width }} className={styles.videoTile}>
       {track ? (
-              <video
-        className={styles.videoTrack}
-        autoPlay="1"
-        ref={(ref) => ref && track.attach(ref)}
-      />) : (
+        <video
+          className={styles.videoTrack}
+          autoPlay="1"
+          ref={(ref) => ref && track.attach(ref)}
+        />
+      ) : (
         <h3 color="white">{fallback}</h3>
-        )}
-
+      )}
     </div>
-  )
-}
+  );
+};
 
 export default Video;
