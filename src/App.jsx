@@ -49,12 +49,6 @@ const App = () => {
 
   const respondToTrackRemoved = (track) => {
     console.log(`Vinto: A track has been removed, this is the track that's been removed: ${track}`)
-    if(track.getType() === 'audio') return;
-    setTracks((tracks) => {
-      const updatedTracks = { ...tracks };
-      updatedTracks[`${track.getParticipantId()}-${track.getType()}`] = null
-      return updatedTracks
-    })
   };
 
   const respondToUserLeft = (id, user) => {
