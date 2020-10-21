@@ -1,7 +1,9 @@
 .conference {
-  display: flex;
   background: #eee8d5;
-  flex-wrap: wrap;
-  align-items: center;
+  /* Grid Item - specifies which named grid area to occupy */
   grid-area: conference;
+  /* Flex Container - to be used as a flex container */
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
 }
