@@ -58,6 +58,7 @@ const connectToAConference = ({
   connection,
   trackAddedHandler,
   trackRemovedHandler,
+  trackMuteChangedHandler,
   userLeftHandler,
 }) => {
   // create the local representation of the conference
@@ -71,6 +72,7 @@ const connectToAConference = ({
       if(track.getType() === 'audio') {
         track.mute();
       };
+      track.addEventListener(JitsiMeetJS.events.track.TRACK_MUTE_CHANGED, trackMuteChangedHandler)
     })
     console.log(
       "Vinto: The length of localTracks is 2",
@@ -112,6 +114,7 @@ export const connectLocalTracksToAConference = async ({ conference }) => {
     localTracks.length === 1
   );
   localTracks.forEach((track) => {
+
     conference.addTrack(track);
   });
   const [localVideoTrack] = localTracks.filter(
@@ -132,6 +135,7 @@ const jitsiConnect = async ({
   room,
   trackAddedHandler,
   trackRemovedHandler,
+  trackMuteChangedHandler,
   userLeftHandler,
 }) => {
   const connection = await connectToAServer({ room });
@@ -141,6 +145,7 @@ const jitsiConnect = async ({
     connection,
     trackAddedHandler,
     trackRemovedHandler,
+    trackMuteChangedHandler,
     userLeftHandler,
   });
   conference.addTrack(localVideoTrack);

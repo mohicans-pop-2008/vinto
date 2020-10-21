@@ -74,7 +74,7 @@ const config = {
   enableLipSync: false,
   disableRtx: false, // Enables RTX everywhere
   enableScreenshotCapture: false,
-  openBridgeChannel: 'websocket', // One of true, 'datachannel', or 'websocket'
+  openBridgeChannel: true, // One of true, 'datachannel', or 'websocket'
   channelLastN: 20, // The default value of the channel attribute last-n.
   // lastNLimits: {
   //   5: 20,
