@@ -65,6 +65,16 @@ const App = () => {
     });
   };
 
+  const respondToTrackMuteChanged = (track) => {
+    console.log('Vinto: React app detects TRACK_MUTE_CHANGED. Here is the track', track)
+    if(track.getType() === 'audio') return;
+    setTracks((tracks) => {
+      const updatedTracks = { ... tracks };
+      updatedTracks[`${track.getParticipantId()}-${track.getType()}`] = track
+      return updatedTracks
+    })
+  }
+
   /**
    * Joins a conference
    */
@@ -75,6 +85,7 @@ const App = () => {
       room: "some-default-room",
       trackAddedHandler: respondToTrackAdded,
       trackRemovedHandler: respondToTrackRemoved,
+      trackMuteChangedHandler: respondToTrackMuteChanged,
       userLeftHandler: respondToUserLeft,
     });
     setConference(theConference);
