@@ -7,6 +7,7 @@ import jitsiConnect, {
 } from "../utils/jitsiConnector";
 import { UIGridLayout } from "./uicontainers/";
 import { Conference, Controls, JoinForm, Sidebar } from "./components";
+import { object } from "prop-types";
 
 /**
  * REACT application starts
@@ -17,6 +18,8 @@ import { Conference, Controls, JoinForm, Sidebar } from "./components";
 
 const App = () => {
   console.log("Vinto: RENDERED or RE-RENDERED");
+  const [name, setName] = useState('');
+  const [id, setId] = useState(null);
   const [conference, setConference] = useState(null);
   const [tracks, setTracks] = useState({});
 
@@ -90,11 +93,12 @@ const App = () => {
   /**
    * Joins a conference
    */
-  const connect = async (e) => {
+  const connect = async (e, name, room) => {
     console.log("Vinto: Let's join a conference now");
     e.preventDefault();
+    console.log("teh variables i'm hoping to pass", name, room)
     const { theConference, localVideoTrack } = await jitsiConnect({
-      room: "some-default-room",
+      room,
       trackAddedHandler: respondToTrackAdded,
       trackRemovedHandler: respondToTrackRemoved,
       trackMuteChangedHandler: respondToTrackMuteChanged,
@@ -102,9 +106,11 @@ const App = () => {
     });
     setConference(theConference);
     if (!localVideoTrack.getParticipantId()) return;
+    setId(localVideoTrack.getParticipantId())
     const key = `${localVideoTrack.getParticipantId()}-${localVideoTrack.getType()}`;
     console.log("Vinto: key ========>", key);
     setTracks((tracks) => ({ ...tracks, [key]: localVideoTrack }));
+    setName(name);
   };
 
   /**
@@ -119,6 +125,14 @@ const App = () => {
       <Conference tracks={tracks} />
       <Sidebar />
       <Controls localTracks={localTracks} />
+      <button onClick={async () => {
+        Object.keys(tracks).filter((key) => key.includes(id)).map((key) => tracks[key]).forEach( async (track) => await track.dispose())
+        await conference.leave();
+        setConference(null)
+        setTracks({})
+        setName('')
+        setId(null)
+      }}>Leave Conference</button>
     </UIGridLayout>
   ) : (
     <JoinForm onSubmit={connect} />
