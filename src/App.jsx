@@ -16,11 +16,12 @@ import { Conference, Controls, JoinForm, Sidebar } from "./components";
  */
 
 const App = () => {
-  console.log("Vinto: RENDERED or RE-RENDERED");
-  const [name, setName] = useState('');
+  console.log("Vinto: RENDERED: app");
+  const [name, setName] = useState("");
   const [id, setId] = useState(null);
   const [conference, setConference] = useState(null);
   const [tracks, setTracks] = useState({});
+  const [participants, setParticipants] = useState({});
 
   /**
    * EVENT HANDLERS
@@ -35,7 +36,10 @@ const App = () => {
     console.log("Vinto: the track that was added --->", track);
     console.log("Vinto: tracks at this time", tracks);
     console.log("Vinto: participant ID --->", track.getParticipantId());
-    track.addEventListener(JitsiMeetJS.events.track.TRACK_MUTE_CHANGED, respondToTrackMuteChanged)
+    track.addEventListener(
+      JitsiMeetJS.events.track.TRACK_MUTE_CHANGED,
+      respondToTrackMuteChanged
+    );
     if (
       (track.isLocal() && track.getType() === "audio") ||
       !track.getParticipantId()
@@ -46,15 +50,32 @@ const App = () => {
     const trackType = track.getType();
     const key = `${participantId}-${trackType}`;
 
+    setParticipants((participants) => ({
+      ...participants,
+      [participantId]: true,
+    }));
     setTracks((tracks) => ({ ...tracks, [key]: track }));
   };
 
   const respondToTrackRemoved = (track) => {
-    console.log(`Vinto: A track has been removed, this is the track that's been removed: ${track}`)
+    console.log(
+      `Vinto: A track has been removed, this is the track that's been removed: ${track}`
+    );
   };
 
   const respondToUserLeft = (id, user) => {
     console.log(`Vinto: User ${id} Left`, user);
+
+    setParticipants((participants) => {
+      const updatedParticipants = { ...participants };
+      try {
+        delete updatedParticipants[id];
+        return updatedParticipants;
+      } catch (err) {
+        console.log("Vinto: Failed to delete a participant -->", err.message);
+      }
+    });
+
     setTracks((tracks) => {
       const updatedTracks = { ...tracks };
       const videoKey = `${id}-video`;
@@ -70,24 +91,26 @@ const App = () => {
   };
 
   const respondToTrackMuteChanged = (track) => {
-    console.log('Vinto: React app detects TRACK_MUTE_CHANGED. Here is the track', track)
-    console.log('Vinto: The new TrackID ---->', track.getId())
-    if(track.getType() === 'audio') return;
-    if(track.isMuted()) {
+    console.log(
+      "Vinto: React app detects TRACK_MUTE_CHANGED. Here is the track",
+      track
+    );
+    console.log("Vinto: The new TrackID ---->", track.getId());
+    if (track.getType() === "audio") return;
+    if (track.isMuted()) {
       setTracks((tracks) => {
         const updatedTracks = { ...tracks };
-        updatedTracks[`${track.getParticipantId()}-${track.getType()}`] = null
-        return updatedTracks
-      })
+        updatedTracks[`${track.getParticipantId()}-${track.getType()}`] = null;
+        return updatedTracks;
+      });
     } else {
       setTracks((tracks) => {
         const updatedTracks = { ...tracks };
-        updatedTracks[`${track.getParticipantId()}-${track.getType()}`] = track
-        return updatedTracks
-      })
-
+        updatedTracks[`${track.getParticipantId()}-${track.getType()}`] = track;
+        return updatedTracks;
+      });
     }
-  }
+  };
 
   /**
    * Joins a conference
@@ -104,7 +127,7 @@ const App = () => {
     });
     setConference(theConference);
     if (!localVideoTrack.getParticipantId()) return;
-    setId(localVideoTrack.getParticipantId())
+    setId(localVideoTrack.getParticipantId());
     const key = `${localVideoTrack.getParticipantId()}-${localVideoTrack.getType()}`;
     console.log("Vinto: key ========>", key);
     setTracks((tracks) => ({ ...tracks, [key]: localVideoTrack }));
@@ -114,23 +137,34 @@ const App = () => {
   /**
    * RENDER METHOD
    */
-  let localTracks
+  let localTracks;
   if (conference) {
     localTracks = conference.getLocalTracks();
   }
+  let participantCount = null;
+  if (Object.keys(participants).length) {
+    participantCount = Object.keys(participants).length;
+  }
   return conference ? (
     <UIGridLayout>
-      <Conference tracks={tracks} />
+      <Conference tracks={tracks} participantCount={participantCount || 0} />
       <Sidebar />
       <Controls localTracks={localTracks} />
-      <button onClick={async () => {
-        Object.keys(tracks).filter((key) => key.includes(id)).map((key) => tracks[key]).forEach( async (track) => await track.dispose())
-        await conference.leave();
-        setConference(null)
-        setTracks({})
-        setName('')
-        setId(null)
-      }}>Leave Conference</button>
+      <button
+        onClick={async () => {
+          Object.keys(tracks)
+            .filter((key) => key.includes(id))
+            .map((key) => tracks[key])
+            .forEach(async (track) => await track.dispose());
+          await conference.leave();
+          setConference(null);
+          setTracks({});
+          setName("");
+          setId(null);
+        }}
+      >
+        Leave Conference
+      </button>
     </UIGridLayout>
   ) : (
     <JoinForm onSubmit={connect} />
