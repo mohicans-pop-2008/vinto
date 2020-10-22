@@ -2,6 +2,8 @@ import React, { useRef } from "react";
 import Video from "./video";
 import Audio from "./audio";
 import styles from "./conference.module.css";
+import { throttle } from "lodash/throttle";
+import { debounce } from "lodash/debounce";
 
 const Conference = ({ tracks }) => {
   const conferenceDiv = useRef(null); // {current: DOM Element(div)}
