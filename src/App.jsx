@@ -1,12 +1,12 @@
-import "./App.css";
-import JitsiMeetJS from "lib-jitsi-meet";
-import regeneratorRuntime from "regenerator-runtime";
-import React, { useEffect, useState, useCallback } from "react";
+import './App.css';
+import JitsiMeetJS from 'lib-jitsi-meet';
+import regeneratorRuntime from 'regenerator-runtime';
+import React, { useEffect, useState, useCallback } from 'react';
 import jitsiConnect, {
   connectLocalTracksToAConference,
-} from "../utils/jitsiConnector";
-import { UIGridLayout } from "./uicontainers/";
-import { Conference, Controls, JoinForm, Sidebar } from "./components";
+} from '../utils/jitsiConnector';
+import { UIGridLayout } from './uicontainers/';
+import { Conference, Controls, JoinForm, Sidebar } from './components';
 
 /**
  * REACT application starts
@@ -41,7 +41,7 @@ const App = () => {
       respondToTrackMuteChanged
     );
     if (
-      (track.isLocal() && track.getType() === "audio") ||
+      (track.isLocal() && track.getType() === 'audio') ||
       !track.getParticipantId()
     )
       return;
@@ -85,7 +85,7 @@ const App = () => {
         delete updatedTracks[audioKey];
         return updatedTracks;
       } catch (err) {
-        console.log("Vinto: Failed to delete a track -->", err.message);
+        console.log('Vinto: Failed to delete a track -->', err.message);
       }
     });
   };
@@ -129,7 +129,7 @@ const App = () => {
     if (!localVideoTrack.getParticipantId()) return;
     setId(localVideoTrack.getParticipantId());
     const key = `${localVideoTrack.getParticipantId()}-${localVideoTrack.getType()}`;
-    console.log("Vinto: key ========>", key);
+    console.log('Vinto: key ========>', key);
     setTracks((tracks) => ({ ...tracks, [key]: localVideoTrack }));
     setName(name);
   };

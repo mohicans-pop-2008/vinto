@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+// import { joinFormStyle } from './style';
 
 const JoinForm = ({ onSubmit }) => {
   const [name, setName] = useState('');
@@ -18,7 +19,13 @@ const JoinForm = ({ onSubmit }) => {
       <form onSubmit={(e) => onSubmit(e, name, room)}>
         <label htmlFor="name">
           Name:
-          <input id="name" type="text" name="name" value={name} onChange={onChange} />
+          <input
+            id="name"
+            type="text"
+            name="name"
+            value={name}
+            onChange={onChange}
+          />
         </label>
         <label htmlFor="name">
           RoomName:
