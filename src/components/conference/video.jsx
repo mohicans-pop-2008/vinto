@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styles from "./video.module.css";
 
-const Video = ({ track, participantCount, height, width }) => {
+const Video = ({ track, height, width }) => {
   return (
     <div style={{ height: height, width: width }} className={styles.videoTile}>
       {track ? (
