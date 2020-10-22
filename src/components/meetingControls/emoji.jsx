@@ -1,4 +1,5 @@
 import React from 'react';
+import buttonStyle from '../conference/style';
 
 const Emoji = () => {
   const onClick = () => {
@@ -6,7 +7,7 @@ const Emoji = () => {
   };
 
   return (
-    <button type="button" onClick={onClick}>
+    <button type="button" style={buttonStyle} onClick={onClick}>
       Emoji will go here!
     </button>
   );

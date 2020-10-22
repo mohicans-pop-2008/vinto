@@ -1,13 +1,12 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+import buttonStyle from '../conference/style';
 
 const Engagement = () => {
   const engagementScore = useSelector((state) => state.engagementScore);
   return (
-    <button type="button">
-      Engagement Score:
-      {' '}
-      {engagementScore}
+    <button type="button" style={buttonStyle}>
+      Engagement Score: {engagementScore}
     </button>
   );
 };
