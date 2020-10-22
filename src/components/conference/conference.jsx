@@ -33,10 +33,10 @@ const Conference = ({ tracks, participantCount }) => {
       let width;
       let height;
       if (hScale <= vScale) {
-        width = Math.floor(conWidth / cols);
+        width = Math.floor(conWidth / cols)-20;
         height = Math.floor(width / aspectRatio);
       } else {
-        height = Math.floor(conHeight / rows);
+        height = Math.floor(conHeight / rows)-20;
         width = Math.floor(height * aspectRatio);
       }
       const area = width * height;
