@@ -7,7 +7,6 @@ import jitsiConnect, {
 } from '../utils/jitsiConnector';
 import { UIGridLayout } from './uicontainers/';
 import { Conference, Controls, JoinForm, Sidebar } from './components';
-import { videoContainerStyle } from './components/style';
 
 /**
  * REACT application starts
