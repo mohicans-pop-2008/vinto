@@ -95,7 +95,6 @@ const App = () => {
   const connect = async (e, name, room) => {
     console.log("Vinto: Let's join a conference now");
     e.preventDefault();
-    console.log("teh variables i'm hoping to pass", name, room)
     const { theConference, localVideoTrack } = await jitsiConnect({
       room,
       trackAddedHandler: respondToTrackAdded,
