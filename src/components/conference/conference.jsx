@@ -1,11 +1,11 @@
-import React, { useRef } from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 import Video from "./video";
 import Audio from "./audio";
 import styles from "./conference.module.css";
-import { throttle } from "lodash/throttle";
-import { debounce } from "lodash/debounce";
+import { debounce } from "lodash";
 
 const Conference = ({ tracks }) => {
+  const [layout, setLayout] = useState({});
   const conferenceDiv = useRef(null); // {current: DOM Element(div)}
   const participants = {};
   Object.keys(tracks).forEach((key) => {
@@ -14,11 +14,37 @@ const Conference = ({ tracks }) => {
     participants[id] = true;
   });
 
+  // Compute layout should the conferenceDiv reference
+  // ever change
+  const computeAndSetLayout = useCallback(() => {
+    if (!conferenceDiv) return;
+    conferenceDivHeight = conferenceDiv.current.getBoundingClientRect().height;
+    conferenceDivWidth = conferenceDiv.current.getBoundingClientRect().width;
+    console.log(
+      `Vinto: computeAndSetLayout runs participantCount: ${participantCount}, conferenceDivHeight: ${conferenceDivHeight}, and conferenceDivWidth: ${conferenceDivWidth}.`
+    );
+    setLayout((layout) =>
+      calculateBestLayout(conferenceDivHeight, conferenceDivWidth)
+    );
+  }, [conferenceDiv]);
+
+  const windowResizeListener = useRef(debounce(computeAndSetLayout, 1000))
+    .current;
+
+  useEffect(() => {
+    window.addEventListener("resize", windowResizeListener);
+  }, [windowResizeListener]);
+
+  const logWindowHeight = () => {
+    console.log("Height --> ", window.innerHeight);
+  };
+
   /* Layout Math
    * this is a div container for the video element
    * it should have a calculated height and width
    * it should have some fallback content - ID for now, ideally a display name
    */
+
   const participantCount = Object.keys(participants).length;
   let conferenceDivHeight;
   let conferenceDivWidth;
@@ -64,17 +90,6 @@ const Conference = ({ tracks }) => {
     }
     return bestLayout;
   };
-
-  let layout;
-  if (conferenceDiv.current !== null) {
-    console.log("Vinto: conferenceDiv", conferenceDiv);
-    conferenceDivHeight = conferenceDiv.current.getBoundingClientRect().height;
-    conferenceDivWidth = conferenceDiv.current.getBoundingClientRect().width;
-    console.log(
-      `Vinto: LAYOUT: computes participantCount: ${participantCount}, conferenceDivHeight: ${conferenceDivHeight}, and conferenceDivWidth: ${conferenceDivWidth}.`
-    );
-    layout = calculateBestLayout(conferenceDivHeight, conferenceDivWidth);
-  }
 
   // console.log("Vinto: layout on state --> ", layout);
   return (
