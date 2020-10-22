@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { raiseHand, lowerHand } from '../../store';
-import buttonStyle from '../conference/style';
+import buttonStyle from '../style';
 
 const RaiseHand = ({ uniqueID }) => {
   const [handRaised, setHandRaised] = useState(false);

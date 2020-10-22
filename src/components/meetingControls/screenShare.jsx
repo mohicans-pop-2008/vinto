@@ -1,5 +1,5 @@
 import React from 'react';
-import buttonStyle from '../conference/style';
+import buttonStyle from '../style';
 
 const ScreenShare = () => (
   <button type="button" style={buttonStyle}>

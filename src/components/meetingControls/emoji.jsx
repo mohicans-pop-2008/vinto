@@ -1,5 +1,5 @@
 import React from 'react';
-import buttonStyle from '../conference/style';
+import buttonStyle from '../style';
 
 const Emoji = () => {
   const onClick = () => {

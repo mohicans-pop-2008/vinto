@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import buttonStyle from '../conference/style';
+import buttonStyle from '../style';
 
 // This component can modularize for track type. For now just calling it mute
 const AudioMute = ({ track }) => {

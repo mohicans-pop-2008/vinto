@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import buttonStyle from '../conference/style';
+import buttonStyle from '../style';
 
 const Hands = () => {
   const onClick = () => {
