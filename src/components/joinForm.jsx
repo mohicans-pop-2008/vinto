@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { joinFormStyle } from './style';
+// import { joinFormStyle } from './style';
 
 const JoinForm = ({ onSubmit }) => {
   const [name, setName] = useState('');
