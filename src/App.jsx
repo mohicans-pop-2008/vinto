@@ -16,9 +16,12 @@ import { Conference, Controls, JoinForm, Sidebar } from './components';
  */
 
 const App = () => {
-  console.log('Vinto: RENDERED or RE-RENDERED');
+  console.log("Vinto: RENDERED: app");
+  const [name, setName] = useState("");
+  const [id, setId] = useState(null);
   const [conference, setConference] = useState(null);
   const [tracks, setTracks] = useState({});
+  const [participants, setParticipants] = useState({});
 
   /**
    * EVENT HANDLERS
@@ -29,10 +32,10 @@ const App = () => {
    */
 
   const respondToTrackAdded = (track) => {
-    console.log('Vinto: React app detects TRACK_ADDED');
-    console.log('Vinto: the track that was added --->', track);
-    console.log('Vinto: tracks at this time', tracks);
-    console.log('Vinto: participant ID --->', track.getParticipantId());
+    console.log("Vinto: React app detects TRACK_ADDED");
+    console.log("Vinto: the track that was added --->", track);
+    console.log("Vinto: tracks at this time", tracks);
+    console.log("Vinto: participant ID --->", track.getParticipantId());
     track.addEventListener(
       JitsiMeetJS.events.track.TRACK_MUTE_CHANGED,
       respondToTrackMuteChanged
@@ -47,6 +50,10 @@ const App = () => {
     const trackType = track.getType();
     const key = `${participantId}-${trackType}`;
 
+    setParticipants((participants) => ({
+      ...participants,
+      [participantId]: true,
+    }));
     setTracks((tracks) => ({ ...tracks, [key]: track }));
   };
 
@@ -58,6 +65,17 @@ const App = () => {
 
   const respondToUserLeft = (id, user) => {
     console.log(`Vinto: User ${id} Left`, user);
+
+    setParticipants((participants) => {
+      const updatedParticipants = { ...participants };
+      try {
+        delete updatedParticipants[id];
+        return updatedParticipants;
+      } catch (err) {
+        console.log("Vinto: Failed to delete a participant -->", err.message);
+      }
+    });
+
     setTracks((tracks) => {
       const updatedTracks = { ...tracks };
       const videoKey = `${id}-video`;
@@ -74,11 +92,11 @@ const App = () => {
 
   const respondToTrackMuteChanged = (track) => {
     console.log(
-      'Vinto: React app detects TRACK_MUTE_CHANGED. Here is the track',
+      "Vinto: React app detects TRACK_MUTE_CHANGED. Here is the track",
       track
     );
-    console.log('Vinto: The new TrackID ---->', track.getId());
-    if (track.getType() === 'audio') return;
+    console.log("Vinto: The new TrackID ---->", track.getId());
+    if (track.getType() === "audio") return;
     if (track.isMuted()) {
       setTracks((tracks) => {
         const updatedTracks = { ...tracks };
@@ -97,11 +115,11 @@ const App = () => {
   /**
    * Joins a conference
    */
-  const connect = async (e) => {
+  const connect = async (e, name, room) => {
     console.log("Vinto: Let's join a conference now");
     e.preventDefault();
     const { theConference, localVideoTrack } = await jitsiConnect({
-      room: 'some-default-room',
+      room,
       trackAddedHandler: respondToTrackAdded,
       trackRemovedHandler: respondToTrackRemoved,
       trackMuteChangedHandler: respondToTrackMuteChanged,
@@ -109,9 +127,11 @@ const App = () => {
     });
     setConference(theConference);
     if (!localVideoTrack.getParticipantId()) return;
+    setId(localVideoTrack.getParticipantId());
     const key = `${localVideoTrack.getParticipantId()}-${localVideoTrack.getType()}`;
     console.log('Vinto: key ========>', key);
     setTracks((tracks) => ({ ...tracks, [key]: localVideoTrack }));
+    setName(name);
   };
 
   /**
@@ -121,11 +141,30 @@ const App = () => {
   if (conference) {
     localTracks = conference.getLocalTracks();
   }
+  let participantCount = null;
+  if (Object.keys(participants).length) {
+    participantCount = Object.keys(participants).length;
+  }
   return conference ? (
     <UIGridLayout>
-      <Conference tracks={tracks} />
+      <Conference tracks={tracks} participantCount={participantCount || 0} />
       <Sidebar />
       <Controls localTracks={localTracks} />
+      <button
+        onClick={async () => {
+          Object.keys(tracks)
+            .filter((key) => key.includes(id))
+            .map((key) => tracks[key])
+            .forEach(async (track) => await track.dispose());
+          await conference.leave();
+          setConference(null);
+          setTracks({});
+          setName("");
+          setId(null);
+        }}
+      >
+        Leave Conference
+      </button>
     </UIGridLayout>
   ) : (
     <JoinForm onSubmit={connect} />
