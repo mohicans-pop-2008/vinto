@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Video from "./video";
 import Audio from "./audio";
 import styles from "./conference.module.css";
@@ -100,26 +100,6 @@ const Conference = ({ tracks, participantCount }) => {
     };
   }, []);
 
-  // Compute layout should the conferenceDiv reference
-  // ever change
-  // const computeAndSetLayout = useCallback(() => {
-  //   setLayout((layout) =>
-  //     calculateBestLayout(conferenceDivHeight, conferenceDivWidth)
-  //   );
-  // }, [conferenceDiv]);
-
-  // const windowResizeListener = useRef(debounce(computeAndSetLayout, 1000))
-  //   .current;
-
-  // useEffect(() => {
-  //   window.addEventListener("resize", windowResizeListener);
-  // }, [windowResizeListener]);
-
-  // const logWindowHeight = () => {
-  //   console.log("Height --> ", window.innerHeight);
-  // };
-
-  // console.log("Vinto: layout on state --> ", layout);
   return (
     <div className={styles.conference} ref={conferenceDiv}>
       {Object.keys(tracks).map((trackKey) => {
