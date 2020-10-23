@@ -15,10 +15,12 @@ import { Conference, Controls, JoinForm, Sidebar } from './components';
  * and it should always reflect all the local and remote tracks in the conference
  */
 
+const idFallback = Math.floor(Math.random() * 1000000).toString()
+
 const App = () => {
   console.log("Vinto: RENDERED: app");
   const [name, setName] = useState("");
-  const [id, setId] = useState(null);
+  const [id, setId] = useState("");
   const [conference, setConference] = useState(null);
   const [tracks, setTracks] = useState({});
   const [participants, setParticipants] = useState({});
@@ -116,6 +118,7 @@ const App = () => {
    * Joins a conference
    */
   const connect = async (e, name, room) => {
+    setName(name);
     console.log("Vinto: Let's join a conference now");
     e.preventDefault();
     const { theConference, localVideoTrack } = await jitsiConnect({
@@ -126,13 +129,27 @@ const App = () => {
       userLeftHandler: respondToUserLeft,
     });
     setConference(theConference);
-    if (!localVideoTrack.getParticipantId()) return;
+    if (!localVideoTrack.getParticipantId()) {
+      setId(idFallback)
+      return;
+    }
     setId(localVideoTrack.getParticipantId());
     const key = `${localVideoTrack.getParticipantId()}-${localVideoTrack.getType()}`;
     console.log('Vinto: key ========>', key);
     setTracks((tracks) => ({ ...tracks, [key]: localVideoTrack }));
-    setName(name);
   };
+
+  const leave = async () => {
+    Object.keys(tracks)
+      .filter((key) => key.includes(id))
+      .map((key) => tracks[key])
+      .forEach(async (track) => await track.dispose());
+    await conference.leave();
+    setConference(null);
+    setTracks({});
+    setName("");
+    setId("");
+  }
 
   /**
    * RENDER METHOD
@@ -150,25 +167,13 @@ const App = () => {
       <Conference tracks={tracks} participantCount={participantCount || 0} />
       <Sidebar />
       <Controls localTracks={localTracks} />
-      <button
-        onClick={async () => {
-          Object.keys(tracks)
-            .filter((key) => key.includes(id))
-            .map((key) => tracks[key])
-            .forEach(async (track) => await track.dispose());
-          await conference.leave();
-          setConference(null);
-          setTracks({});
-          setName("");
-          setId(null);
-        }}
-      >
+      <button onClick={leave}>
         Leave Conference
       </button>
     </UIGridLayout>
   ) : (
-    <JoinForm onSubmit={connect} />
-  );
+      <JoinForm onSubmit={connect} />
+    );
 };
 
 export default App;
