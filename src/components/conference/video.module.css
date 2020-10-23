@@ -1,9 +1,11 @@
 .videoTile {
   background: #93a1a1;
-  border: 3px dotted #d33682;
+  border-radius: 10px;
+  margin: 10px;
 }
 
 .videoTrack {
   height: 100%;
   width: 100%;
+  border-radius: 10px;
 }
