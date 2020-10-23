@@ -6,7 +6,7 @@ import RaiseHand from './raiseHand';
 import Emoji from './emoji';
 import { controlbarStyle } from '../style';
 
-const Controls = ({ localTracks }) => (
+const Controls = ({ localTracks, name, id }) => (
   <div style={controlbarStyle}>
     <ScreenShare />
     <VideoMute
@@ -15,7 +15,7 @@ const Controls = ({ localTracks }) => (
     <AudioMute
       track={localTracks.filter((track) => track.getType() === 'audio')[0]}
     />
-    <RaiseHand />
+    <RaiseHand name={name} id={id} />
     <Emoji />
   </div>
 );

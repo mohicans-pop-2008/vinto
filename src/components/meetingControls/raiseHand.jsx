@@ -3,15 +3,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import { raiseHand, lowerHand } from '../../store';
 import buttonStyle from '../style';
 
-const RaiseHand = ({ uniqueID }) => {
+const RaiseHand = ({ name, id }) => {
   const [handRaised, setHandRaised] = useState(false);
   const dispatch = useDispatch();
-  const name = useSelector((state) => state.name);
+  // const name = useSelector((state) => state.name);
   const onClick = () => {
     if (handRaised) {
-      dispatch(lowerHand({ uniqueID: name + uniqueID }));
+      dispatch(lowerHand({ uniqueID: name + id }));
     } else {
-      dispatch(raiseHand({ name, uniqueID: name + uniqueID }));
+      dispatch(raiseHand({ name, uniqueID: name + id }));
     }
     setHandRaised(!handRaised);
   };
