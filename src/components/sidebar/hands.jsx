@@ -1,17 +1,23 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
-import buttonStyle from '../style';
+import React from "react";
+import { useSelector } from "react-redux";
+import { Hand } from "@styled-icons/entypo/Hand";
+import styles from "./hand.module.css";
 
 const Hands = () => {
   const onClick = () => {
     console.log(
-      '==================THIS WILL EVENTUALLY BE REPLACED WITH expanding/collapsing an element to show whos hands are raised!=================='
+      "==================THIS WILL EVENTUALLY BE REPLACED WITH expanding/collapsing an element to show whos hands are raised!=================="
     );
   };
   const raisedHands = useSelector((state) => state.raisedHands);
   return (
-    <button type="button" style={buttonStyle} onClick={onClick}>
-      {`Number of hands raised: ${raisedHands.length}`}
+    <button
+      type="button"
+      className={raisedHands.length ? styles.handsRaised : styles.none}
+      onClick={onClick}
+    >
+      <Hand size="24" title="Hands Raised" />
+      {`${raisedHands.length}`}
     </button>
   );
 };
