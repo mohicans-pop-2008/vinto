@@ -2,8 +2,9 @@
   background: #fdf6e3;
   height: 100%;
   display: grid;
-  grid-template-columns: 90% 10%;
-  grid-template-rows: 90% 10%;
+  margin: 0 auto;
+  grid-template-columns: 90% 60px;
+  grid-template-rows: 90% 60px;
   grid-template-areas:
     'conference sidebar'
     'meetingControls sidebar';
