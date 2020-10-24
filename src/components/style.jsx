@@ -14,6 +14,9 @@ export const sidebarStyle = {
 
 export const controlbarStyle = {
   background: '#9ba4b4',
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'center',
 };
 
 export const joinFormStyle = {
