@@ -1,0 +1,15 @@
+.none {
+  color: white;
+  background: #14274E;
+  padding: 10px;
+  cursor: pointer;
+  margin: 2px;
+}
+
+.handsRaised {
+  color: white;
+  background: #dc758f;
+  padding: 10px;
+  cursor: pointer;
+  margin: 2px;
+}

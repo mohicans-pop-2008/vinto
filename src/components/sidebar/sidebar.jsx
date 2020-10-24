@@ -5,7 +5,7 @@ import { sidebarStyle } from '../style';
 
 const Sidebar = () => (
   <div style={sidebarStyle}>
-    <Engagement />
+    {/*<Engagement />*/}
     <Hands />
   </div>
 );

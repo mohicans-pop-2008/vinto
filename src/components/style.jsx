@@ -8,6 +8,8 @@ const buttonStyle = {
 
 export const sidebarStyle = {
   background: '#9ba4b4',
+  display: 'flex',
+  flexDirection: 'column',
 };
 
 export const controlbarStyle = {
