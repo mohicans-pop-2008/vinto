@@ -13,3 +13,10 @@
   cursor: pointer;
   margin: 2px;
 }
+
+.modal {
+  color: white;
+  background: #dc758f;
+  padding: 10px;
+  margin: 2px;
+}
