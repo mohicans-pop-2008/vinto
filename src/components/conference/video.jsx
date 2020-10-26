@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import styles from "./video.module.css";
+import Typography from "@material-ui/core/Typography"
 
-const Video = ({ track, height, width }) => {
+const Video = ({ track, name, height, width }) => {
   return (
     <div style={{ height: height, width: width }} className={styles.videoTile}>
       {track ? (
@@ -11,8 +12,10 @@ const Video = ({ track, height, width }) => {
           ref={(ref) => ref && track.attach(ref)}
         />
       ) : (
-        <h3 color="white">Participant</h3>
-      )}
+          <Typography variant="h3">
+            {name}
+          </Typography>
+        )}
     </div>
   );
 };

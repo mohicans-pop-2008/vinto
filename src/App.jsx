@@ -166,7 +166,7 @@ const App = () => {
   }
   return conference ? (
     <UIGridLayout>
-      <Conference tracks={tracks} participantCount={participantCount || 0} />
+      <Conference tracks={tracks} participantCount={participantCount || 0} name={name} />
       <Sidebar />
       <Controls leave={leave} localTracks={localTracks} name={name} id={id} />
     </UIGridLayout>

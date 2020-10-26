@@ -4,7 +4,7 @@ import Audio from "./audio";
 import styles from "./conference.module.css";
 import { debounce } from "lodash";
 
-const Conference = ({ tracks, participantCount }) => {
+const Conference = ({ tracks, participantCount, name }) => {
   const [resized, setResized] = useState({});
   const conferenceDiv = useRef(null); // {current: DOM Element(div)}
 
@@ -108,6 +108,7 @@ const Conference = ({ tracks, participantCount }) => {
             <Video
               key={trackKey}
               track={tracks[trackKey]}
+              name={name}
               height={layout.height}
               width={layout.width}
             />
