@@ -1,17 +1,17 @@
-import { AlignCenter } from 'styled-icons/zondicons';
-
 const buttonStyle = {
-  color: "white",
-  fontSize: 24,
+  color: "#FFFFFF",
+  borderColor: "#FFFFFF"
 };
 
 export const sidebarStyle = {
-  background: "#9ba4b4",
+  background: "#373F51",
+  color: "#FFFFFF",
   gridArea: "sidebar",
 };
 
 export const controlbarStyle = {
-  background: "#9ba4b4",
+  background: "#373F51",
+  color: "#FFFFFF",
   gridArea: "meetingControls",
   display: "flex",
   flexDirection: "row",

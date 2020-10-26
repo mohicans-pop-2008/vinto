@@ -25,11 +25,17 @@ const RaiseHand = ({ name, id }) => {
           type="button"
           onClick={onClick}
           startIcon={<HandLeft size="24" />}
+          color="inherit"
         >
           Lower Hand
         </Button>
       ) : (
-        <Button type="button" onClick={onClick} endIcon={<Hand size="24" />}>
+        <Button
+          type="button"
+          onClick={onClick}
+          endIcon={<Hand size="24" />}
+          color="inherit"
+        >
           Raise Hand
         </Button>
       )}

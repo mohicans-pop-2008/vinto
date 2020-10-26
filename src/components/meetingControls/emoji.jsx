@@ -12,6 +12,7 @@ const Emoji = () => {
       type="button"
       endIcon={<EmojiEmotions size="24" />}
       onClick={onClick}
+      color="inherit"
     >
       Emote
     </Button>

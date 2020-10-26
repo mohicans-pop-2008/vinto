@@ -12,7 +12,7 @@ const AudioMute = ({ track }) => {
   };
 
   return (
-    <IconButton type="button" onClick={onClick}>
+    <IconButton type="button" onClick={onClick} color="inherit">
       {muted ? <Mic size="24" /> : <MicOff size="24" />}
     </IconButton>
   );
