@@ -1,12 +1,12 @@
-import './App.css';
-import JitsiMeetJS from 'lib-jitsi-meet';
-import regeneratorRuntime from 'regenerator-runtime';
-import React, { useEffect, useState, useCallback } from 'react';
+import "./App.css";
+import JitsiMeetJS from "lib-jitsi-meet";
+import regeneratorRuntime from "regenerator-runtime";
+import React, { useEffect, useState, useCallback } from "react";
 import jitsiConnect, {
   connectLocalTracksToAConference,
-} from '../utils/jitsiConnector';
-import { UIGridLayout } from './uicontainers/';
-import { Conference, Controls, JoinForm, Sidebar } from './components';
+} from "../utils/jitsiConnector";
+import { UIGridLayout } from "./uicontainers/";
+import { Conference, Controls, JoinForm, Sidebar } from "./components";
 
 /**
  * REACT application starts
@@ -15,7 +15,7 @@ import { Conference, Controls, JoinForm, Sidebar } from './components';
  * and it should always reflect all the local and remote tracks in the conference
  */
 
-const idFallback = Math.floor(Math.random() * 1000000).toString()
+const idFallback = Math.floor(Math.random() * 1000000).toString();
 
 const App = () => {
   console.log("Vinto: RENDERED: app");
@@ -43,7 +43,7 @@ const App = () => {
       respondToTrackMuteChanged
     );
     if (
-      (track.isLocal() && track.getType() === 'audio') ||
+      (track.isLocal() && track.getType() === "audio") ||
       !track.getParticipantId()
     )
       return;
@@ -72,6 +72,7 @@ const App = () => {
       const updatedParticipants = { ...participants };
       try {
         delete updatedParticipants[id];
+        console.log('Vinto: participant has left')
         return updatedParticipants;
       } catch (err) {
         console.log("Vinto: Failed to delete a participant -->", err.message);
@@ -87,7 +88,7 @@ const App = () => {
         delete updatedTracks[audioKey];
         return updatedTracks;
       } catch (err) {
-        console.log('Vinto: Failed to delete a track -->', err.message);
+        console.log("Vinto: Failed to delete a track -->", err.message);
       }
     });
   };
@@ -130,12 +131,12 @@ const App = () => {
     });
     setConference(theConference);
     if (!localVideoTrack.getParticipantId()) {
-      setId(idFallback)
+      setId(idFallback);
       return;
     }
     setId(localVideoTrack.getParticipantId());
     const key = `${localVideoTrack.getParticipantId()}-${localVideoTrack.getType()}`;
-    console.log('Vinto: key ========>', key);
+    console.log("Vinto: key ========>", key);
     setTracks((tracks) => ({ ...tracks, [key]: localVideoTrack }));
   };
 
@@ -145,11 +146,12 @@ const App = () => {
       .map((key) => tracks[key])
       .forEach(async (track) => await track.dispose());
     await conference.leave();
+    setParticipants({});
     setConference(null);
     setTracks({});
     setName("");
     setId("");
-  }
+  };
 
   /**
    * RENDER METHOD
@@ -166,14 +168,11 @@ const App = () => {
     <UIGridLayout>
       <Conference tracks={tracks} participantCount={participantCount || 0} />
       <Sidebar />
-      <Controls localTracks={localTracks} name={name} id={id} />
-      <button onClick={leave}>
-        Leave Conference
-      </button>
+      <Controls leave={leave} localTracks={localTracks} name={name} id={id} />
     </UIGridLayout>
   ) : (
-      <JoinForm onSubmit={connect} />
-    );
+    <JoinForm onSubmit={connect} />
+  );
 };
 
 export default App;

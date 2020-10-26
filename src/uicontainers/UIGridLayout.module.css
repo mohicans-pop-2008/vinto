@@ -1,9 +1,10 @@
 .gridContainer {
   background: #fdf6e3;
-  height: 100%;
+  height: 100vh;
+  width: 100vw;
   display: grid;
-  grid-template-columns: 90% 10%;
-  grid-template-rows: 90% 10%;
+  grid-template-columns: calc(100vw - 60px) 60px;
+  grid-template-rows: calc(100vh - 60px) 60px;
   grid-template-areas:
     'conference sidebar'
     'meetingControls sidebar';

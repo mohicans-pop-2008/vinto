@@ -1,23 +1,38 @@
 const buttonStyle = {
-  color: 'white',
-  background: '#14274E',
-  padding: '10px',
-  cursor: 'pointer',
-  margin: '2px',
+  color: "#FFFFFF",
+  borderColor: "#FFFFFF"
 };
 
 export const sidebarStyle = {
-  background: '#9ba4b4',
-  display: 'flex',
-  flexDirection: 'column',
+  background: "#373F51",
+  color: "#FFFFFF",
+  gridArea: "sidebar",
+  display: "column",
 };
 
 export const controlbarStyle = {
-  background: '#9ba4b4',
+  background: "#373F51",
+  color: "#FFFFFF",
+  gridArea: "meetingControls",
+  display: "flex",
+  flexDirection: "row",
+  justifyContent: "space-around",
+  height: 30,
+  padding: "15px 0px 15px 0px",
+};
+
+export const joinPageStyle = {
+  color: '#373f51',
+  background: '#ffffff',
+  textAlign: 'center',
+  height: '100%',
 };
 
 export const joinFormStyle = {
-  background: '#394867',
-};
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'center',
+  flexWrap: 'wrap',
+}
 
 export default buttonStyle;

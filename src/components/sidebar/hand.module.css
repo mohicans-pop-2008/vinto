@@ -13,3 +13,18 @@
   cursor: pointer;
   margin: 2px;
 }
+
+.modal {
+  position: relative;
+  left: -100px;
+  color: white;
+  background: #dc758f;
+  padding: 10px;
+  margin: 2px;
+  width: 138px;
+  border-radius: 5px 0px 0px 5px;
+}
+
+.badge {
+  margin-top: 20px;
+}
