@@ -14,7 +14,7 @@ const VideoMute = ({ track }) => {
 
   return (
     <IconButton type="button" onClick={onClick} color="inherit">
-      {muted ? <Video size="24" /> : <VideoOff size="24" />}
+      {muted ? <VideoOff size="24" /> : <Video size="24" />}
     </IconButton>
   );
 };
