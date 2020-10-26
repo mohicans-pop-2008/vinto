@@ -72,6 +72,7 @@ const App = () => {
       const updatedParticipants = { ...participants };
       try {
         delete updatedParticipants[id];
+        console.log('Vinto: participant has left')
         return updatedParticipants;
       } catch (err) {
         console.log("Vinto: Failed to delete a participant -->", err.message);
@@ -145,6 +146,7 @@ const App = () => {
       .map((key) => tracks[key])
       .forEach(async (track) => await track.dispose());
     await conference.leave();
+    setParticipants({});
     setConference(null);
     setTracks({});
     setName("");
