@@ -8,7 +8,7 @@ import Leave from "./leave";
 
 import { controlbarStyle } from "../style";
 
-const Controls = ({ localTracks, name, id }) => (
+const Controls = ({ localTracks, leave, name, id }) => (
   <div style={controlbarStyle}>
     <ScreenShare />
     <VideoMute
@@ -19,7 +19,7 @@ const Controls = ({ localTracks, name, id }) => (
     />
     <RaiseHand name={name} id={id} />
     <Emoji />
-    <Leave tracks={localTracks} />
+    <Leave tracks={localTracks} leave={leave} />
   </div>
 );
 

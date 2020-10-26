@@ -168,8 +168,7 @@ const App = () => {
     <UIGridLayout>
       <Conference tracks={tracks} participantCount={participantCount || 0} />
       <Sidebar />
-      <Controls localTracks={localTracks} name={name} id={id} />
-      <button onClick={leave}>Leave Conference</button>
+      <Controls leave={leave} localTracks={localTracks} name={name} id={id} />
     </UIGridLayout>
   ) : (
     <JoinForm onSubmit={connect} />

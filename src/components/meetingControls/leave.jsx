@@ -3,15 +3,7 @@ import Button from "@material-ui/core/Button";
 import { X } from "@styled-icons/feather";
 import styles from "./leave.module.css";
 
-const Leave = ({ localTracks }) => {
-  const leave = async () => {
-    localTracks.forEach(async (track) => await track.dispose());
-    await conference.leave();
-    setConference(null);
-    setTracks({});
-    setName("");
-    setId("");
-  };
+const Leave = ({ leave }) => {
   return (
     <Button
       onClick={leave}
