@@ -7,6 +7,7 @@ export const sidebarStyle = {
   background: "#373F51",
   color: "#FFFFFF",
   gridArea: "sidebar",
+  display: "column",
 };
 
 export const controlbarStyle = {
