@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import buttonStyle from '../style';
+import React, { useState } from "react";
+import IconButton from "@material-ui/core/IconButton";
+import { Mic, MicOff } from "@styled-icons/feather";
 
 // This component can modularize for track type. For now just calling it mute
 const AudioMute = ({ track }) => {
@@ -11,9 +12,9 @@ const AudioMute = ({ track }) => {
   };
 
   return (
-    <button type="button" style={buttonStyle} onClick={onClick}>
-      {muted ? 'Unmute mic' : 'Mute mic'}
-    </button>
+    <IconButton type="button" onClick={onClick}>
+      {muted ? <Mic size="24" /> : <MicOff size="24" />}
+    </IconButton>
   );
 };
 
