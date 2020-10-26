@@ -1,5 +1,6 @@
-import React from 'react';
-import buttonStyle from '../style';
+import React from "react";
+import Button from "@material-ui/core/Button";
+import { EmojiEmotions } from "@styled-icons/material-sharp";
 
 const Emoji = () => {
   const onClick = () => {
@@ -7,9 +8,13 @@ const Emoji = () => {
   };
 
   return (
-    <button type="button" style={buttonStyle} onClick={onClick}>
-      Emoji will go here!
-    </button>
+    <Button
+      type="button"
+      endIcon={<EmojiEmotions size="24" />}
+      onClick={onClick}
+    >
+      Emote
+    </Button>
   );
 };
 
