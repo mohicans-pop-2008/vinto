@@ -19,7 +19,7 @@ export const controlbarStyle = {
 };
 
 export const joinPageStyle = {
-  color: '#5a606f',
+  color: '#373f51',
   background: '#ffffff',
   textAlign: 'center',
   height: '100%',
@@ -29,6 +29,7 @@ export const joinFormStyle = {
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'center',
+  flexWrap: 'wrap',
 }
 
 export default buttonStyle;

@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { joinPageStyle, joinFormStyle } from "./style";
+import styles from "./joinForm.module.css";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 // import AppBar from "@material-ui/core/AppBar";
-// import Typography from "@material-ui/core/Typography";
+import Typography from "@material-ui/core/Typography";
 
 const JoinForm = ({ onSubmit }) => {
   const [name, setName] = useState("");
@@ -19,7 +20,7 @@ const JoinForm = ({ onSubmit }) => {
 
   return (
     <div style={joinPageStyle}>
-      <h1>Welcome to Vinto</h1>
+      <img src="vinto-horizontal-logo.png" />
       <form style={joinFormStyle} onSubmit={(e) => onSubmit(e, name, room)}>
         <TextField
           id="name"
@@ -29,6 +30,7 @@ const JoinForm = ({ onSubmit }) => {
           name="name"
           value={name}
           onChange={onChange}
+          className={styles.inputs}
         />
         <TextField
           id="room"
@@ -38,24 +40,14 @@ const JoinForm = ({ onSubmit }) => {
           name="room"
           value={room}
           onChange={onChange}
+          className={styles.inputs}
         />
-        {/*<label htmlFor="name">Name:</label>
-        <input
-          id="name"
-          type="text"
-          name="name"
-          value={name}
-          onChange={onChange}
-        />
-        <label htmlFor="name">RoomName:</label>
-        <input
-          id="room"
-          type="text"
-          name="room"
-          value={room}
-          onChange={onChange}
-        />*/}
-        <Button type="submit" disabled={!name || !room} variant="contained">
+        <Button
+          type="submit"
+          disabled={!name || !room}
+          variant="contained"
+          className={styles.inputs}
+        >
           Join Room
         </Button>
       </form>
