@@ -18,11 +18,17 @@ export const controlbarStyle = {
   gridArea: "meetingControls",
 };
 
-export const joinFormStyle = {
-  color: 'white',
-  background: '#394867',
+export const joinPageStyle = {
+  color: '#5a606f',
+  background: '#ffffff',
   textAlign: 'center',
   height: '100%',
 };
+
+export const joinFormStyle = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'center',
+}
 
 export default buttonStyle;
