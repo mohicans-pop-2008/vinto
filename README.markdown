@@ -74,7 +74,8 @@ Source: [Mohicans Team Contract and Norms](https://docs.google.com/document/d/1a
   - [Schema and API](https://drive.google.com/file/d/1veoxu8lWvBJcykzOP_nmxFGTidL7ea84/view)
 
 ### Architecture
-<img src="https://lucid.app/invitations/accept/1bbdc69f-cca3-42df-9315-51142b837cda">
+
+* [Architecture - Lucid Chart](https://lucid.app/invitations/accept/1bbdc69f-cca3-42df-9315-51142b837cda)
 
 - A jitsi-meet server (currently using meet.jit.si) / self-hosted server also possible.
 - A very specific working version of "lib-jitsi-meet": "github:jitsi/lib-jitsi-meet#15dcc57424cc937290e1963b8eb402c1fcf48ccb".
