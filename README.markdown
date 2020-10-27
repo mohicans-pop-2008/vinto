@@ -9,6 +9,18 @@
 - [Vinto Project Board](https://github.com/orgs/mohicans-pop-2008/projects/1) to get a sense of what we are actually working on.
 </details>
 
+## About
+
+Built by Chikara Takahashi, Kevin Hu, and S. Tanveer Shah. Deployed version at [vinto.app](https://vinto.app).
+
+> Vinto is a videoconferencing solution that emphasizes realtime non-verbal interactions between participants.
+
+Vinto allows participants to join a room, have a video conference, and communicate non-verbally through hand raises, and - in the future - through even more forms of expression, e.g. claps, queueing up to ask a question, emojis, etc.
+
+Under the hood, Vinto uses lib-jitsi-meet, an API that wraps around WebRTC technology and is designed to set up video conferences on a server running [jitsi-meet](https://github.com/jitsi/jitsi-meet) (e.g. [meet.jit.si](https://meet.jit.si/)). Vinto also implements a [socket.io](https://socket.io) server to orchestrate real-time interactions like hand raises, etc.
+
+Finally, everything is rendered with React, front-end state is managed by Redux stores, and icons/components are from the beautiful material-ui and styled-icons libraries. Where necessary, Vinto implements Promises to ensure that React can respond appropriately to lib-jitsi-meet events, e.g. rendering a conference only after it has been connected to and initialized correctly on the meeting server (i.e. [meet.jit.si](https://meet.jit.si/)) by default.
+
 ## Contribution Guidelines
 
 Source: [Mohicans Team Contract and Norms](https://docs.google.com/document/d/1aHNAhwWkPEynwzW29mGgXruK7I7cTa0y4Q_sDHNT3Wk/edit?usp=sharing)
