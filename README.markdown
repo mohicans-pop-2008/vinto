@@ -73,8 +73,8 @@ Source: [Mohicans Team Contract and Norms](https://docs.google.com/document/d/1a
   - [Wireframe and Frontend State](https://docs.google.com/presentation/d/1AFjcZvJZWQtv_HhX-1dZmH0AtKYrF7m3alAe72k7LT4/edit?usp=sharing)
   - [Schema and API](https://drive.google.com/file/d/1veoxu8lWvBJcykzOP_nmxFGTidL7ea84/view)
 
-### Key Ingredients
-<img src="https://embed.creately.com/xC8wnKn63IY?token=GN2A93FluMC4doDQ&type=svg">
+### Architecture
+<img src="https://lucid.app/invitations/accept/1bbdc69f-cca3-42df-9315-51142b837cda">
 
 - A jitsi-meet server (currently using meet.jit.si) / self-hosted server also possible.
 - A very specific working version of "lib-jitsi-meet": "github:jitsi/lib-jitsi-meet#15dcc57424cc937290e1963b8eb402c1fcf48ccb".
