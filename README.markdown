@@ -1,4 +1,8 @@
-# README
+# Vinto README
+
+> zoom lectures are so weird. for all i know i lost internet and im just sitting here talking to myself
+
+--[Seth Trueger @MDaware on Twitter 2020-10-30](https://twitter.com/MDaware/status/1321913186313031682?s=20)
 
 <details>
   <summary>Quick Links</summary>
@@ -8,6 +12,7 @@
   - [Schema and API](https://drive.google.com/file/d/1veoxu8lWvBJcykzOP_nmxFGTidL7ea84/view)
 - [Vinto Project Board](https://github.com/orgs/mohicans-pop-2008/projects/1) to get a sense of what we are actually working on.
 </details>
+
 
 ## About
 
